@@ -1,0 +1,17 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:key="username"
+        app:title="@string/username_text"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        app:entries="@array/theme_entries"
+        app:entryValues="@array/theme_values"
+        app:defaultValue="system"
+        app:key="theme_preference"
+        app:title="@string/theme_title"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>

@@ -24,10 +24,6 @@ class BingoFragment : Fragment(), View.OnClickListener {
     private val diagValue = 2
     private val bonusValue = 2
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

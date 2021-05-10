@@ -1,5 +1,6 @@
 package com.example.bingoetagelta
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
@@ -28,6 +30,8 @@ class MainActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        usernameCheck()
     }
 
     override fun onStart() {
@@ -37,6 +41,23 @@ class MainActivity : AppCompatActivity(){
         )
         }
         randomizeText()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        calculateBingoCount()
+    }
+
+    private fun usernameCheck(){
+        // Check if username is setup
+        if (PreferenceManager.getDefaultSharedPreferences(this)
+            .getString("username","") == ""){
+            Toast.makeText(
+                this,
+                resources.getString(R.string.username_empty_reply),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
     private fun randomizeText(){
@@ -115,7 +136,7 @@ class MainActivity : AppCompatActivity(){
         // bonus check
         if (buttonStateArray[9]) result += bonusValue
 
-        textVBingoCount.text = result.toString()
+        textVBingoCount.text = resources.getString(R.string.text_bingo_count) + result.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -140,11 +161,4 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-/*    Preference preference = findPreference(key);
-    preference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
-            // Do something extra when the preference has changed.
-        }
-    });*/
 }

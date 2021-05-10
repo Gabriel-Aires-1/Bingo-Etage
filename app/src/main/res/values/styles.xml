@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
-        <item name="android:textColor">?attr/buttonTextColor</item>
-        <item name="android:backgroundTint">?attr/buttonBackgroundColor</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-    -->
-<!--    <style name="ToggleButtonStyle" parent="android:Widget.Button">-->
     <style name="ToggleButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">?attr/buttonTextColor</item>
-<!--        <item name="android:background">@drawable/button_shape</item>-->
-        <item name="android:backgroundTint">?attr/buttonBackgroundColor</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColorPrimary">?attr/textColor</item>
+        <item name="android:background">?attr/button_background</item>
+        <item name="android:foreground">@drawable/button_ripple</item>
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:elevation">8dp</item>
     </style>
 </resources>

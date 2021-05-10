@@ -11,7 +11,8 @@
     <string name="text_button_9">9</string>
     <string name="text_button_10">10</string>
     <!-- unicode for space: \u0020 -->
-    <string name="text_bingo_count">Total :\u0020</string>
+    <!-- %1$s : format string   -->
+    <string name="text_bingo_count">Total : %1$s</string>
     <string name="setting_text">Paramètres</string>
 
     <!-- Settings -->

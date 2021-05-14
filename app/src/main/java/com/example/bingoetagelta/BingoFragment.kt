@@ -34,7 +34,6 @@ class BingoFragment : Fragment(), View.OnClickListener {
     private lateinit var textVBingoCount : TextView
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
-    //private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
     private val caseValue = 1
     private val lineValue = 2
@@ -45,8 +44,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: numberArrayShuffled
-            checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: checkedArray
+            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: IntArray(numberOfButton)
+            checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: BooleanArray(numberOfButton)
             editingBool = editingBool || it.getBoolean(EDITING_BOOL)
         }
     }
@@ -84,12 +83,18 @@ class BingoFragment : Fragment(), View.OnClickListener {
         return fragView
     }
 
-    fun setBingoGrid(numberArrayShuffled: IntArray?,
-                     checkedArray: BooleanArray?,
-                     editingBool: Boolean) {
-        this.numberArrayShuffled = numberArrayShuffled ?: IntArray(numberOfButton)
-        this.checkedArray = checkedArray ?: BooleanArray(numberOfButton)
-        this.editingBool = editingBool
+    fun setBingoGrid(numberArrayShuffledInput: IntArray?,
+                     checkedArrayInput: BooleanArray?,
+                     editingBoolInput: Boolean) {
+        numberArrayShuffled = numberArrayShuffledInput ?: IntArray(numberOfButton)
+        checkedArray = checkedArrayInput ?: BooleanArray(numberOfButton)
+        editingBool = editingBoolInput
+
+        arguments = Bundle().apply {
+            putIntArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
+            putBooleanArray(CHECKED_ARRAY, checkedArray)
+            putBoolean(EDITING_BOOL, editingBool)
+        }
     }
 
     fun updateBingoGrid(){

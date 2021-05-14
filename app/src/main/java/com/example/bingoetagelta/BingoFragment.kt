@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.preference.PreferenceManager
@@ -30,6 +32,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
 
     private lateinit var buttonArray : Array<ToggleButton>
     private lateinit var textVBingoCount : TextView
+    private lateinit var okButton : Button
+    private lateinit var editButton: ImageButton
     //private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
     private val caseValue = 1
@@ -43,7 +47,7 @@ class BingoFragment : Fragment(), View.OnClickListener {
         arguments?.let {
             numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: numberArrayShuffled
             checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: checkedArray
-            editingBool = it.getBoolean(EDITING_BOOL)
+            editingBool = editingBool || it.getBoolean(EDITING_BOOL)
         }
     }
 
@@ -64,10 +68,17 @@ class BingoFragment : Fragment(), View.OnClickListener {
         }
         for (button in buttonArray) button.setOnClickListener(this)
 
+        okButton = fragView.findViewById(R.id.okButton)
+        okButton.setOnClickListener(this)
+
+        editButton = fragView.findViewById(R.id.editButton)
+        editButton.setOnClickListener(this)
+
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
-        // Initialize TextView
+        // Initialize TextView and Buttons
         updateBingoGrid()
+        setEditing(editingBool)
 
         // return the view
         return fragView
@@ -96,7 +107,12 @@ class BingoFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        calculateBingoCount()
+        if (v==null) return
+        when(v.id){
+            R.id.okButton -> setEditing(false)
+            R.id.editButton -> setEditing(true)
+            else -> calculateBingoCount()
+        }
     }
 
     private fun calculateBingoCount(){
@@ -135,6 +151,15 @@ class BingoFragment : Fragment(), View.OnClickListener {
         if (buttonStateArray[9]) result += bonusValue
 
         textVBingoCount.text = resources.getString(R.string.text_bingo_count, result.toString())
+    }
+
+    private fun setEditing(edit: Boolean){
+        editingBool = edit
+        okButton.visibility = if (editingBool) Button.VISIBLE else Button.INVISIBLE
+        editButton.visibility = if (!editingBool) Button.VISIBLE else Button.INVISIBLE
+        for (button in buttonArray){
+            button.isEnabled = editingBool
+        }
     }
 
     companion object {

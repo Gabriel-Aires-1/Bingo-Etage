@@ -14,7 +14,10 @@
         android:textOff="@string/text_button_1"
         android:textOn="@string/text_button_1"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
-        app:layout_constraintEnd_toStartOf="@+id/button2" />
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
         android:id="@+id/button2"
@@ -24,8 +27,11 @@
         android:textOff="@string/text_button_2"
         android:textOn="@string/text_button_2"
         app:layout_constraintBottom_toTopOf="@+id/button5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <ToggleButton
         android:id="@+id/button3"
@@ -35,6 +41,8 @@
         android:textOff="@string/text_button_3"
         android:textOn="@string/text_button_3"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button2" />
 
     <ToggleButton
@@ -42,33 +50,36 @@
         style="@style/ToggleButtonStyle"
         android:layout_marginEnd="32dp"
         android:text="@string/text_button_4"
-        android:textOn="@string/text_button_4"
         android:textOff="@string/text_button_4"
+        android:textOn="@string/text_button_4"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
-        app:layout_constraintEnd_toStartOf="@+id/button5" />
+        app:layout_constraintEnd_toStartOf="@+id/button5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
         android:id="@+id/button5"
         style="@style/ToggleButtonStyle"
-        android:layout_marginBottom="156dp"
         android:text="@string/text_button_5"
         android:textOff="@string/text_button_5"
         android:textOn="@string/text_button_5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <!-- TODO Regarder chaînes pour centrer les boutons-->
+        app:layout_constraintBottom_toTopOf="@+id/button8"
+        app:layout_constraintEnd_toStartOf="@+id/button6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button4"
+        app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <ToggleButton
         android:id="@+id/button6"
         style="@style/ToggleButtonStyle"
         android:layout_marginStart="32dp"
         android:text="@string/text_button_6"
-        android:textOn="@string/text_button_6"
         android:textOff="@string/text_button_6"
+        android:textOn="@string/text_button_6"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button5" />
 
     <ToggleButton
@@ -76,20 +87,25 @@
         style="@style/ToggleButtonStyle"
         android:layout_marginEnd="32dp"
         android:text="@string/text_button_7"
-        android:textOn="@string/text_button_7"
         android:textOff="@string/text_button_7"
+        android:textOn="@string/text_button_7"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
-        app:layout_constraintEnd_toStartOf="@+id/button8" />
+        app:layout_constraintEnd_toStartOf="@+id/button8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ToggleButton
         android:id="@+id/button8"
         style="@style/ToggleButtonStyle"
         android:layout_marginTop="32dp"
         android:text="@string/text_button_8"
-        android:textOn="@string/text_button_8"
         android:textOff="@string/text_button_8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textOn="@string/text_button_8"
+        app:layout_constraintBottom_toTopOf="@+id/button10"
+        app:layout_constraintEnd_toStartOf="@+id/button9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button7"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
 
     <ToggleButton
@@ -97,21 +113,24 @@
         style="@style/ToggleButtonStyle"
         android:layout_marginStart="32dp"
         android:text="@string/text_button_9"
-        android:textOn="@string/text_button_9"
         android:textOff="@string/text_button_9"
+        android:textOn="@string/text_button_9"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button8" />
 
     <ToggleButton
         android:id="@+id/button10"
         style="@style/ToggleButtonStyle"
-        android:textSize="22sp"
         android:layout_marginTop="56dp"
         android:text="@string/text_button_10"
         android:textOff="@string/text_button_10"
         android:textOn="@string/text_button_10"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/textViewBingoCount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button8" />
 
@@ -124,7 +143,9 @@
         android:textColor="?attr/textColor"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button10" />
 

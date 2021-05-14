@@ -26,6 +26,8 @@
     <!-- %1$s : format string   -->
     <string name="text_bingo_count">Total : %1$s</string>
     <string name="setting_text">Paramètres</string>
+    <string name="text_ok_button">Valider</string>
+    <string name="description_edit_button">Editer</string>
 
 
     <!-- Calendar fragment strings -->

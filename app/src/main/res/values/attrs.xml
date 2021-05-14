@@ -3,4 +3,5 @@
     <attr name="textColor" format="color" />
     <attr name="button_background" format="reference" />
     <attr name="setting_icon" format="reference" />
+    <attr name="edit_button_icon" format="reference" />
 </resources>

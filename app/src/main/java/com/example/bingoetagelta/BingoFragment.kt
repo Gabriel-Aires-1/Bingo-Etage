@@ -11,18 +11,42 @@ import androidx.preference.PreferenceManager
 import java.util.*
 import kotlin.random.Random
 
+// the fragment initialization parameters keys
+private const val NUMBER_ARRAY_SHUFFLED = "NUMBER_ARRAY_SHUFFLED"
+private const val CHECKED_ARRAY = "CHECKED_ARRAY"
+private const val EDITING_BOOL = "EDITING_BOOL"
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [BingoFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
 class BingoFragment : Fragment(), View.OnClickListener {
+    private val numberOfButton=10
+
+    private var numberArrayShuffled: IntArray? = IntArray(numberOfButton)
+    private var checkedArray: BooleanArray? = BooleanArray(numberOfButton)
+    private var editingBool: Boolean = false
 
     private lateinit var buttonArray : Array<ToggleButton>
     private lateinit var textVBingoCount : TextView
     private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
-    private val numberOfButton=10
 
     private val caseValue = 1
     private val lineValue = 2
     private val columnValue = 2
     private val diagValue = 2
     private val bonusValue = 2
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            val currentDate = Calendar.getInstance()
+            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED)
+            checkedArray = it.getBooleanArray(CHECKED_ARRAY)
+            editingBool = it.getBoolean(EDITING_BOOL)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,5 +145,28 @@ class BingoFragment : Fragment(), View.OnClickListener {
         if (buttonStateArray[9]) result += bonusValue
 
         textVBingoCount.text = resources.getString(R.string.text_bingo_count, result.toString())
+    }
+
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param numberArrayShuffled Parameter 1 : the bingo grid for the selected day
+         * @param checkedArray Parameter 2 : the checked (or not) values
+         * @param editingBool Parameter 3 : the editing mode
+         * @return A new instance of fragment BingoFragment.
+         */
+        @JvmStatic
+        fun newInstance(numberArrayShuffled: IntArray?,
+                        checkedArray: BooleanArray?,
+                        editingBool: Boolean) =
+            BingoFragment().apply {
+                arguments = Bundle().apply {
+                    putIntArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
+                    putBooleanArray(CHECKED_ARRAY, checkedArray)
+                    putBoolean(EDITING_BOOL, editingBool)
+                }
+            }
     }
 }

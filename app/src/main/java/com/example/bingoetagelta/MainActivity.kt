@@ -81,7 +81,11 @@ class MainActivity : AppCompatActivity(){
         FragmentStateAdapter(fragmentManager, lifecycle) {
 
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
-            BingoFragment(),
+            BingoFragment.newInstance(
+                null,
+                null,
+                false
+            ),
             CalendarFragment.newInstance(
                 Calendar.getInstance().get(Calendar.DAY_OF_YEAR),
                 Calendar.getInstance().get(Calendar.MONTH),

@@ -24,13 +24,13 @@ private const val EDITING_BOOL = "EDITING_BOOL"
 class BingoFragment : Fragment(), View.OnClickListener {
     private val numberOfButton=10
 
-    private var numberArrayShuffled: IntArray? = IntArray(numberOfButton)
-    private var checkedArray: BooleanArray? = BooleanArray(numberOfButton)
+    private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
+    private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
     private var editingBool: Boolean = false
 
     private lateinit var buttonArray : Array<ToggleButton>
     private lateinit var textVBingoCount : TextView
-    private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+    //private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
     private val caseValue = 1
     private val lineValue = 2
@@ -41,9 +41,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            val currentDate = Calendar.getInstance()
-            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED)
-            checkedArray = it.getBooleanArray(CHECKED_ARRAY)
+            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: numberArrayShuffled
+            checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: checkedArray
             editingBool = it.getBoolean(EDITING_BOOL)
         }
     }
@@ -67,42 +66,33 @@ class BingoFragment : Fragment(), View.OnClickListener {
 
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
-        // Randomize bingo buttons
-        randomizeBingoButtons()
-
         // Initialize TextView
-        calculateBingoCount()
+        updateBingoGrid()
 
         // return the view
         return fragView
     }
 
-    private fun randomizeBingoButtons(){
+    fun setBingoGrid(numberArrayShuffled: IntArray?,
+                     checkedArray: BooleanArray?,
+                     editingBool: Boolean) {
+        this.numberArrayShuffled = numberArrayShuffled ?: IntArray(numberOfButton)
+        this.checkedArray = checkedArray ?: BooleanArray(numberOfButton)
+        this.editingBool = editingBool
+    }
+
+    fun updateBingoGrid(){
         fun updateText(button: ToggleButton, newText: String){
             button.text = newText
             button.textOff = newText
             button.textOn = newText
         }
-        fun getSeed(): Int{
-            val currentDate = Calendar.getInstance()
-            // Set to 12:0:0.000
-            currentDate.set(Calendar.HOUR_OF_DAY, 12)
-            currentDate.set(Calendar.MINUTE, 0)
-            currentDate.set(Calendar.SECOND, 0)
-            currentDate.set(Calendar.MILLISECOND, 0)
-            // Return hashcode
-            val nameHashCode = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("username","")
-                .hashCode()
-            return currentDate.hashCode() xor nameHashCode
-        }
-
-        val arrayShuffled = floorNumbers.copyOf()
-        arrayShuffled.shuffle(Random(getSeed()))
 
         for ((index, button) in buttonArray.withIndex()) {
-            updateText(button, arrayShuffled[index].toString())
+            updateText(button, numberArrayShuffled[index].toString())
+            button.isChecked = checkedArray[index]
         }
+        calculateBingoCount()
     }
 
     override fun onClick(v: View?) {

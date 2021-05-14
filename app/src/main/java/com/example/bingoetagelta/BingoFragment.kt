@@ -5,24 +5,51 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.preference.PreferenceManager
 import java.util.*
 import kotlin.random.Random
 
+// the fragment initialization parameters keys
+private const val NUMBER_ARRAY_SHUFFLED = "NUMBER_ARRAY_SHUFFLED"
+private const val CHECKED_ARRAY = "CHECKED_ARRAY"
+private const val EDITING_BOOL = "EDITING_BOOL"
+
+/**
+ * A simple [Fragment] subclass.
+ * Use the [BingoFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
 class BingoFragment : Fragment(), View.OnClickListener {
+    private val numberOfButton=10
+
+    private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
+    private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
+    private var editingBool: Boolean = false
 
     private lateinit var buttonArray : Array<ToggleButton>
     private lateinit var textVBingoCount : TextView
-    private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
-    private val numberOfButton=10
+    private lateinit var okButton : Button
+    private lateinit var editButton: ImageButton
+    //private val floorNumbers = arrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
     private val caseValue = 1
     private val lineValue = 2
     private val columnValue = 2
     private val diagValue = 2
     private val bonusValue = 2
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: numberArrayShuffled
+            checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: checkedArray
+            editingBool = editingBool || it.getBoolean(EDITING_BOOL)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,48 +68,51 @@ class BingoFragment : Fragment(), View.OnClickListener {
         }
         for (button in buttonArray) button.setOnClickListener(this)
 
+        okButton = fragView.findViewById(R.id.okButton)
+        okButton.setOnClickListener(this)
+
+        editButton = fragView.findViewById(R.id.editButton)
+        editButton.setOnClickListener(this)
+
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
-        // Randomize bingo buttons
-        randomizeBingoButtons()
-
-        // Initialize TextView
-        calculateBingoCount()
+        // Initialize TextView and Buttons
+        updateBingoGrid()
+        setEditing(editingBool)
 
         // return the view
         return fragView
     }
 
-    private fun randomizeBingoButtons(){
+    fun setBingoGrid(numberArrayShuffled: IntArray?,
+                     checkedArray: BooleanArray?,
+                     editingBool: Boolean) {
+        this.numberArrayShuffled = numberArrayShuffled ?: IntArray(numberOfButton)
+        this.checkedArray = checkedArray ?: BooleanArray(numberOfButton)
+        this.editingBool = editingBool
+    }
+
+    fun updateBingoGrid(){
         fun updateText(button: ToggleButton, newText: String){
             button.text = newText
             button.textOff = newText
             button.textOn = newText
         }
-        fun getSeed(): Int{
-            val currentDate = Calendar.getInstance()
-            // Set to 12:0:0.000
-            currentDate.set(Calendar.HOUR_OF_DAY, 12)
-            currentDate.set(Calendar.MINUTE, 0)
-            currentDate.set(Calendar.SECOND, 0)
-            currentDate.set(Calendar.MILLISECOND, 0)
-            // Return hashcode
-            val nameHashCode = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString("username","")
-                .hashCode()
-            return currentDate.hashCode() xor nameHashCode
-        }
-
-        val arrayShuffled = floorNumbers.copyOf()
-        arrayShuffled.shuffle(Random(getSeed()))
 
         for ((index, button) in buttonArray.withIndex()) {
-            updateText(button, arrayShuffled[index].toString())
+            updateText(button, numberArrayShuffled[index].toString())
+            button.isChecked = checkedArray[index]
         }
+        calculateBingoCount()
     }
 
     override fun onClick(v: View?) {
-        calculateBingoCount()
+        if (v==null) return
+        when(v.id){
+            R.id.okButton -> setEditing(false)
+            R.id.editButton -> setEditing(true)
+            else -> calculateBingoCount()
+        }
     }
 
     private fun calculateBingoCount(){
@@ -121,5 +151,37 @@ class BingoFragment : Fragment(), View.OnClickListener {
         if (buttonStateArray[9]) result += bonusValue
 
         textVBingoCount.text = resources.getString(R.string.text_bingo_count, result.toString())
+    }
+
+    private fun setEditing(edit: Boolean){
+        editingBool = edit
+        okButton.visibility = if (editingBool) Button.VISIBLE else Button.INVISIBLE
+        editButton.visibility = if (!editingBool) Button.VISIBLE else Button.INVISIBLE
+        for (button in buttonArray){
+            button.isEnabled = editingBool
+        }
+    }
+
+    companion object {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+         *
+         * @param numberArrayShuffled Parameter 1 : the bingo grid for the selected day
+         * @param checkedArray Parameter 2 : the checked (or not) values
+         * @param editingBool Parameter 3 : the editing mode
+         * @return A new instance of fragment BingoFragment.
+         */
+        @JvmStatic
+        fun newInstance(numberArrayShuffled: IntArray?,
+                        checkedArray: BooleanArray?,
+                        editingBool: Boolean) =
+            BingoFragment().apply {
+                arguments = Bundle().apply {
+                    putIntArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
+                    putBooleanArray(CHECKED_ARRAY, checkedArray)
+                    putBoolean(EDITING_BOOL, editingBool)
+                }
+            }
     }
 }

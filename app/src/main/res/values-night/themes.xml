@@ -14,6 +14,7 @@
         <!-- Customize your theme here. -->
         <item name="textColor">@color/white</item>
         <item name="button_background">@drawable/button_night</item>
+        <item name="edit_button_icon">@drawable/ic_baseline_edit_white</item>
         <!-- Toolbar -->
         <item name="setting_icon">@drawable/ic_baseline_settings_white</item>
     </style>

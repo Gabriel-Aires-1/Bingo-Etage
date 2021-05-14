@@ -1,5 +1,17 @@
 <resources>
+
+
+    <!-- App level strings -->
     <string name="app_name">BingoEtageLTA</string>
+
+
+    <!-- Main activity strings -->
+    <string name="first_tab_name">Grille</string>
+    <string name="second_tab_name">Calendrier</string>
+    <string name="unknown_tab">Onglet inconnu</string>
+
+
+    <!-- Bingo fragment strings -->
     <string name="text_button_1">1</string>
     <string name="text_button_2">2</string>
     <string name="text_button_3">3</string>
@@ -14,8 +26,15 @@
     <!-- %1$s : format string   -->
     <string name="text_bingo_count">Total : %1$s</string>
     <string name="setting_text">Paramètres</string>
+    <string name="text_ok_button">Valider</string>
+    <string name="description_edit_button">Editer</string>
 
-    <!-- Settings -->
+
+    <!-- Calendar fragment strings -->
+    <string name="text_calendar_average">Moyenne du mois courant :\n%1$s</string>
+
+
+    <!-- Settings strings -->
     <string name="theme_title">Choix du thème</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Thème clair</string>
@@ -27,4 +46,6 @@
 
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
+
+
 </resources>

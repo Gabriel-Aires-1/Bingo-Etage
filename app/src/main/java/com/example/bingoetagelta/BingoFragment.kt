@@ -46,7 +46,7 @@ class BingoFragment : Fragment(), View.OnClickListener {
         arguments?.let {
             numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: IntArray(numberOfButton)
             checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: BooleanArray(numberOfButton)
-            editingBool = editingBool || it.getBoolean(EDITING_BOOL)
+            editingBool = it.getBoolean(EDITING_BOOL)
         }
     }
 

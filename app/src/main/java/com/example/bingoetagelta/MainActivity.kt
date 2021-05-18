@@ -1,12 +1,14 @@
 package com.example.bingoetagelta
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -15,11 +17,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.lang.IllegalStateException
 import java.util.*
 import kotlin.random.Random
 
 
-class MainActivity : AppCompatActivity(){
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener{
     private lateinit var bingoFragment : BingoFragment
     private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
@@ -46,6 +49,10 @@ class MainActivity : AppCompatActivity(){
             }
         }.attach()
 
+        // Set listener for theme preference
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
+        applyDayNightMode()
 
         usernameCheck()
     }
@@ -133,5 +140,21 @@ class MainActivity : AppCompatActivity(){
         fun getFragment(position: Int): Fragment{
             return fragmentArray[position]
         }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if(key.equals("theme_preference")) applyDayNightMode()
+    }
+
+    private fun applyDayNightMode(){
+        AppCompatDelegate.setDefaultNightMode(
+            when(PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("theme_preference","")){
+                "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> throw IllegalStateException("Invalid theme preference value")
+            }
+        )
     }
 }

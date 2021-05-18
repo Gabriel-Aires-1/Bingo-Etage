@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import java.util.*
 
 
@@ -27,6 +28,8 @@ class CalendarFragment : Fragment() {
     // Views
     private lateinit var calendarView: CalendarView
     private lateinit var averageTextView: TextView
+
+    private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

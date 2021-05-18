@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.fragment.app.viewModels
 import androidx.preference.PreferenceManager
 import java.util.*
 import kotlin.random.Random
@@ -34,6 +35,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
     private lateinit var textVBingoCount : TextView
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
+
+    private val viewModel: BingoViewModel by viewModels()
 
     private val caseValue = 1
     private val lineValue = 2

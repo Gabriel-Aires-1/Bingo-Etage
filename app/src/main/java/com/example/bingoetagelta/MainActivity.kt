@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.CalendarView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -22,8 +23,12 @@ import java.util.*
 import kotlin.random.Random
 
 
-class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener{
+class MainActivity : AppCompatActivity(),
+    SharedPreferences.OnSharedPreferenceChangeListener{
+
     private lateinit var bingoFragment : BingoFragment
+    private lateinit var calendarFragment: CalendarFragment
+    private val selectedDate = setCalendarTime(Calendar.getInstance())
     private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,10 +66,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         fun getSeed(): Int {
             val nonNullDay = day ?: Calendar.getInstance()
             // Set to 12:0:0.000
-            nonNullDay.set(Calendar.HOUR_OF_DAY, 12)
-            nonNullDay.set(Calendar.MINUTE, 0)
-            nonNullDay.set(Calendar.SECOND, 0)
-            nonNullDay.set(Calendar.MILLISECOND, 0)
+            setCalendarTime(nonNullDay)
             // Return hashcode
             val nameHashCode = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("username", "")
@@ -76,6 +78,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         arrayShuffled.shuffle(Random(getSeed()))
 
         bingoFragment.setBingoGrid(arrayShuffled, null, false)
+    }
+
+    private fun setCalendarTime(cal: Calendar): Calendar{
+        cal.set(Calendar.HOUR_OF_DAY, 12)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal
     }
 
     private fun usernameCheck(){

@@ -24,7 +24,8 @@ private const val EDITING_BOOL = "EDITING_BOOL"
  * Use the [BingoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class BingoFragment : Fragment(), View.OnClickListener {
+class BingoFragment : Fragment(), View.OnClickListener
+{
     private val numberOfButton=10
 
     private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
@@ -44,7 +45,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
     private val diagValue = 2
     private val bonusValue = 2
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         arguments?.let {
             numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: IntArray(numberOfButton)
@@ -56,11 +58,13 @@ class BingoFragment : Fragment(), View.OnClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?
+    {
         // Inflate the layout for this fragment
         val fragView = inflater.inflate(R.layout.fragment_bingo, container, false)
         // Input initialization
-        buttonArray = Array(numberOfButton){
+        buttonArray = Array(numberOfButton)
+        {
                 i -> fragView.findViewById(
             resources.getIdentifier(
                 "button${i + 1}",
@@ -88,7 +92,8 @@ class BingoFragment : Fragment(), View.OnClickListener {
 
     fun setBingoGrid(numberArrayShuffledInput: IntArray?,
                      checkedArrayInput: BooleanArray?,
-                     editingBoolInput: Boolean) {
+                     editingBoolInput: Boolean)
+    {
         numberArrayShuffled = numberArrayShuffledInput ?: IntArray(numberOfButton)
         checkedArray = checkedArrayInput ?: BooleanArray(numberOfButton)
         editingBool = editingBoolInput
@@ -100,21 +105,25 @@ class BingoFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun updateBingoGrid(){
-        fun updateText(button: ToggleButton, newText: String){
+    fun updateBingoGrid()
+    {
+        fun updateText(button: ToggleButton, newText: String)
+        {
             button.text = newText
             button.textOff = newText
             button.textOn = newText
         }
 
-        for ((index, button) in buttonArray.withIndex()) {
+        for ((index, button) in buttonArray.withIndex())
+        {
             updateText(button, numberArrayShuffled[index].toString())
             button.isChecked = checkedArray[index]
         }
         calculateBingoCount()
     }
 
-    override fun onClick(v: View?) {
+    override fun onClick(v: View?)
+    {
         if (v==null) return
         when(v.id){
             R.id.okButton -> setEditing(false)
@@ -123,29 +132,35 @@ class BingoFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    private fun calculateBingoCount(){
+    private fun calculateBingoCount()
+    {
 
         val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
 
         var result = 0
 
-        for (buttonState in buttonStateArray){
+        for (buttonState in buttonStateArray)
+        {
             if (buttonState) result+=caseValue
         }
 
         // line check
-        for (i in 1..3){
+        for (i in 1..3)
+        {
             var lineChecked = true
-            for (j in 1..3){
+            for (j in 1..3)
+            {
                 if (!buttonStateArray[(i - 1) * 3 + j - 1]) lineChecked = false
             }
             if (lineChecked) result+=lineValue
         }
 
         // column check
-        for (j in 1..3){
+        for (j in 1..3)
+        {
             var lineChecked = true
-            for (i in 1..3){
+            for (i in 1..3)
+            {
                 if (!buttonStateArray[(i - 1) * 3 + j - 1]) lineChecked = false
             }
             if (lineChecked) result+=columnValue
@@ -161,16 +176,19 @@ class BingoFragment : Fragment(), View.OnClickListener {
         textVBingoCount.text = resources.getString(R.string.text_bingo_count, result.toString())
     }
 
-    private fun setEditing(edit: Boolean){
+    private fun setEditing(edit: Boolean)
+    {
         editingBool = edit
         okButton.visibility = if (editingBool) Button.VISIBLE else Button.INVISIBLE
         editButton.visibility = if (!editingBool) Button.VISIBLE else Button.INVISIBLE
-        for (button in buttonArray){
+        for (button in buttonArray)
+        {
             button.isEnabled = editingBool
         }
     }
 
-    companion object {
+    companion object
+    {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

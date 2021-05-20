@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.*
 
-class BingoViewModel: ViewModel() {
+class BingoViewModel: ViewModel()
+{
     private val currentDate = MutableLiveData<Calendar>()
 }

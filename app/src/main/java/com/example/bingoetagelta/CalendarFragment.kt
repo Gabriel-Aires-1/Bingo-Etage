@@ -21,7 +21,8 @@ private const val CURRENT_YEAR = "currentYear"
  * Use the [CalendarFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CalendarFragment : Fragment() {
+class CalendarFragment : Fragment()
+{
     private var currentDay: Int = 1
     private var currentMonth: Int = 1
     private var currentYear: Int = 1
@@ -31,7 +32,8 @@ class CalendarFragment : Fragment() {
 
     private val viewModel: BingoViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val currentDate = Calendar.getInstance()
@@ -44,7 +46,8 @@ class CalendarFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?
+    {
         // Inflate the layout for this fragment
         val fragView = inflater.inflate(R.layout.fragment_calendar, container, false)
 
@@ -60,7 +63,8 @@ class CalendarFragment : Fragment() {
         return fragView
     }
 
-    private fun calendarViewSetup(){
+    private fun calendarViewSetup()
+    {
         val currentDate = Calendar.getInstance()
         currentDate.set(Calendar.DAY_OF_YEAR, currentDay)
         currentDate.set(Calendar.MONTH, currentMonth)
@@ -69,7 +73,8 @@ class CalendarFragment : Fragment() {
         calendarView.setDate(currentDate.timeInMillis, false, false)
     }
 
-    companion object {
+    companion object
+    {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.

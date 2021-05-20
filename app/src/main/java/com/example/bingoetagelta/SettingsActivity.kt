@@ -6,13 +6,16 @@ import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.preference.PreferenceFragmentCompat
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : AppCompatActivity()
+{
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
         // Add the fragment if not saved
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null)
+        {
             /*supportFragmentManager
                 .beginTransaction()
                 .replace(R.id.settings_layout, SettingsFragment())
@@ -25,14 +28,16 @@ class SettingsActivity : AppCompatActivity() {
         setupToolbar()
     }
 
-    private fun setupToolbar(){
+    private fun setupToolbar()
+    {
         setSupportActionBar(findViewById(R.id.toolbar))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
     /*override fun onPreferenceChange(preference: Preference?, newValue: Any?): Boolean {
-        return when (preference?.key){
+        return when (preference?.key)
+        {
             "username" -> {
                 when (newValue){
                     null, "" ->{
@@ -52,12 +57,14 @@ class SettingsActivity : AppCompatActivity() {
 
 
 
-    class SettingsFragment : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat()
+    {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
         }
 
-/*        override fun onResume() {
+/*        override fun onResume()
+        {
             super.onResume()
 
             // Preference validation

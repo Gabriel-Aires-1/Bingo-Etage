@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import com.example.bingoetagelta.viewmodel.BingoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 
@@ -20,7 +24,9 @@ private const val CURRENT_YEAR = "currentYear"
  * Use the [CalendarFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CalendarFragment : Fragment() {
+@AndroidEntryPoint
+class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
+{
     private var currentDay: Int = 1
     private var currentMonth: Int = 1
     private var currentYear: Int = 1
@@ -28,7 +34,10 @@ class CalendarFragment : Fragment() {
     private lateinit var calendarView: CalendarView
     private lateinit var averageTextView: TextView
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private val viewModel: BingoViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val currentDate = Calendar.getInstance()
@@ -41,12 +50,14 @@ class CalendarFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?
+    {
         // Inflate the layout for this fragment
         val fragView = inflater.inflate(R.layout.fragment_calendar, container, false)
 
         // calendarView setup
         calendarView = fragView.findViewById(R.id.calendarView)
+        calendarView.setOnDateChangeListener(this)
         calendarViewSetup()
 
         // textView setup
@@ -57,7 +68,8 @@ class CalendarFragment : Fragment() {
         return fragView
     }
 
-    private fun calendarViewSetup(){
+    private fun calendarViewSetup()
+    {
         val currentDate = Calendar.getInstance()
         currentDate.set(Calendar.DAY_OF_YEAR, currentDay)
         currentDate.set(Calendar.MONTH, currentMonth)
@@ -66,7 +78,8 @@ class CalendarFragment : Fragment() {
         calendarView.setDate(currentDate.timeInMillis, false, false)
     }
 
-    companion object {
+    companion object
+    {
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -85,5 +98,9 @@ class CalendarFragment : Fragment() {
                     putInt(CURRENT_YEAR, currentYear)
                 }
             }
+    }
+
+    override fun onSelectedDayChange(view: CalendarView, year: Int, month: Int, dayOfMonth: Int) {
+        viewModel.changeCurrentDate(year, month, dayOfMonth)
     }
 }

@@ -1,29 +1,40 @@
 package com.example.bingoetagelta
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.bingoetagelta.viewmodel.BingoViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.hilt.android.AndroidEntryPoint
+import java.lang.IllegalStateException
 import java.util.*
-import kotlin.random.Random
 
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity(),
+    SharedPreferences.OnSharedPreferenceChangeListener
+{
 
-class MainActivity : AppCompatActivity(){
     private lateinit var bingoFragment : BingoFragment
-    private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+    private lateinit var calendarFragment: CalendarFragment
+/*    private val selectedDate = setCalendarTime(Calendar.getInstance())
+    private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)*/
+    private val model: BingoViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar_main))
@@ -32,32 +43,37 @@ class MainActivity : AppCompatActivity(){
         val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
         val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        generateBingoGrid(bingoFragment, null)
+        // generateBingoGrid(bingoFragment, null)
 
         viewPager.adapter = viewPagerAdapter
 
         val tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
 
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when(position){
-                0 -> resources.getString(R.string.first_tab_name)
-                1 -> resources.getString(R.string.second_tab_name)
-                else -> resources.getString(R.string.unknown_tab)
-            }
+        TabLayoutMediator(tabLayout, viewPager)
+        { tab, position ->
+            tab.text = when(position)
+                        {
+                            0 -> resources.getString(R.string.first_tab_name)
+                            1 -> resources.getString(R.string.second_tab_name)
+                            else -> resources.getString(R.string.unknown_tab)
+                        }
         }.attach()
 
+        // Set listener for theme preference
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
+        applyDayNightMode()
 
         usernameCheck()
     }
 
-    private fun generateBingoGrid(bingoFragment: BingoFragment, day: Calendar?){
-        fun getSeed(): Int {
+/*    private fun generateBingoGrid(bingoFragment: BingoFragment, day: Calendar?)
+    {
+        fun getSeed(): Int
+        {
             val nonNullDay = day ?: Calendar.getInstance()
             // Set to 12:0:0.000
-            nonNullDay.set(Calendar.HOUR_OF_DAY, 12)
-            nonNullDay.set(Calendar.MINUTE, 0)
-            nonNullDay.set(Calendar.SECOND, 0)
-            nonNullDay.set(Calendar.MILLISECOND, 0)
+            setCalendarTime(nonNullDay)
             // Return hashcode
             val nameHashCode = PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("username", "")
@@ -69,12 +85,23 @@ class MainActivity : AppCompatActivity(){
         arrayShuffled.shuffle(Random(getSeed()))
 
         bingoFragment.setBingoGrid(arrayShuffled, null, false)
-    }
+    }*/
 
-    private fun usernameCheck(){
+/*    private fun setCalendarTime(cal: Calendar): Calendar
+    {
+        cal.set(Calendar.HOUR_OF_DAY, 12)
+        cal.set(Calendar.MINUTE, 0)
+        cal.set(Calendar.SECOND, 0)
+        cal.set(Calendar.MILLISECOND, 0)
+        return cal
+    }*/
+
+    private fun usernameCheck()
+    {
         // Check if username is setup
         if (PreferenceManager.getDefaultSharedPreferences(this)
-            .getString("username","") == ""){
+            .getString("username","") == "")
+        {
             Toast.makeText(
                 this,
                 resources.getString(R.string.username_empty_reply),
@@ -83,13 +110,16 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
         menuInflater.inflate(R.menu.toolbar_menu, menu)
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.setting_menu -> {
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId)
+    {
+        R.id.setting_menu ->
+        {
             // User chose the "Settings" item, show the app settings UI...
             val intent = Intent()
             intent.setClassName(this, "com.example.bingoetagelta.SettingsActivity")
@@ -98,7 +128,8 @@ class MainActivity : AppCompatActivity(){
             true
         }
 
-        else -> {
+        else ->
+        {
             // If we got here, the user's action was not recognized.
             // Invoke the superclass to handle it.
             super.onOptionsItemSelected(item)
@@ -106,7 +137,8 @@ class MainActivity : AppCompatActivity(){
     }
 
     class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
-        FragmentStateAdapter(fragmentManager, lifecycle) {
+        FragmentStateAdapter(fragmentManager, lifecycle)
+    {
 
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
             BingoFragment.newInstance(
@@ -122,16 +154,38 @@ class MainActivity : AppCompatActivity(){
         )
 
 
-        override fun getItemCount(): Int {
+        override fun getItemCount(): Int
+        {
             return fragmentArray.size
         }
 
-        override fun createFragment(position: Int): Fragment {
+        override fun createFragment(position: Int): Fragment
+        {
             return fragmentArray[position]
         }
 
-        fun getFragment(position: Int): Fragment{
+        fun getFragment(position: Int): Fragment
+        {
             return fragmentArray[position]
         }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?)
+    {
+        if(key.equals("theme_preference")) applyDayNightMode()
+    }
+
+    private fun applyDayNightMode()
+    {
+        AppCompatDelegate.setDefaultNightMode(
+            when(PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("theme_preference",""))
+            {
+                "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> throw IllegalStateException("Invalid theme preference value")
+            }
+        )
     }
 }

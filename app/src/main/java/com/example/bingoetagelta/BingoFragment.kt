@@ -9,10 +9,10 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.ToggleButton
-import androidx.fragment.app.viewModels
-import androidx.preference.PreferenceManager
+import androidx.fragment.app.activityViewModels
+import com.example.bingoetagelta.viewmodel.BingoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-import kotlin.random.Random
 
 // the fragment initialization parameters keys
 private const val NUMBER_ARRAY_SHUFFLED = "NUMBER_ARRAY_SHUFFLED"
@@ -24,6 +24,7 @@ private const val EDITING_BOOL = "EDITING_BOOL"
  * Use the [BingoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class BingoFragment : Fragment(), View.OnClickListener
 {
     private val numberOfButton=10
@@ -37,13 +38,7 @@ class BingoFragment : Fragment(), View.OnClickListener
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
 
-    private val viewModel: BingoViewModel by viewModels()
-
-    private val caseValue = 1
-    private val lineValue = 2
-    private val columnValue = 2
-    private val diagValue = 2
-    private val bonusValue = 2
+    private val viewModel: BingoViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -73,6 +68,7 @@ class BingoFragment : Fragment(), View.OnClickListener
             ))
         }
         for (button in buttonArray) button.setOnClickListener(this)
+        buttonArray[0].setOnClickListener(this)
 
         okButton = fragView.findViewById(R.id.okButton)
         okButton.setOnClickListener(this)
@@ -83,16 +79,30 @@ class BingoFragment : Fragment(), View.OnClickListener
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
         // Initialize TextView and Buttons
-        updateBingoGrid()
-        setEditing(editingBool)
+        changeBingoGrid()
+
+        // Listen to calendar changes
+        viewModel.currentDate.observe(viewLifecycleOwner,
+            androidx.lifecycle.Observer<Calendar> { _ -> changeBingoGrid()})
 
         // return the view
         return fragView
     }
 
-    fun setBingoGrid(numberArrayShuffledInput: IntArray?,
-                     checkedArrayInput: BooleanArray?,
-                     editingBoolInput: Boolean)
+    private fun changeBingoGrid()
+    {
+        setBingoGridBundleVar(
+            viewModel.getBingoGridFromCurrentDate(),
+            viewModel.checkedArrayInput,
+            viewModel.editingBoolInput
+        )
+        updateBingoGrid()
+        setEditing(editingBool)
+    }
+
+    private fun setBingoGridBundleVar(numberArrayShuffledInput: IntArray?,
+                                      checkedArrayInput: BooleanArray?,
+                                      editingBoolInput: Boolean)
     {
         numberArrayShuffled = numberArrayShuffledInput ?: IntArray(numberOfButton)
         checkedArray = checkedArrayInput ?: BooleanArray(numberOfButton)
@@ -105,7 +115,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         }
     }
 
-    fun updateBingoGrid()
+    private fun updateBingoGrid()
     {
         fun updateText(button: ToggleButton, newText: String)
         {
@@ -119,7 +129,7 @@ class BingoFragment : Fragment(), View.OnClickListener
             updateText(button, numberArrayShuffled[index].toString())
             button.isChecked = checkedArray[index]
         }
-        calculateBingoCount()
+        updateBingoCount()
     }
 
     override fun onClick(v: View?)
@@ -128,52 +138,18 @@ class BingoFragment : Fragment(), View.OnClickListener
         when(v.id){
             R.id.okButton -> setEditing(false)
             R.id.editButton -> setEditing(true)
-            else -> calculateBingoCount()
+            else -> updateBingoCount()
         }
     }
 
-    private fun calculateBingoCount()
+    private fun updateBingoCount()
     {
-
         val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
 
-        var result = 0
-
-        for (buttonState in buttonStateArray)
-        {
-            if (buttonState) result+=caseValue
-        }
-
-        // line check
-        for (i in 1..3)
-        {
-            var lineChecked = true
-            for (j in 1..3)
-            {
-                if (!buttonStateArray[(i - 1) * 3 + j - 1]) lineChecked = false
-            }
-            if (lineChecked) result+=lineValue
-        }
-
-        // column check
-        for (j in 1..3)
-        {
-            var lineChecked = true
-            for (i in 1..3)
-            {
-                if (!buttonStateArray[(i - 1) * 3 + j - 1]) lineChecked = false
-            }
-            if (lineChecked) result+=columnValue
-        }
-
-        // diag check
-        if (buttonStateArray[0] && buttonStateArray[4] && buttonStateArray[8]) result +=diagValue
-        if (buttonStateArray[2] && buttonStateArray[4] && buttonStateArray[6]) result +=diagValue
-
-        // bonus check
-        if (buttonStateArray[9]) result += bonusValue
-
-        textVBingoCount.text = resources.getString(R.string.text_bingo_count, result.toString())
+        textVBingoCount.text = resources.getString(
+            R.string.text_bingo_count,
+            viewModel.calculateBingoCount(buttonStateArray).toString()
+        )
     }
 
     private fun setEditing(edit: Boolean)

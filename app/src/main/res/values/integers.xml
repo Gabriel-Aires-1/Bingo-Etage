@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="caseValue">1</integer>
+    <integer name="lineValue">2</integer>
+    <integer name="columnValue">2</integer>
+    <integer name="diagValue">2</integer>
+    <integer name="bonusValue">2</integer>
+
+    <integer-array name="lineArray_0">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </integer-array>
+    <integer-array name="lineArray_1">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </integer-array>
+    <integer-array name="lineArray_2">
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </integer-array>
+
+    <integer-array name="columnArray_0">
+        <item>0</item>
+        <item>3</item>
+        <item>6</item>
+    </integer-array>
+    <integer-array name="columnArray_1">
+        <item>1</item>
+        <item>4</item>
+        <item>7</item>
+    </integer-array>
+    <integer-array name="columnArray_2">
+        <item>2</item>
+        <item>5</item>
+        <item>8</item>
+    </integer-array>
+
+    <integer-array name="diagArray_0">
+        <item>0</item>
+        <item>4</item>
+        <item>8</item>
+    </integer-array>
+    <integer-array name="diagArray_1">
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+    </integer-array>
+
+    <integer-array name="bonusArray">
+        <item>9</item>
+    </integer-array>
+</resources>

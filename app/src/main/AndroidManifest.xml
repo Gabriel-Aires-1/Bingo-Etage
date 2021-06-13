@@ -8,7 +8,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BingoEtageLTA">
+        android:theme="@style/Theme.BingoEtageLTA"
+        android:name="App">
         <activity
             android:name=".SettingsActivity"
             android:label="@string/settings_toolbar_title"

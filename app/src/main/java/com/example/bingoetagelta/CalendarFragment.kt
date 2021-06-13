@@ -7,7 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.example.bingoetagelta.viewmodel.BingoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
 
@@ -21,7 +24,8 @@ private const val CURRENT_YEAR = "currentYear"
  * Use the [CalendarFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CalendarFragment : Fragment()
+@AndroidEntryPoint
+class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
 {
     private var currentDay: Int = 1
     private var currentMonth: Int = 1
@@ -30,7 +34,7 @@ class CalendarFragment : Fragment()
     private lateinit var calendarView: CalendarView
     private lateinit var averageTextView: TextView
 
-    private val viewModel: BingoViewModel by viewModels()
+    private val viewModel: BingoViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -53,6 +57,7 @@ class CalendarFragment : Fragment()
 
         // calendarView setup
         calendarView = fragView.findViewById(R.id.calendarView)
+        calendarView.setOnDateChangeListener(this)
         calendarViewSetup()
 
         // textView setup
@@ -93,5 +98,9 @@ class CalendarFragment : Fragment()
                     putInt(CURRENT_YEAR, currentYear)
                 }
             }
+    }
+
+    override fun onSelectedDayChange(view: CalendarView, year: Int, month: Int, dayOfMonth: Int) {
+        viewModel.changeCurrentDate(year, month, dayOfMonth)
     }
 }

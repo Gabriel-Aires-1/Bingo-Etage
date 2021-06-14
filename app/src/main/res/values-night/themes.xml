@@ -4,15 +4,16 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/grey_1</item>
         <item name="colorPrimaryVariant">@color/black</item>
-        <item name="colorOnPrimary">@color/grey_2</item>
+        <item name="colorOnPrimary">@color/grey_10</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/purple_700</item>
+        <item name="colorSecondaryVariant">@color/purple_500</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="textColor">@color/white</item>
+        <item name="textColorSecondary">@color/grey_2</item>
         <item name="button_background">@drawable/button_night</item>
         <item name="edit_button_icon">@drawable/ic_baseline_edit_white</item>
         <!-- Toolbar -->

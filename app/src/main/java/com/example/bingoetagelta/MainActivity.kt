@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(),
 
         // ViewPager
         val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
-        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle)
+        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, model)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
 
         viewPager.adapter = viewPagerAdapter
@@ -104,9 +104,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, model: BingoViewModel) :
         FragmentStateAdapter(fragmentManager, lifecycle)
     {
+        // Retrieve the current date from viewModel
+        private val currentDate = model.currentDate.value ?: Calendar.getInstance()
 
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
             BingoFragment.newInstance(
@@ -115,9 +117,9 @@ class MainActivity : AppCompatActivity(),
                 false
             ),
             CalendarFragment.newInstance(
-                Calendar.getInstance().get(Calendar.DAY_OF_YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.YEAR)
+                currentDate.get(Calendar.DAY_OF_YEAR),
+                currentDate.get(Calendar.MONTH),
+                currentDate.get(Calendar.YEAR)
             ),
         )
 

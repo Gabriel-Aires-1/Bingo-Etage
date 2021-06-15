@@ -67,35 +67,6 @@ class MainActivity : AppCompatActivity(),
         usernameCheck()
     }
 
-/*    private fun generateBingoGrid(bingoFragment: BingoFragment, day: Calendar?)
-    {
-        fun getSeed(): Int
-        {
-            val nonNullDay = day ?: Calendar.getInstance()
-            // Set to 12:0:0.000
-            setCalendarTime(nonNullDay)
-            // Return hashcode
-            val nameHashCode = PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("username", "")
-                .hashCode()
-            return nonNullDay.hashCode() xor nameHashCode
-        }
-
-        val arrayShuffled = floorNumbers.copyOf()
-        arrayShuffled.shuffle(Random(getSeed()))
-
-        bingoFragment.setBingoGrid(arrayShuffled, null, false)
-    }*/
-
-/*    private fun setCalendarTime(cal: Calendar): Calendar
-    {
-        cal.set(Calendar.HOUR_OF_DAY, 12)
-        cal.set(Calendar.MINUTE, 0)
-        cal.set(Calendar.SECOND, 0)
-        cal.set(Calendar.MILLISECOND, 0)
-        return cal
-    }*/
-
     private fun usernameCheck()
     {
         // Check if username is setup

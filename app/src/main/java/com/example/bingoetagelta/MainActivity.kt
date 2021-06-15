@@ -29,8 +29,6 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var bingoFragment : BingoFragment
     private lateinit var calendarFragment: CalendarFragment
-/*    private val selectedDate = setCalendarTime(Calendar.getInstance())
-    private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)*/
     private val model: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -43,7 +41,6 @@ class MainActivity : AppCompatActivity(),
         val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
         val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        // generateBingoGrid(bingoFragment, null)
 
         viewPager.adapter = viewPagerAdapter
 

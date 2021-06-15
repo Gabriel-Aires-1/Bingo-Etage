@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var bingoFragment : BingoFragment
     private lateinit var calendarFragment: CalendarFragment
-    private val model: BingoViewModel by viewModels()
+    private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(),
 
         // ViewPager
         val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
-        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, model)
+        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
 
         viewPager.adapter = viewPagerAdapter
@@ -104,11 +104,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, model: BingoViewModel) :
+    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, viewModel: BingoViewModel) :
         FragmentStateAdapter(fragmentManager, lifecycle)
     {
         // Retrieve the current date from viewModel
-        private val currentDate = model.currentDate.value ?: Calendar.getInstance()
+        private val currentDate = viewModel.currentDate.value ?: Calendar.getInstance()
 
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
             BingoFragment.newInstance(

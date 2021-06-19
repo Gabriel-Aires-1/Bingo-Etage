@@ -27,7 +27,7 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         bingoGridDAO.loadForMonth(bingoGridMonth)
 
 
-    suspend fun getUsername() = pref.getString("username", "")
+    fun getUsername() = pref.getString("username", "")
 
     val caseValue = context.resources.getInteger(R.integer.caseValue)
     val lineValue = context.resources.getInteger(R.integer.lineValue)

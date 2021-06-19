@@ -1,7 +1,6 @@
 package com.example.bingoetagelta
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import android.widget.ToggleButton
 import androidx.fragment.app.activityViewModels
 import com.example.bingoetagelta.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 // the fragment initialization parameters keys
 private const val NUMBER_ARRAY_SHUFFLED = "NUMBER_ARRAY_SHUFFLED"
@@ -83,8 +81,10 @@ class BingoFragment : Fragment(), View.OnClickListener
         changeBingoGrid()
 
         // Listen to calendar changes
-        viewModel.currentDate.observe(viewLifecycleOwner,
-            androidx.lifecycle.Observer<Calendar> { _ -> changeBingoGrid()})
+        viewModel.bingoGrid.observe(
+            viewLifecycleOwner,
+            { changeBingoGrid() }
+        )
 
         // return the view
         return fragView
@@ -93,9 +93,9 @@ class BingoFragment : Fragment(), View.OnClickListener
     private fun changeBingoGrid()
     {
         setBingoGridBundleVar(
-            viewModel.getBingoGridFromCurrentDate(),
-            viewModel.checkedArrayInput,
-            viewModel.editingBoolInput
+            viewModel.bingoGrid.value!!.numberArrayShuffledInput.toIntArray(),
+            viewModel.bingoGrid.value!!.checkedArrayInput.toBooleanArray(),
+            viewModel.bingoGrid.value!!.editingBoolInput,
         )
         updateBingoGrid()
         setEditing(editingBool)
@@ -136,24 +136,23 @@ class BingoFragment : Fragment(), View.OnClickListener
     override fun onClick(v: View?)
     {
         if (v==null) return
-        when(v.id){
-            R.id.okButton -> setEditing(false)
-            R.id.editButton -> setEditing(true)
-            else -> updateBingoCount()
+        when(v.id)
+        {
+            R.id.okButton -> editingBool = false
+            R.id.editButton -> editingBool = true
         }
+        // Common part
+        // Update the view model with current states (checked buttons)
+        // The update of the viewModel calls back the observer on the livedata to update the display
         val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
-
-        viewModel.saveCurrentGrid(buttonStateArray, editingBool)
-        Log.i("BELTA", "Saving to database")
+        viewModel.updateCheckedValues(buttonStateArray.toList(), editingBool)
     }
 
     private fun updateBingoCount()
     {
-        val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
-
         textVBingoCount.text = resources.getString(
             R.string.text_bingo_count,
-            viewModel.calculateBingoCount(buttonStateArray).toString()
+            viewModel.bingoGrid.value!!.totalValue.toString()
         )
     }
 

@@ -18,16 +18,14 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-
-    private val _currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
+    private val _currentDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
     val currentDate: LiveData<Calendar> = _currentDate
 
-    //val currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
+    private val _bingoGrid = MutableLiveData(generateBingoGrid())
 
-    var checkedArrayInput: BooleanArray? = null
-    var editingBoolInput: Boolean = false
+    val bingoGrid: LiveData<BingoGrid> = _bingoGrid
 
-    private lateinit var numberListShuffled: List<Int>
+    val numberOfButton = 10
 
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
@@ -37,6 +35,7 @@ class BingoViewModel @Inject constructor(
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         setCalendarTime(cal)
         _currentDate.value = cal
+        _bingoGrid.value = generateBingoGrid()
     }
 
     private fun setCalendarTime(cal: Calendar): Calendar
@@ -48,36 +47,35 @@ class BingoViewModel @Inject constructor(
         return cal
     }
 
-    fun getBingoGridFromCurrentDate(): IntArray
+    fun updateCheckedValues(checkedValues: List<Boolean>, editingBool: Boolean)
     {
-        lateinit var bingoGrid : BingoGrid
+        val tmpBingoGrid = bingoGrid.value!!
+        tmpBingoGrid.checkedArrayInput = checkedValues
+        tmpBingoGrid.editingBoolInput = editingBool
+        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray())
+        _bingoGrid.value = tmpBingoGrid
+        saveCurrentGrid()
+    }
+
+    private fun generateBingoGrid(): BingoGrid
+    {
+        var bingoGrid : BingoGrid?
         runBlocking {
             bingoGrid = repository.getBingoGrids(
                 currentDate.value!!.get(Calendar.DAY_OF_MONTH),
                 currentDate.value!!.get(Calendar.MONTH),
                 currentDate.value!!.get(Calendar.YEAR),
             )
-            bingoGrid.numberArrayShuffledInput
         }
-        return if(bingoGrid != null)
-        {
-            checkedArrayInput = bingoGrid.checkedArrayInput.toBooleanArray()
-            numberListShuffled = bingoGrid.numberArrayShuffledInput
-            editingBoolInput = bingoGrid.editingBoolInput
-            bingoGrid.numberArrayShuffledInput.toIntArray()
-        }
-        else
-        {
-            checkedArrayInput = null
-            generateBingoGridFromCurrentDate()
-        }
+        return bingoGrid ?: generateBingoGridFromCurrentDate()
     }
 
-    private fun generateBingoGridFromCurrentDate(): IntArray
+    private fun generateBingoGridFromCurrentDate(): BingoGrid
     {
+        val nonNullDay = currentDate.value ?: Calendar.getInstance()
+
         fun getSeed(): Int
         {
-            val nonNullDay = currentDate.value ?: Calendar.getInstance()
             // Set to 12:0:0.000
             setCalendarTime(nonNullDay)
             // Return hashcode
@@ -86,16 +84,21 @@ class BingoViewModel @Inject constructor(
             return nonNullDay.hashCode() xor nameHashCode
         }
 
-        checkedArrayInput = null
-        editingBoolInput = true
-
-        val arrayShuffled = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+        val arrayShuffled = mutableListOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
         arrayShuffled.shuffle(Random(getSeed()))
-        numberListShuffled = arrayShuffled.toList()
-        return arrayShuffled
+
+        return BingoGrid(
+            nonNullDay.get(Calendar.DAY_OF_MONTH),
+            nonNullDay.get(Calendar.MONTH),
+            nonNullDay.get(Calendar.YEAR),
+            arrayShuffled,
+            BooleanArray(numberOfButton).toList(),
+            false,
+            0
+        )
     }
 
-    fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
+    private fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
     {
         fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
         {
@@ -148,20 +151,11 @@ class BingoViewModel @Inject constructor(
         return result
     }
 
-    fun saveCurrentGrid(checkedArrayInput: Array<Boolean>,
-                        editingBoolInput: Boolean)
+    fun saveCurrentGrid()
     {
-        viewModelScope.launch(Dispatchers.IO) {
-            val bingoGrid = BingoGrid(
-                day = currentDate.value!!.get(Calendar.DAY_OF_MONTH),
-                month = currentDate.value!!.get(Calendar.MONTH),
-                year = currentDate.value!!.get(Calendar.YEAR),
-                numberArrayShuffledInput = numberListShuffled,
-                checkedArrayInput = checkedArrayInput.toList(),
-                editingBoolInput = editingBoolInput,
-                totalValue = calculateBingoCount(checkedArrayInput)
-            )
-            repository.saveBingoGrid(bingoGrid)
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            repository.saveBingoGrid(bingoGrid.value!!)
         }
     }
 }

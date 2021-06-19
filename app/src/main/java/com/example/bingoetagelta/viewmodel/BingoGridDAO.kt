@@ -26,4 +26,7 @@ interface BingoGridDAO
         WHERE month = :bingoGridMonth 
         """)
     suspend fun loadForMonth(bingoGridMonth: Int): List<BingoGrid>
+
+    @Query("DELETE FROM bingoGrid")
+    suspend fun deleteDatabase()
 }

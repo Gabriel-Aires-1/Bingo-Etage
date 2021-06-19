@@ -86,8 +86,7 @@ class BingoViewModel @Inject constructor(
             // Set to 12:0:0.000
             setCalendarTime(nonNullDay)
             // Return hashcode
-            var nameHashCode: Int = 0
-            nameHashCode = repository.getUsername().hashCode()
+            val nameHashCode = repository.getUsername().hashCode()
             return nonNullDay.hashCode() xor nameHashCode
         }
 
@@ -100,7 +99,7 @@ class BingoViewModel @Inject constructor(
             nonNullDay.get(Calendar.YEAR),
             arrayShuffled,
             BooleanArray(numberOfButton).toList(),
-            false,
+            true,
             0
         )
     }
@@ -158,7 +157,7 @@ class BingoViewModel @Inject constructor(
         return result
     }
 
-    fun saveCurrentGrid()
+    private fun saveCurrentGrid()
     {
         viewModelScope.launch(Dispatchers.IO)
         {

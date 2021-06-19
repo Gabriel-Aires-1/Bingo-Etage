@@ -27,7 +27,7 @@ private const val EDITING_BOOL = "EDITING_BOOL"
 class BingoFragment : Fragment(), View.OnClickListener
 {
     // Rewritten in the onCreate function
-    private var numberOfButton = 5
+    private var numberOfButton: Int = 0
 
     private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
     private var checkedArray: BooleanArray = BooleanArray(numberOfButton)

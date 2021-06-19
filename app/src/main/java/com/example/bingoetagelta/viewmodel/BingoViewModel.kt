@@ -18,15 +18,21 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
+    // Number of bingo buttons
+    var numberOfButton = 10
+
+    // Current date displayed in the app
+    // Updated by the CalendarFragment on selection
     private val _currentDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
     val currentDate: LiveData<Calendar> = _currentDate
 
+    // Database object
+    // Updated when the date has been changed or when the user changed selection
+    // Observed by the BingoFragment to update display
     private val _bingoGrid = MutableLiveData(generateBingoGrid())
-
     val bingoGrid: LiveData<BingoGrid> = _bingoGrid
 
-    val numberOfButton = 10
-
+    // Update the current date and regenerate the grid in accordance
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
         val cal = Calendar.getInstance()
@@ -38,6 +44,7 @@ class BingoViewModel @Inject constructor(
         _bingoGrid.value = generateBingoGrid()
     }
 
+    // sets the time to a standard value in order
     private fun setCalendarTime(cal: Calendar): Calendar
     {
         cal.set(Calendar.HOUR_OF_DAY, 12)

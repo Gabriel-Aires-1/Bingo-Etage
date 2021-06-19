@@ -151,7 +151,8 @@ class MainActivity : AppCompatActivity(),
             when(PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("theme_preference",""))
             {
-                "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                // empty string for the first startup
+                "system", "" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 "light" -> AppCompatDelegate.MODE_NIGHT_NO
                 "dark" -> AppCompatDelegate.MODE_NIGHT_YES
                 else -> throw IllegalStateException("Invalid theme preference value")

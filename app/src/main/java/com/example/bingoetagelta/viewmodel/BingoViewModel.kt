@@ -151,7 +151,7 @@ class BingoViewModel @Inject constructor(
                         editingBoolInput: Boolean)
     {
         viewModelScope.launch(Dispatchers.IO) {
-            var bingoGrid = BingoGrid(
+            val bingoGrid = BingoGrid(
                 day = currentDate.value!!.get(Calendar.DAY_OF_MONTH),
                 month = currentDate.value!!.get(Calendar.MONTH),
                 year = currentDate.value!!.get(Calendar.YEAR),

@@ -1,5 +1,6 @@
 package com.example.bingoetagelta.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,11 +18,11 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-    /*
+
     private val _currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
     val currentDate: LiveData<Calendar> = _currentDate
-    */
-    val currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
+
+    //val currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
 
     var checkedArrayInput: BooleanArray? = null
     var editingBoolInput: Boolean = false
@@ -35,7 +36,7 @@ class BingoViewModel @Inject constructor(
         cal.set(Calendar.MONTH, month)
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         setCalendarTime(cal)
-        currentDate.value = cal
+        _currentDate.value = cal
     }
 
     private fun setCalendarTime(cal: Calendar): Calendar

@@ -4,7 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
@@ -15,10 +17,16 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
+    /*
+    private val _currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
+    val currentDate: LiveData<Calendar> = _currentDate
+    */
     val currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
 
     var checkedArrayInput: BooleanArray? = null
     var editingBoolInput: Boolean = false
+
+    private lateinit var numberListShuffled: List<Int>
 
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
@@ -41,7 +49,16 @@ class BingoViewModel @Inject constructor(
 
     fun getBingoGridFromCurrentDate(): IntArray
     {
-        return generateBingoGridFromCurrentDate()
+        lateinit var bingoGrid : BingoGrid
+        runBlocking {
+            bingoGrid = repository.getBingoGrids(
+                currentDate.value!!.get(Calendar.DAY_OF_MONTH),
+                currentDate.value!!.get(Calendar.MONTH),
+                currentDate.value!!.get(Calendar.YEAR),
+            )
+            bingoGrid.numberArrayShuffledInput
+        }
+        return if(bingoGrid != null) bingoGrid.numberArrayShuffledInput.toIntArray() else generateBingoGridFromCurrentDate()
     }
 
     private fun generateBingoGridFromCurrentDate(): IntArray
@@ -62,7 +79,7 @@ class BingoViewModel @Inject constructor(
 
         val arrayShuffled = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
         arrayShuffled.shuffle(Random(getSeed()))
-
+        numberListShuffled = arrayShuffled.toList()
         return arrayShuffled
     }
 
@@ -117,5 +134,22 @@ class BingoViewModel @Inject constructor(
         }
 
         return result
+    }
+
+    fun saveCurrentGrid(checkedArrayInput: Array<Boolean>,
+                        editingBoolInput: Boolean)
+    {
+        viewModelScope.launch(Dispatchers.IO) {
+            var bingoGrid = BingoGrid(
+                day = currentDate.value!!.get(Calendar.DAY_OF_MONTH),
+                month = currentDate.value!!.get(Calendar.MONTH),
+                year = currentDate.value!!.get(Calendar.YEAR),
+                numberArrayShuffledInput = numberListShuffled,
+                checkedArrayInput = checkedArrayInput.toList(),
+                editingBoolInput = editingBoolInput,
+                totalValue = calculateBingoCount(checkedArrayInput)
+            )
+            repository.saveBingoGrid(bingoGrid)
+        }
     }
 }

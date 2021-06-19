@@ -3,6 +3,7 @@ package com.example.bingoetagelta.viewmodel
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.room.Room
 import com.example.bingoetagelta.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -12,6 +13,19 @@ import javax.inject.Singleton
 class DataRepository @Inject constructor(@ApplicationContext val context: Context)
 {
     private val pref: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
+
+    private val db = Room.databaseBuilder(
+        context,
+        BingoGridDatabase::class.java, "database-name"
+    ).build()
+    private val bingoGridDAO = db.bingoGridDAO()
+
+    suspend fun saveBingoGrid(bingoGrid: BingoGrid) = bingoGridDAO.insert(bingoGrid)
+    suspend fun getBingoGrids(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int) =
+        bingoGridDAO.load(bingoGridDay,bingoGridMonth,bingoGridYear)
+    suspend fun getBingoGridsFromMonth(bingoGridMonth: Int) =
+        bingoGridDAO.loadForMonth(bingoGridMonth)
+
 
     suspend fun getUsername() = pref.getString("username", "")
 

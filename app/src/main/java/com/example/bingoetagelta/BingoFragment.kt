@@ -1,6 +1,7 @@
 package com.example.bingoetagelta
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -140,6 +141,10 @@ class BingoFragment : Fragment(), View.OnClickListener
             R.id.editButton -> setEditing(true)
             else -> updateBingoCount()
         }
+        val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
+
+        viewModel.saveCurrentGrid(buttonStateArray, editingBool)
+        Log.i("BELTA", "Saving to database")
     }
 
     private fun updateBingoCount()

@@ -80,7 +80,7 @@ class BingoViewModel @Inject constructor(
             setCalendarTime(nonNullDay)
             // Return hashcode
             var nameHashCode: Int = 0
-            viewModelScope.launch { nameHashCode = repository.getUsername().hashCode() }
+            nameHashCode = repository.getUsername().hashCode()
             return nonNullDay.hashCode() xor nameHashCode
         }
 

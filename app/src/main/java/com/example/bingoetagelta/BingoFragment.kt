@@ -69,8 +69,8 @@ class BingoFragment : Fragment(), View.OnClickListener
             ))
         }
         for (button in buttonArray) button.setOnClickListener(this)
-        buttonArray[0].setOnClickListener(this)
 
+        // Validation button
         okButton = fragView.findViewById(R.id.okButton)
         okButton.setOnClickListener(this)
 
@@ -168,10 +168,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         editingBool = edit
         okButton.visibility = if (editingBool) Button.VISIBLE else Button.INVISIBLE
         editButton.visibility = if (!editingBool) Button.VISIBLE else Button.INVISIBLE
-        for (button in buttonArray)
-        {
-            button.isEnabled = editingBool
-        }
+        for (button in buttonArray) button.isEnabled = editingBool
     }
 
     companion object

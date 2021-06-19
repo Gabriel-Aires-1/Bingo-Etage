@@ -26,7 +26,9 @@ private const val EDITING_BOOL = "EDITING_BOOL"
 @AndroidEntryPoint
 class BingoFragment : Fragment(), View.OnClickListener
 {
-    private val numberOfButton=10
+    private val viewModel: BingoViewModel by activityViewModels()
+
+    private val numberOfButton=viewModel.numberOfButton
 
     private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
     private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
@@ -36,8 +38,6 @@ class BingoFragment : Fragment(), View.OnClickListener
     private lateinit var textVBingoCount : TextView
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
-
-    private val viewModel: BingoViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -57,6 +57,8 @@ class BingoFragment : Fragment(), View.OnClickListener
         // Inflate the layout for this fragment
         val fragView = inflater.inflate(R.layout.fragment_bingo, container, false)
         // Input initialization
+
+        // array of bingo buttons
         buttonArray = Array(numberOfButton)
         {
                 i -> fragView.findViewById(
@@ -72,9 +74,11 @@ class BingoFragment : Fragment(), View.OnClickListener
         okButton = fragView.findViewById(R.id.okButton)
         okButton.setOnClickListener(this)
 
+        // Edition button
         editButton = fragView.findViewById(R.id.editButton)
         editButton.setOnClickListener(this)
 
+        // Bingo value textView
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
         // Initialize TextView and Buttons
@@ -90,6 +94,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         return fragView
     }
 
+    // Get the viewModel values and update display
     private fun changeBingoGrid()
     {
         setBingoGridBundleVar(
@@ -97,10 +102,11 @@ class BingoFragment : Fragment(), View.OnClickListener
             viewModel.bingoGrid.value!!.checkedArrayInput.toBooleanArray(),
             viewModel.bingoGrid.value!!.editingBoolInput,
         )
-        updateBingoGrid()
         setEditing(editingBool)
+        updateBingoGridDisplay()
     }
 
+    // Set the variables and bundle to the new values
     private fun setBingoGridBundleVar(numberArrayShuffledInput: IntArray?,
                                       checkedArrayInput: BooleanArray?,
                                       editingBoolInput: Boolean)
@@ -116,7 +122,8 @@ class BingoFragment : Fragment(), View.OnClickListener
         }
     }
 
-    private fun updateBingoGrid()
+    // Update the bingoFragment display according to the data stored in viewModel
+    private fun updateBingoGridDisplay()
     {
         fun updateText(button: ToggleButton, newText: String)
         {

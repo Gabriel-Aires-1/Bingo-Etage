@@ -58,7 +58,18 @@ class BingoViewModel @Inject constructor(
             )
             bingoGrid.numberArrayShuffledInput
         }
-        return if(bingoGrid != null) bingoGrid.numberArrayShuffledInput.toIntArray() else generateBingoGridFromCurrentDate()
+        return if(bingoGrid != null)
+        {
+            checkedArrayInput = bingoGrid.checkedArrayInput.toBooleanArray()
+            numberListShuffled = bingoGrid.numberArrayShuffledInput
+            editingBoolInput = bingoGrid.editingBoolInput
+            bingoGrid.numberArrayShuffledInput.toIntArray()
+        }
+        else
+        {
+            checkedArrayInput = null
+            generateBingoGridFromCurrentDate()
+        }
     }
 
     private fun generateBingoGridFromCurrentDate(): IntArray

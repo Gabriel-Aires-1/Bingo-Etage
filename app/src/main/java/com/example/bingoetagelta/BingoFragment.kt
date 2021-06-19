@@ -26,9 +26,8 @@ private const val EDITING_BOOL = "EDITING_BOOL"
 @AndroidEntryPoint
 class BingoFragment : Fragment(), View.OnClickListener
 {
-    private val viewModel: BingoViewModel by activityViewModels()
-
-    private val numberOfButton=viewModel.numberOfButton
+    // Rewritten in the onCreate function
+    private var numberOfButton = 5
 
     private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
     private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
@@ -39,9 +38,12 @@ class BingoFragment : Fragment(), View.OnClickListener
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
 
+    private val viewModel: BingoViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        numberOfButton = viewModel.numberOfButton
         arguments?.let {
             numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: IntArray(numberOfButton)
             checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: BooleanArray(numberOfButton)

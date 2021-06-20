@@ -29,6 +29,9 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var bingoFragment : BingoFragment
     private lateinit var calendarFragment: CalendarFragment
+    private lateinit var viewPager: ViewPager2
+    private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
+    private lateinit var tabLayout: TabLayout
     private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -38,14 +41,14 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.toolbar_main))
 
         // ViewPager
-        val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
-        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
+        viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
+        viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
         calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment
 
         viewPager.adapter = viewPagerAdapter
 
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
+        tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
 
         TabLayoutMediator(tabLayout, viewPager)
         { tab, position ->
@@ -90,6 +93,7 @@ class MainActivity : AppCompatActivity(),
         R.id.calendar_menu ->
         {
             calendarFragment.setDateCalendarView(Calendar.getInstance())
+            viewPager.currentItem = 0
             true
         }
         R.id.setting_menu ->

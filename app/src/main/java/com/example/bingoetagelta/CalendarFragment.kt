@@ -112,9 +112,12 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
     {
         if (bingoGridList == null || bingoGridList.isEmpty()) return 0.0f
 
+        // Count only validated grids
+        val filteredBingoGridList = bingoGridList.filterNot { it.editingBoolInput }
+
         var average = 0.0f
-        bingoGridList.forEach { bingoGrid -> average += bingoGrid.totalValue }
-        average /= bingoGridList.size
+        filteredBingoGridList.forEach { bingoGrid -> average += bingoGrid.totalValue }
+        average /= filteredBingoGridList.size
         return average
     }
 

@@ -1,11 +1,9 @@
 package com.example.bingoetagelta.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.*
@@ -31,6 +29,12 @@ class BingoViewModel @Inject constructor(
     // Observed by the BingoFragment to update display
     private val _bingoGrid = MutableLiveData(generateBingoGrid())
     val bingoGrid: LiveData<BingoGrid> = _bingoGrid
+
+    // Current selected month in calendarView results as liveData
+    private var _currentMonthBingoGrids = repository.getBingoGridsFromMonthFlow(
+            currentDate.value!!.get(Calendar.MONTH)
+        ).distinctUntilChanged().asLiveData()
+    var currentMonthBingoGrids: LiveData<List<BingoGrid>> = _currentMonthBingoGrids
 
     // Update the current date and regenerate the grid in accordance
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
@@ -157,11 +161,19 @@ class BingoViewModel @Inject constructor(
         return result
     }
 
+    // Save the current BingoGrid to database
     private fun saveCurrentGrid()
     {
         viewModelScope.launch(Dispatchers.IO)
         {
             repository.saveBingoGrid(bingoGrid.value!!)
         }
+    }
+
+    // Change the month reflected in currentMonthBingoGrids
+    fun changeSelectedMonth(month: Int)
+    {
+        _currentMonthBingoGrids = repository.getBingoGridsFromMonthFlow(month).distinctUntilChanged().asLiveData()
+        currentMonthBingoGrids = _currentMonthBingoGrids
     }
 }

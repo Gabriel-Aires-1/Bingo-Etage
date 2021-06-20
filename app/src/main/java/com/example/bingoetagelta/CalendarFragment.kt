@@ -78,6 +78,18 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
         calendarView.setDate(currentDate.timeInMillis, false, false)
     }
 
+    // Sets the date and trigger the event
+    fun setDateCalendarView(date: Calendar)
+    {
+        calendarView.date = date.timeInMillis
+        onSelectedDayChange(
+            calendarView,
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH),
+        )
+    }
+
     companion object
     {
         /**

@@ -22,5 +22,6 @@
         <item name="edit_button_icon">@drawable/ic_baseline_edit_black</item>
         <!-- Toolbar -->
         <item name="setting_icon">@drawable/ic_baseline_settings_black</item>
+        <item name="calendar_icon">@drawable/ic_baseline_calendar_black</item>
     </style>
 </resources>

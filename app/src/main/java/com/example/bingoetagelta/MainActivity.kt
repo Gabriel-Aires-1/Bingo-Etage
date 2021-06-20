@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(),
         val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
         val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
+        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment
 
         viewPager.adapter = viewPagerAdapter
 
@@ -86,6 +87,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId)
     {
+        R.id.calendar_menu ->
+        {
+            calendarFragment.setDateCalendarView(Calendar.getInstance())
+            true
+        }
         R.id.setting_menu ->
         {
             // User chose the "Settings" item, show the app settings UI...

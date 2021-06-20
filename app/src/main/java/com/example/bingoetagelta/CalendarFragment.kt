@@ -114,6 +114,7 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
 
         // Count only validated grids
         val filteredBingoGridList = bingoGridList.filterNot { it.editingBoolInput }
+        if (filteredBingoGridList.isEmpty()) return 0.0f
 
         var average = 0.0f
         filteredBingoGridList.forEach { bingoGrid -> average += bingoGrid.totalValue }

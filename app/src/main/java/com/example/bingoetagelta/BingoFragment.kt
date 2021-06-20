@@ -12,6 +12,8 @@ import android.widget.ToggleButton
 import androidx.fragment.app.activityViewModels
 import com.example.bingoetagelta.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 // the fragment initialization parameters keys
 private const val NUMBER_ARRAY_SHUFFLED = "NUMBER_ARRAY_SHUFFLED"
@@ -37,6 +39,7 @@ class BingoFragment : Fragment(), View.OnClickListener
     private lateinit var textVBingoCount : TextView
     private lateinit var okButton : Button
     private lateinit var editButton: ImageButton
+    private lateinit var textViewDate: TextView
 
     private val viewModel: BingoViewModel by activityViewModels()
 
@@ -83,6 +86,9 @@ class BingoFragment : Fragment(), View.OnClickListener
         // Bingo value textView
         textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
+        // Text view for date display
+        textViewDate = fragView.findViewById(R.id.textViewDate)
+
         // Initialize TextView and Buttons
         changeBingoGrid()
 
@@ -105,6 +111,7 @@ class BingoFragment : Fragment(), View.OnClickListener
             viewModel.bingoGrid.value!!.editingBoolInput,
         )
         setEditing(editingBool)
+        updateDateDisplay()
         updateBingoGridDisplay()
     }
 
@@ -122,6 +129,16 @@ class BingoFragment : Fragment(), View.OnClickListener
             putBooleanArray(CHECKED_ARRAY, checkedArray)
             putBoolean(EDITING_BOOL, editingBool)
         }
+    }
+
+    // Update the date display
+    private fun updateDateDisplay()
+    {
+        val date = Calendar.getInstance()
+        date.set(Calendar.YEAR, viewModel.bingoGrid.value!!.year)
+        date.set(Calendar.MONTH, viewModel.bingoGrid.value!!.month)
+        date.set(Calendar.DAY_OF_MONTH, viewModel.bingoGrid.value!!.day)
+        textViewDate.text = String.format(resources.getString(R.string.date_format), date)
     }
 
     // Update the bingoFragment display according to the data stored in viewModel

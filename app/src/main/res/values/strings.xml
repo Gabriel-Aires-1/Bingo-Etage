@@ -46,6 +46,8 @@
 
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
+    <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
+    <string name="calendar_button_text">Aller à la date courante</string>
 
 
 </resources>

@@ -1,10 +1,11 @@
 package com.example.bingoetagelta.viewmodel
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
@@ -15,11 +16,27 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-    val currentDate: MutableLiveData<Calendar> = MutableLiveData<Calendar>(setCalendarTime(Calendar.getInstance()))
+    // Number of bingo buttons
+    var numberOfButton = 10
 
-    var checkedArrayInput: BooleanArray? = null
-    var editingBoolInput: Boolean = false
+    // Current date displayed in the app
+    // Updated by the CalendarFragment on selection
+    private val _currentDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
+    val currentDate: LiveData<Calendar> = _currentDate
 
+    // Database object
+    // Updated when the date has been changed or when the user changed selection
+    // Observed by the BingoFragment to update display
+    private val _bingoGrid = MutableLiveData(generateBingoGrid())
+    val bingoGrid: LiveData<BingoGrid> = _bingoGrid
+
+    // Current selected month in calendarView results as liveData
+    private var _currentMonthBingoGrids = repository.getBingoGridsFromMonthFlow(
+            currentDate.value!!.get(Calendar.MONTH)
+        ).distinctUntilChanged().asLiveData()
+    var currentMonthBingoGrids: LiveData<List<BingoGrid>> = _currentMonthBingoGrids
+
+    // Update the current date and regenerate the grid in accordance
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
         val cal = Calendar.getInstance()
@@ -27,9 +44,11 @@ class BingoViewModel @Inject constructor(
         cal.set(Calendar.MONTH, month)
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         setCalendarTime(cal)
-        currentDate.value = cal
+        _currentDate.value = cal
+        _bingoGrid.value = generateBingoGrid()
     }
 
+    // sets the time to a standard value in order
     private fun setCalendarTime(cal: Calendar): Calendar
     {
         cal.set(Calendar.HOUR_OF_DAY, 12)
@@ -39,34 +58,57 @@ class BingoViewModel @Inject constructor(
         return cal
     }
 
-    fun getBingoGridFromCurrentDate(): IntArray
+    fun updateCheckedValues(checkedValues: List<Boolean>, editingBool: Boolean)
     {
-        return generateBingoGridFromCurrentDate()
+        val tmpBingoGrid = bingoGrid.value!!
+        tmpBingoGrid.checkedArrayInput = checkedValues
+        tmpBingoGrid.editingBoolInput = editingBool
+        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray())
+        _bingoGrid.value = tmpBingoGrid
+        saveCurrentGrid()
     }
 
-    private fun generateBingoGridFromCurrentDate(): IntArray
+    private fun generateBingoGrid(): BingoGrid
     {
+        var bingoGrid : BingoGrid?
+        runBlocking {
+            bingoGrid = repository.getBingoGrids(
+                currentDate.value!!.get(Calendar.DAY_OF_MONTH),
+                currentDate.value!!.get(Calendar.MONTH),
+                currentDate.value!!.get(Calendar.YEAR),
+            )
+        }
+        return bingoGrid ?: generateBingoGridFromCurrentDate()
+    }
+
+    private fun generateBingoGridFromCurrentDate(): BingoGrid
+    {
+        val nonNullDay = currentDate.value ?: Calendar.getInstance()
+
         fun getSeed(): Int
         {
-            val nonNullDay = currentDate.value ?: Calendar.getInstance()
             // Set to 12:0:0.000
             setCalendarTime(nonNullDay)
             // Return hashcode
-            var nameHashCode: Int = 0
-            viewModelScope.launch { nameHashCode = repository.getUsername().hashCode() }
+            val nameHashCode = repository.getUsername().hashCode()
             return nonNullDay.hashCode() xor nameHashCode
         }
 
-        checkedArrayInput = null
-        editingBoolInput = true
-
-        val arrayShuffled = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+        val arrayShuffled = mutableListOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
         arrayShuffled.shuffle(Random(getSeed()))
 
-        return arrayShuffled
+        return BingoGrid(
+            nonNullDay.get(Calendar.DAY_OF_MONTH),
+            nonNullDay.get(Calendar.MONTH),
+            nonNullDay.get(Calendar.YEAR),
+            arrayShuffled,
+            BooleanArray(numberOfButton).toList(),
+            true,
+            0
+        )
     }
 
-    fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
+    private fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
     {
         fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
         {
@@ -117,5 +159,21 @@ class BingoViewModel @Inject constructor(
         }
 
         return result
+    }
+
+    // Save the current BingoGrid to database
+    private fun saveCurrentGrid()
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            repository.saveBingoGrid(bingoGrid.value!!)
+        }
+    }
+
+    // Change the month reflected in currentMonthBingoGrids
+    fun changeSelectedMonth(month: Int)
+    {
+        _currentMonthBingoGrids = repository.getBingoGridsFromMonthFlow(month).distinctUntilChanged().asLiveData()
+        currentMonthBingoGrids = _currentMonthBingoGrids
     }
 }

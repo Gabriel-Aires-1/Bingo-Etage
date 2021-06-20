@@ -9,6 +9,7 @@ import android.widget.CalendarView
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.example.bingoetagelta.viewmodel.BingoGrid
 import com.example.bingoetagelta.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -62,7 +63,14 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
 
         // textView setup
         averageTextView = fragView.findViewById(R.id.textViewCalendar)
-        averageTextView.text = resources.getString(R.string.text_calendar_average, "0")
+        //averageTextView.text = resources.getString(R.string.text_calendar_average, "0")
+        updateAverageTextView(viewModel.currentMonthBingoGrids.value)
+
+        // Observe result changes
+        viewModel.currentMonthBingoGrids.observe(
+            viewLifecycleOwner,
+            { bingoGridList -> updateAverageTextView(bingoGridList) }
+        )
 
         // Return fragment
         return fragView
@@ -76,6 +84,41 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
         currentDate.set(Calendar.YEAR, currentYear)
 
         calendarView.setDate(currentDate.timeInMillis, false, false)
+    }
+
+    // Sets the date and trigger the event
+    fun setDateCalendarView(date: Calendar)
+    {
+        calendarView.date = date.timeInMillis
+        onSelectedDayChange(
+            calendarView,
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH),
+        )
+    }
+
+    private fun updateAverageTextView(bingoGridList: List<BingoGrid>?)
+    {
+        averageTextView.text = resources.getString(
+            R.string.text_calendar_average,
+            String.format("%.2f",
+                getAverageValue(bingoGridList)
+            )
+        )
+    }
+
+    private fun getAverageValue(bingoGridList: List<BingoGrid>?): Float
+    {
+        if (bingoGridList == null || bingoGridList.isEmpty()) return 0.0f
+
+        // Count only validated grids
+        val filteredBingoGridList = bingoGridList.filterNot { it.editingBoolInput }
+
+        var average = 0.0f
+        filteredBingoGridList.forEach { bingoGrid -> average += bingoGrid.totalValue }
+        average /= filteredBingoGridList.size
+        return average
     }
 
     companion object
@@ -102,5 +145,14 @@ class CalendarFragment : Fragment(), CalendarView.OnDateChangeListener
 
     override fun onSelectedDayChange(view: CalendarView, year: Int, month: Int, dayOfMonth: Int) {
         viewModel.changeCurrentDate(year, month, dayOfMonth)
+
+        // As CalendarView does not provide MonthChangeListener
+        // Changing the average on SelectedDateChange
+        viewModel.changeSelectedMonth(month)
+        updateAverageTextView(viewModel.currentMonthBingoGrids.value)
+        viewModel.currentMonthBingoGrids.observe(
+            viewLifecycleOwner,
+            { bingoGridList -> updateAverageTextView(bingoGridList) }
+        )
     }
 }

@@ -29,9 +29,10 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var bingoFragment : BingoFragment
     private lateinit var calendarFragment: CalendarFragment
-/*    private val selectedDate = setCalendarTime(Calendar.getInstance())
-    private val floorNumbers = intArrayOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)*/
-    private val model: BingoViewModel by viewModels()
+    private lateinit var viewPager: ViewPager2
+    private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
+    private lateinit var tabLayout: TabLayout
+    private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -40,14 +41,14 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.toolbar_main))
 
         // ViewPager
-        val viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
-        val viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle)
+        viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
+        viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        // generateBingoGrid(bingoFragment, null)
+        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment
 
         viewPager.adapter = viewPagerAdapter
 
-        val tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
+        tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
 
         TabLayoutMediator(tabLayout, viewPager)
         { tab, position ->
@@ -89,6 +90,12 @@ class MainActivity : AppCompatActivity(),
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId)
     {
+        R.id.calendar_menu ->
+        {
+            calendarFragment.setDateCalendarView(Calendar.getInstance())
+            viewPager.currentItem = 0
+            true
+        }
         R.id.setting_menu ->
         {
             // User chose the "Settings" item, show the app settings UI...
@@ -107,9 +114,11 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
+    class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, viewModel: BingoViewModel) :
         FragmentStateAdapter(fragmentManager, lifecycle)
     {
+        // Retrieve the current date from viewModel
+        private val currentDate = viewModel.currentDate.value ?: Calendar.getInstance()
 
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
             BingoFragment.newInstance(
@@ -118,9 +127,9 @@ class MainActivity : AppCompatActivity(),
                 false
             ),
             CalendarFragment.newInstance(
-                Calendar.getInstance().get(Calendar.DAY_OF_YEAR),
-                Calendar.getInstance().get(Calendar.MONTH),
-                Calendar.getInstance().get(Calendar.YEAR)
+                currentDate.get(Calendar.DAY_OF_YEAR),
+                currentDate.get(Calendar.MONTH),
+                currentDate.get(Calendar.YEAR)
             ),
         )
 
@@ -152,7 +161,8 @@ class MainActivity : AppCompatActivity(),
             when(PreferenceManager.getDefaultSharedPreferences(this)
                 .getString("theme_preference",""))
             {
-                "system" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+                // empty string for the first startup
+                "system", "" -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
                 "light" -> AppCompatDelegate.MODE_NIGHT_NO
                 "dark" -> AppCompatDelegate.MODE_NIGHT_YES
                 else -> throw IllegalStateException("Invalid theme preference value")

@@ -23,6 +23,7 @@
         android:id="@+id/button2"
         style="@style/ToggleButtonStyle"
         android:layout_marginBottom="32dp"
+        android:layout_marginTop="32dp"
         android:text="@string/text_button_2"
         android:textOff="@string/text_button_2"
         android:textOn="@string/text_button_2"
@@ -140,7 +141,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
         android:text="@string/text_bingo_count"
-        android:textColor="?attr/textColor"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/okButton"
@@ -148,6 +148,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button10" />
+    <!--        android:textColor="?attr/textColor"-->
 
     <Button
         android:id="@+id/okButton"
@@ -179,7 +180,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/date_format"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

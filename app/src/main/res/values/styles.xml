@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="ToggleButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:textColor">?attr/textColor</item>
+<!--        <item name="android:textColor">?attr/textColor</item>-->
         <item name="android:background">?attr/button_background</item>
         <item name="android:foreground">@drawable/button_ripple</item>
         <item name="android:layout_width">56dp</item>

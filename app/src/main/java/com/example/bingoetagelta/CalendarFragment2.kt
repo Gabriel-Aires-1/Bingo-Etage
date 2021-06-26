@@ -113,8 +113,6 @@ class CalendarFragment2 : Fragment()
                     viewLifecycleOwner,
                     { bingoGridList -> updateAverageTextView(container.averageTextView, bingoGridList) }
                 )
-                container.averageTextView.text =
-                    "test"
             }
         }
 

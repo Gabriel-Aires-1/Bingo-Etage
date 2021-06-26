@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="SUN"
+        android:text="@string/trigram_day_1"
         android:textSize="14sp" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="MON"
+        android:text="@string/trigram_day_2"
         android:textSize="14sp" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="TUE"
+        android:text="@string/trigram_day_3"
         android:textSize="14sp" />
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="WED"
+        android:text="@string/trigram_day_4"
         android:textSize="14sp" />
 
     <TextView
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="THU"
+        android:text="@string/trigram_day_5"
         android:textSize="14sp" />
 
     <TextView
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="FRI"
+        android:text="@string/trigram_day_6"
         android:textSize="14sp" />
 
     <TextView
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="SAT"
+        android:text="@string/trigram_day_7"
         android:textSize="14sp" />
 
 </LinearLayout>

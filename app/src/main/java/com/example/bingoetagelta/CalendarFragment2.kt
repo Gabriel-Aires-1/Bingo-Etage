@@ -1,12 +1,14 @@
 package com.example.bingoetagelta
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -67,6 +69,19 @@ class CalendarFragment2 : Fragment()
 
         // calendarView setup
         calendarView = fragView.findViewById(R.id.calendarView2)
+
+        // Set the day legend to current local
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.HOUR_OF_DAY,0)
+        cal.set(Calendar.MINUTE,0)
+        cal.set(Calendar.SECOND,0)
+        cal.set(Calendar.MILLISECOND,0)
+        fragView.findViewById<LinearLayout>(R.id.legendLayout).children.forEachIndexed { index, view ->
+            (view as TextView).apply {
+                cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek + index)
+                text = String.format("%1\$ta", cal).toUpperCase(Locale.ROOT)
+            }
+        }
 
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
             // Called only when a new container is needed.

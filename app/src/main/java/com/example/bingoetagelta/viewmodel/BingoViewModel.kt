@@ -176,4 +176,8 @@ class BingoViewModel @Inject constructor(
         _currentMonthBingoGrids = repository.getBingoGridsFromMonthFlow(month).distinctUntilChanged().asLiveData()
         currentMonthBingoGrids = _currentMonthBingoGrids
     }
+
+    fun getYearMonthBingoGrids(month: Int, year: Int) = repository.getBingoGridsFromYearMonthFlow(year,month).distinctUntilChanged().asLiveData()
+
+    fun getDayBingoGrid(day: Int, month: Int, year: Int) = repository.getBingoGridFlow(day, month, year).distinctUntilChanged().asLiveData()
 }

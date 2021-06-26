@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),
 {
 
     private lateinit var bingoFragment : BingoFragment
-    private lateinit var calendarFragment: CalendarFragment
+    private lateinit var calendarFragment: CalendarFragment2
     private lateinit var viewPager: ViewPager2
     private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
     private lateinit var tabLayout: TabLayout
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),
         viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
         viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment
+        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment2
 
         viewPager.adapter = viewPagerAdapter
 
@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity(),
     {
         R.id.calendar_menu ->
         {
-            calendarFragment.setDateCalendarView(Calendar.getInstance())
+            //calendarFragment.setDateCalendarView(Calendar.getInstance())
             viewPager.currentItem = 0
             true
         }
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(),
                 null,
                 false
             ),
-            CalendarFragment.newInstance(
+            CalendarFragment2.newInstance(
                 currentDate.get(Calendar.DAY_OF_YEAR),
                 currentDate.get(Calendar.MONTH),
                 currentDate.get(Calendar.YEAR)

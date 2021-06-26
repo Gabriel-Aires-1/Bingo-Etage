@@ -1,0 +1,20 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CalendarFragment2">
+
+    <com.kizitonwose.calendarview.CalendarView
+        android:id="@+id/calendarView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
+        app:cv_dayViewResource="@layout/fragment_calendar2_day"
+        app:cv_monthHeaderResource="@layout/fragment_calendar2_header"
+        app:cv_hasBoundaries="true"
+         />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+

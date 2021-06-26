@@ -33,6 +33,23 @@ interface BingoGridDAO
         """)
     fun loadForMonthFlow(bingoGridMonth: Int): Flow<List<BingoGrid>>
 
+    @Query("""
+        SELECT * FROM bingoGrid 
+        WHERE 
+                month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    fun loadForYearMonthFlow(bingoGridYear: Int, bingoGridMonth: Int): Flow<List<BingoGrid>>
+
+    @Query("""
+        SELECT * FROM bingoGrid 
+        WHERE  
+                day = :bingoGridDay 
+            AND month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    fun loadFlow(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int): Flow<BingoGrid>
+
     @Query("DELETE FROM bingoGrid")
     suspend fun deleteDatabase()
 }

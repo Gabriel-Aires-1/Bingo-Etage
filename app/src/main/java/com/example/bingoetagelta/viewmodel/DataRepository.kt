@@ -27,6 +27,10 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         bingoGridDAO.loadForMonth(bingoGridMonth)
     fun getBingoGridsFromMonthFlow(bingoGridMonth: Int)=
         bingoGridDAO.loadForMonthFlow(bingoGridMonth)
+    fun getBingoGridsFromYearMonthFlow(bingoGridYear: Int, bingoGridMonth: Int)=
+        bingoGridDAO.loadForYearMonthFlow(bingoGridYear, bingoGridMonth)
+    fun getBingoGridFlow(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)=
+        bingoGridDAO.loadFlow(bingoGridDay,bingoGridMonth,bingoGridYear)
 
 
     fun getUsername() = pref.getString("username", "")

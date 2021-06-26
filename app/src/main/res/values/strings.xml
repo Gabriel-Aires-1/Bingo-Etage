@@ -32,6 +32,8 @@
 
     <!-- Calendar fragment strings -->
     <string name="text_calendar_average">Moyenne du mois courant :\n%1$s</string>
+    <string name="calendar_header_date">%1$s %2$s</string>
+    <string name="calendar_header_average">Moyenne : %.2f</string>
 
 
     <!-- Settings strings -->

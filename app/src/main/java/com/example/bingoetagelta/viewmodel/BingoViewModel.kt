@@ -17,7 +17,7 @@ class BingoViewModel @Inject constructor(
     ): ViewModel()
 {
     // Number of bingo buttons
-    var numberOfButton = 10
+    var numberOfButton = repository.floorList.size
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection
@@ -94,7 +94,7 @@ class BingoViewModel @Inject constructor(
             return nonNullDay.hashCode() xor nameHashCode
         }
 
-        val arrayShuffled = mutableListOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+        val arrayShuffled = repository.floorList.toMutableList()
         arrayShuffled.shuffle(Random(getSeed()))
 
         return BingoGrid(

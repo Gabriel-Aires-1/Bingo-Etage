@@ -57,4 +57,6 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
     )
     val bonusArray = context.resources.getIntArray(R.array.bonusArray)
 
+    val floorList = listOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+
 }

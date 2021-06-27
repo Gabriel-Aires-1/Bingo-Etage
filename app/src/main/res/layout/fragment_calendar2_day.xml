@@ -19,5 +19,16 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="0" />
 
+    <TextView
+        android:id="@+id/dayNotification"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/calendar_day_notification">
+    </TextView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

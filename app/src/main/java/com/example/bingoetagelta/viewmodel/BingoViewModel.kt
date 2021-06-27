@@ -172,6 +172,15 @@ class BingoViewModel @Inject constructor(
         }
     }
 
+    // Delete the grid corresponding to these values
+    fun deleteGrid(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
+    {
+        viewModelScope.launch(Dispatchers.IO)
+        {
+            repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
+        }
+    }
+
     // Change the month reflected in currentMonthBingoGrids
     fun changeSelectedMonth(month: Int)
     {

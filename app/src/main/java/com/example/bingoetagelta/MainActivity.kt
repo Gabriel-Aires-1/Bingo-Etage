@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity(),
                 false
             ),
             CalendarFragment2.newInstance(
-                currentDate.get(Calendar.DAY_OF_YEAR),
+                currentDate.get(Calendar.DAY_OF_MONTH),
                 currentDate.get(Calendar.MONTH),
                 currentDate.get(Calendar.YEAR)
             ),

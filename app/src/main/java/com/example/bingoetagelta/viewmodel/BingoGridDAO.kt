@@ -13,6 +13,15 @@ interface BingoGridDAO
     suspend fun delete(bingoGrid: BingoGrid)
 
     @Query("""
+        DELETE FROM BingoGrid
+        WHERE 
+                day = :bingoGridDay 
+            AND month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    suspend fun deleteDay(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
+
+    @Query("""
         SELECT * FROM bingoGrid 
         WHERE 
                 day = :bingoGridDay 

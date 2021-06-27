@@ -61,4 +61,9 @@
     <string name="trigram_day_6">SAM</string>
     <string name="trigram_day_7">DIM</string>
 
+    <string name="delete_DB_object_yes_button_text">Oui</string>
+    <string name="delete_DB_object_no_button_text">Non</string>
+    <string name="delete_DB_object_title">Suppression</string>
+    <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
+
 </resources>

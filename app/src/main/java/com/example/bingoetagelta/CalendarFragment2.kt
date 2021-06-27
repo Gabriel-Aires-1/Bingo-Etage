@@ -1,5 +1,7 @@
 package com.example.bingoetagelta
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -26,7 +28,6 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
@@ -128,8 +129,22 @@ class CalendarFragment2 : Fragment()
                         viewLifecycleOwner,
                         { bingoGrid -> container.updateDayDisplay(bingoGrid) }
                     )
+
+                    if (selectedDate == null &&
+                        day.date.dayOfMonth == currentDay &&
+                        day.date.monthValue - 1  == currentMonth &&
+                        day.date.year == currentYear)
+                    {
+                        container.selected = true
+                        selectedDate = container
+                    }
+
                     container.view.setOnClickListener {
                         changeSelectedDate(container, day)
+                    }
+                    container.view.setOnLongClickListener {
+                        deleteDBObject(container, day)
+                        true
                     }
                 }
             }
@@ -168,10 +183,10 @@ class CalendarFragment2 : Fragment()
 
     fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
     {
-        container.selected = true
         selectedDate?.selected = false
-        calendarView.notifyDateChanged(day.date)
+        container.selected = true
         selectedDate?.day?.let { it -> calendarView.notifyDateChanged(it.date) }
+        calendarView.notifyDateChanged(day.date)
         selectedDate = container
         viewModel.changeCurrentDate(
             day.date.year,
@@ -179,9 +194,23 @@ class CalendarFragment2 : Fragment()
             day.date.dayOfMonth)
     }
 
-    fun deleteDBObject(day: CalendarDay)
+    fun deleteDBObject(container: DayViewContainer,day: CalendarDay)
     {
-
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        alertDialogBuilder.setTitle(resources.getString(R.string.delete_DB_object_title))
+        alertDialogBuilder.setMessage(resources.getString(R.string.delete_DB_object_message))
+        alertDialogBuilder.setPositiveButton(resources.getString(
+            R.string.delete_DB_object_yes_button_text)
+        ) { _, _ ->
+            // Continue with delete operation
+            viewModel.deleteGrid(day.date.dayOfMonth, day.date.monthValue - 1, day.date.year)
+            changeSelectedDate(container, day)
+        }
+        alertDialogBuilder.setNegativeButton(resources.getString(
+            R.string.delete_DB_object_no_button_text),
+        null)
+        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert)
+        alertDialogBuilder.show()
     }
 
     fun updateAverageTextView(averageTextView: TextView, bingoGridList: List<BingoGrid>?)

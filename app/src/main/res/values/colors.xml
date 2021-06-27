@@ -76,4 +76,8 @@
 
     <color name="green">#47a84a</color>
 
+    <color name="md_red_A700">#D50000</color>
+
+    <color name="md_purple_A700">#AA00FF</color>
+
 </resources>

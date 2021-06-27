@@ -6,4 +6,11 @@
     <attr name="setting_icon" format="reference" />
     <attr name="edit_button_icon" format="reference" />
     <attr name="calendar_icon" format="reference" />
+
+<!--    Calendar-->
+    <attr name="calendar_day_border_color" format="color" />
+    <attr name="calendar_day_background_color_min" format="color" />
+    <attr name="calendar_day_background_color_max" format="color" />
+    <attr name="calendar_day_text_disabled_color" format="color" />
+    <attr name="calendar_day_notification_color" format="color" />
 </resources>

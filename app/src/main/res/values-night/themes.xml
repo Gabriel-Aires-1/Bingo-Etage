@@ -43,6 +43,13 @@
         <!-- Toolbar -->
         <item name="setting_icon">@drawable/ic_baseline_settings_white</item>
         <item name="calendar_icon">@drawable/ic_baseline_calendar_white</item>
+        
+        <!--        Calendar-->
+        <item name="calendar_day_border_color">@color/divider_light</item>
+        <item name="calendar_day_background_color_min">@color/md_blue_A200</item>
+        <item name="calendar_day_background_color_max">@color/md_red_A700</item>
+        <item name="calendar_day_text_disabled_color">@color/md_grey_800</item>
+        <item name="calendar_day_notification_color">@color/md_purple_A700</item>
     </style>
 
 </resources>

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:context=".CalendarFragment2"
-    android:id="@+id/dayLayout">
+    android:id="@+id/dayLayout"
+    android:background="@drawable/calendar_day_shape">
 
     <TextView
         android:id="@+id/dayText"

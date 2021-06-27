@@ -46,11 +46,11 @@
 
         <!--        Calendar-->
         <item name="calendar_day_default_background_color">@color/background_dark</item>
-        <item name="calendar_day_default_text_color">@color/divider_dark</item>
+        <item name="calendar_day_default_text_color">@color/md_white_1000</item>
         <item name="calendar_day_border_color">@color/divider_dark</item>
         <item name="calendar_day_background_color_min">@color/md_blue_A200</item>
         <item name="calendar_day_background_color_max">@color/md_red_A700</item>
-        <item name="calendar_day_text_disabled_color">@color/md_grey_800</item>
+        <item name="calendar_day_text_disabled_color">@color/md_black_1000_38</item>
         <item name="calendar_day_notification_color">@color/md_purple_A700</item>
     </style>
 

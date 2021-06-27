@@ -237,7 +237,7 @@ class CalendarFragment2 : Fragment()
             {
                 DayDisplay.DISABLED ->
                 {
-                    layout.setBackgroundColor(defaultBackGroundColor)
+//                    layout.setBackgroundColor(defaultBackGroundColor)
                     textView.setTextColor(textDisabledColor)
                     changeNotificationVisibility(false)
                     layout.visibility = View.VISIBLE

@@ -17,7 +17,7 @@ class BingoViewModel @Inject constructor(
     ): ViewModel()
 {
     // Number of bingo buttons
-    var numberOfButton = repository.floorList.size
+    val numberOfButton = repository.floorList.size
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection

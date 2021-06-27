@@ -129,9 +129,7 @@ class CalendarFragment2 : Fragment()
                         { bingoGrid -> container.updateDayDisplay(bingoGrid) }
                     )
                     container.view.setOnClickListener {
-                        selectedDate?.setSelected(false)
-                        container.setSelected(true)
-                        selectedDate = container
+                        changeSelectedDate(container, day)
                     }
                 }
             }
@@ -166,6 +164,24 @@ class CalendarFragment2 : Fragment()
 
         // Return fragment
         return fragView
+    }
+
+    fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
+    {
+        container.selected = true
+        selectedDate?.selected = false
+        calendarView.notifyDateChanged(day.date)
+        selectedDate?.day?.let { it -> calendarView.notifyDateChanged(it.date) }
+        selectedDate = container
+        viewModel.changeCurrentDate(
+            day.date.year,
+            day.date.monthValue - 1,
+            day.date.dayOfMonth)
+    }
+
+    fun deleteDBObject(day: CalendarDay)
+    {
+
     }
 
     fun updateAverageTextView(averageTextView: TextView, bingoGridList: List<BingoGrid>?)
@@ -227,8 +243,10 @@ class CalendarFragment2 : Fragment()
         private var defaultBorderColor: Int = 0
         private var selectedBorderColor: Int = 0
 
-        var minValue = 0
-        var maxValue = 0
+        var selected = false
+
+        private var minValue = 0
+        private var maxValue = 0
 
         enum class DayDisplay {
             DISABLED, ENABLED, INVISIBLE
@@ -291,6 +309,16 @@ class CalendarFragment2 : Fragment()
                     layout.visibility = View.VISIBLE
                 }
             }
+            if (selected)
+            {
+                gradientDrawable.setStroke(8, selectedBorderColor)
+                textView.setTypeface(null, Typeface.BOLD)
+            }
+            else
+            {
+                gradientDrawable.setStroke(2, defaultBorderColor)
+                textView.setTypeface(null, Typeface.NORMAL)
+            }
         }
 
         fun updateDayDisplay(bingoGrid: BingoGrid?)
@@ -302,21 +330,6 @@ class CalendarFragment2 : Fragment()
             else
             {
                 setDayDisplay(DayDisplay.ENABLED, bingoGrid)
-            }
-        }
-
-        fun setSelected(selected: Boolean)
-        {
-            val gradientDrawable = layout.background as GradientDrawable
-            if (selected)
-            {
-                gradientDrawable.setStroke(8, selectedBorderColor)
-                textView.setTypeface(null, Typeface.BOLD)
-            }
-            else
-            {
-                gradientDrawable.setStroke(2, defaultBorderColor)
-                textView.setTypeface(null, Typeface.NORMAL)
             }
         }
 

@@ -1,6 +1,7 @@
 package com.example.bingoetagelta
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,17 +84,30 @@ class CalendarFragment2 : Fragment()
             }
         }
 
+        // Get colors from theme
+        val value = TypedValue()
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_default_background_color, value, true)
+        val defaultBackGroundColor = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_default_text_color, value, true)
+        val defaultTextColor = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_background_color_min, value, true)
+        val backGroundColorMin = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_background_color_max, value, true)
+        val backGroundColorMax = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_text_disabled_color, value, true)
+        val textDisabledColor = value.data
+
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
             // Called only when a new container is needed.
             override fun create(view: View) = DayViewContainer(view)
 
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, day: CalendarDay) {
+                container.setDayVar(day)
+                container.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor)
+
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
-                    container.layout.visibility = View.VISIBLE
-                    container.textView.text = day.date.dayOfMonth.toString()
-
                     container.attachBingoGrid(viewModel.getDayBingoGrid(
                         day.date.dayOfMonth,
                         day.date.monthValue-1,
@@ -101,13 +115,8 @@ class CalendarFragment2 : Fragment()
                     )
                     container.dayBingoGrid.observe(
                         viewLifecycleOwner,
-                        { bingoGrid -> updateDayColor(container, bingoGrid) }
+                        { bingoGrid -> container.updateDayDisplay(bingoGrid) }
                     )
-                }
-                else
-                {
-                    // day not in current month, render invisible
-                    container.layout.visibility = View.INVISIBLE
                 }
             }
         }
@@ -164,18 +173,6 @@ class CalendarFragment2 : Fragment()
         return average
     }
 
-    fun updateDayColor(container: DayViewContainer, bingoGrid: BingoGrid?)
-    {
-        if (bingoGrid == null || bingoGrid.editingBoolInput)
-        {
-            // Not validated or null, indicate to user that something is missing
-        }
-        else
-        {
-            // Validated, display color scale
-            container.layout.setBackgroundResource(R.color.green)
-        }
-    }
 
 
     companion object
@@ -201,15 +198,89 @@ class CalendarFragment2 : Fragment()
     }
 
     class DayViewContainer(view: View) : ViewContainer(view) {
-        val textView: TextView = view.findViewById(R.id.dayText)
-        val layout: ConstraintLayout = view.findViewById(R.id.dayLayout)
+        private val textView: TextView = view.findViewById(R.id.dayText)
+        private val layout: ConstraintLayout = view.findViewById(R.id.dayLayout)
+        private val notifTextView: TextView = view.findViewById(R.id.dayNotification)
+        lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
+        private var defaultBackGroundColor: Int = 0
+        private var defaultTextColor: Int = 0
+        private var backGroundColorMin: Int = 0
+        private var backGroundColorMax: Int = 0
+        private var textDisabledColor: Int = 0
+
+        enum class DayDisplay {
+            DISABLED, ENABLED, INVISIBLE
+        }
 
         fun attachBingoGrid(bingoGrid: LiveData<BingoGrid>)
         {
             dayBingoGrid = bingoGrid
         }
 
+        fun setDayVar(day: CalendarDay)
+        {
+            this@DayViewContainer.day = day
+            textView.text = day.date.dayOfMonth.toString()
+            if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, null)
+                else setDayDisplay(DayDisplay.INVISIBLE, null)
+        }
+
+        private fun changeNotificationVisibility(visibility: Boolean)
+        {
+            notifTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
+        }
+
+        private fun setDayDisplay(display: DayDisplay, bingoGrid: BingoGrid?)
+        {
+            when(display)
+            {
+                DayDisplay.DISABLED ->
+                {
+                    layout.setBackgroundColor(defaultBackGroundColor)
+                    textView.setTextColor(textDisabledColor)
+                    changeNotificationVisibility(false)
+                    layout.visibility = View.VISIBLE
+                }
+                DayDisplay.INVISIBLE ->
+                {
+                    layout.setBackgroundColor(defaultBackGroundColor)
+                    textView.setTextColor(defaultTextColor)
+                    changeNotificationVisibility(false)
+                    layout.visibility = View.INVISIBLE
+                }
+                DayDisplay.ENABLED ->
+                {
+                    layout.setBackgroundColor(backGroundColorMax)
+                    textView.setTextColor(defaultTextColor)
+                    changeNotificationVisibility(bingoGrid?.editingBoolInput ?: false)
+                    layout.visibility = View.VISIBLE
+                }
+            }
+        }
+
+        fun updateDayDisplay(bingoGrid: BingoGrid?)
+        {
+            if (bingoGrid == null)
+            {
+                setDayDisplay(DayDisplay.DISABLED, null)
+            }
+            else
+            {
+                setDayDisplay(DayDisplay.ENABLED, bingoGrid)
+            }
+        }
+
+        fun setColors(defaultBackGroundColor: Int,defaultTextColor: Int,
+                      backGroundColorMin:Int,backGroundColorMax: Int,
+                      textDisabledColor: Int)
+        {
+            this.defaultBackGroundColor=defaultBackGroundColor
+            this.defaultTextColor= defaultTextColor
+            this.backGroundColorMin=backGroundColorMin
+            this.backGroundColorMax=backGroundColorMax
+            this.textDisabledColor=textDisabledColor
+        }
     }
 
     class MonthViewContainer(view: View) : ViewContainer(view) {

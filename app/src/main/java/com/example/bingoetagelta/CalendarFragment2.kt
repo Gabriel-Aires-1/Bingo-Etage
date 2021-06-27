@@ -1,7 +1,6 @@
 package com.example.bingoetagelta
 
 import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.bingoetagelta.colors.ColorConverter
 import com.example.bingoetagelta.viewmodel.BingoGrid
 import com.example.bingoetagelta.viewmodel.BingoViewModel
 import com.kizitonwose.calendarview.CalendarView
@@ -107,6 +107,7 @@ class CalendarFragment2 : Fragment()
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.setDayVar(day)
                 container.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor)
+                container.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
@@ -211,6 +212,9 @@ class CalendarFragment2 : Fragment()
         private var backGroundColorMax: Int = 0
         private var textDisabledColor: Int = 0
 
+        var minValue = 0
+        var maxValue = 0
+
         enum class DayDisplay {
             DISABLED, ENABLED, INVISIBLE
         }
@@ -226,6 +230,12 @@ class CalendarFragment2 : Fragment()
             textView.text = day.date.dayOfMonth.toString()
             if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, null)
                 else setDayDisplay(DayDisplay.INVISIBLE, null)
+        }
+
+        fun setMinMaxValues(min: Int, max: Int)
+        {
+            minValue = min
+            maxValue = max
         }
 
         private fun changeNotificationVisibility(visibility: Boolean)
@@ -254,9 +264,15 @@ class CalendarFragment2 : Fragment()
                 }
                 DayDisplay.ENABLED ->
                 {
-                    gradientDrawable.setColor(backGroundColorMax)
+                    gradientDrawable.setColor(
+                        ColorConverter.interpolateFromRGB(
+                            (bingoGrid!!.totalValue - minValue).toFloat() / (maxValue - minValue),
+                            backGroundColorMin,
+                            backGroundColorMax,
+                        )
+                    )
                     textView.setTextColor(defaultTextColor)
-                    changeNotificationVisibility(bingoGrid?.editingBoolInput ?: false)
+                    changeNotificationVisibility(bingoGrid.editingBoolInput)
                     layout.visibility = View.VISIBLE
                 }
             }

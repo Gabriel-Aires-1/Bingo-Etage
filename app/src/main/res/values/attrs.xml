@@ -11,6 +11,7 @@
     <attr name="calendar_day_default_background_color" format="color" />
     <attr name="calendar_day_default_text_color" format="color" />
     <attr name="calendar_day_border_color" format="color" />
+    <attr name="calendar_day_selected_border_color" format="color" />
     <attr name="calendar_day_background_color_min" format="color" />
     <attr name="calendar_day_background_color_max" format="color" />
     <attr name="calendar_day_text_disabled_color" format="color" />

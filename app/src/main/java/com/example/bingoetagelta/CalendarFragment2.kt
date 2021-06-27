@@ -1,5 +1,6 @@
 package com.example.bingoetagelta
 
+import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.util.TypedValue
@@ -25,6 +26,7 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
@@ -46,6 +48,8 @@ class CalendarFragment2 : Fragment()
     private var currentDay: Int = 1
     private var currentMonth: Int = 1
     private var currentYear: Int = 1
+
+    private var selectedDate: DayViewContainer? = null
     // Views
     private lateinit var calendarView: CalendarView
 
@@ -98,6 +102,10 @@ class CalendarFragment2 : Fragment()
         val backGroundColorMax = value.data
         requireContext().theme.resolveAttribute(R.attr.calendar_day_text_disabled_color, value, true)
         val textDisabledColor = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_border_color, value, true)
+        val borderColor = value.data
+        requireContext().theme.resolveAttribute(R.attr.calendar_day_selected_border_color, value, true)
+        val selectedBorderColor = value.data
 
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
             // Called only when a new container is needed.
@@ -106,7 +114,7 @@ class CalendarFragment2 : Fragment()
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.setDayVar(day)
-                container.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor)
+                container.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor, borderColor, selectedBorderColor)
                 container.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
 
                 if (day.owner == DayOwner.THIS_MONTH) {
@@ -120,6 +128,11 @@ class CalendarFragment2 : Fragment()
                         viewLifecycleOwner,
                         { bingoGrid -> container.updateDayDisplay(bingoGrid) }
                     )
+                    container.view.setOnClickListener {
+                        selectedDate?.setSelected(false)
+                        container.setSelected(true)
+                        selectedDate = container
+                    }
                 }
             }
         }
@@ -211,6 +224,8 @@ class CalendarFragment2 : Fragment()
         private var backGroundColorMin: Int = 0
         private var backGroundColorMax: Int = 0
         private var textDisabledColor: Int = 0
+        private var defaultBorderColor: Int = 0
+        private var selectedBorderColor: Int = 0
 
         var minValue = 0
         var maxValue = 0
@@ -228,8 +243,8 @@ class CalendarFragment2 : Fragment()
         {
             this@DayViewContainer.day = day
             textView.text = day.date.dayOfMonth.toString()
-            if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, null)
-                else setDayDisplay(DayDisplay.INVISIBLE, null)
+            if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, dayBingoGrid.value)
+                else setDayDisplay(DayDisplay.INVISIBLE, dayBingoGrid.value)
         }
 
         fun setMinMaxValues(min: Int, max: Int)
@@ -290,15 +305,33 @@ class CalendarFragment2 : Fragment()
             }
         }
 
+        fun setSelected(selected: Boolean)
+        {
+            val gradientDrawable = layout.background as GradientDrawable
+            if (selected)
+            {
+                gradientDrawable.setStroke(8, selectedBorderColor)
+                textView.setTypeface(null, Typeface.BOLD)
+            }
+            else
+            {
+                gradientDrawable.setStroke(2, defaultBorderColor)
+                textView.setTypeface(null, Typeface.NORMAL)
+            }
+        }
+
         fun setColors(defaultBackGroundColor: Int,defaultTextColor: Int,
                       backGroundColorMin:Int,backGroundColorMax: Int,
-                      textDisabledColor: Int)
+                      textDisabledColor: Int,
+                      defaultBorderColor: Int, selectedBorderColor: Int)
         {
             this.defaultBackGroundColor=defaultBackGroundColor
             this.defaultTextColor= defaultTextColor
             this.backGroundColorMin=backGroundColorMin
             this.backGroundColorMax=backGroundColorMax
             this.textDisabledColor=textDisabledColor
+            this.defaultBorderColor = defaultBorderColor
+            this.selectedBorderColor = selectedBorderColor
         }
     }
 

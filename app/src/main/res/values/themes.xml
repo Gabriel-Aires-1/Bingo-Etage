@@ -53,6 +53,7 @@
         <item name="calendar_day_default_background_color">@color/background_light</item>
         <item name="calendar_day_default_text_color">@color/md_black_1000</item>
         <item name="calendar_day_border_color">@color/divider_light</item>
+        <item name="calendar_day_selected_border_color">@color/accent_lightblue</item>
         <item name="calendar_day_background_color_min">@color/md_green_500</item>
         <item name="calendar_day_background_color_max">@color/md_red_A700</item>
         <item name="calendar_day_text_disabled_color">@color/md_black_1000_38</item>

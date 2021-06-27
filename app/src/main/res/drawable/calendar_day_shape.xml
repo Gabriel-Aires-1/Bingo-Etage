@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <stroke
-        android:width="1dp"
+        android:width="2px"
         android:color="?attr/calendar_day_border_color"/>
 
 </shape>

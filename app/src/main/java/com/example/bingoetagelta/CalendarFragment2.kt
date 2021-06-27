@@ -1,5 +1,7 @@
 package com.example.bingoetagelta
 
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.ShapeDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -233,25 +235,26 @@ class CalendarFragment2 : Fragment()
 
         private fun setDayDisplay(display: DayDisplay, bingoGrid: BingoGrid?)
         {
+            val gradientDrawable = layout.background as GradientDrawable
             when(display)
             {
                 DayDisplay.DISABLED ->
                 {
-//                    layout.setBackgroundColor(defaultBackGroundColor)
+                    gradientDrawable.setColor(defaultBackGroundColor)
                     textView.setTextColor(textDisabledColor)
                     changeNotificationVisibility(false)
                     layout.visibility = View.VISIBLE
                 }
                 DayDisplay.INVISIBLE ->
                 {
-                    layout.setBackgroundColor(defaultBackGroundColor)
+                    gradientDrawable.setColor(defaultBackGroundColor)
                     textView.setTextColor(defaultTextColor)
                     changeNotificationVisibility(false)
                     layout.visibility = View.INVISIBLE
                 }
                 DayDisplay.ENABLED ->
                 {
-                    layout.setBackgroundColor(backGroundColorMax)
+                    gradientDrawable.setColor(backGroundColorMax)
                     textView.setTextColor(defaultTextColor)
                     changeNotificationVisibility(bingoGrid?.editingBoolInput ?: false)
                     layout.visibility = View.VISIBLE

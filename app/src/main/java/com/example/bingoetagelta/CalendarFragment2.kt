@@ -1,7 +1,6 @@
 package com.example.bingoetagelta
 
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
@@ -110,6 +109,7 @@ class CalendarFragment2 : Fragment()
         DayViewContainer.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor, borderColor, selectedBorderColor)
         DayViewContainer.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
 
+
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
             // Called only when a new container is needed.
             override fun create(view: View) = DayViewContainer(view)
@@ -127,7 +127,7 @@ class CalendarFragment2 : Fragment()
                     )
                     container.dayBingoGrid.observe(
                         viewLifecycleOwner,
-                        { bingoGrid -> container.updateDayDisplay(bingoGrid) }
+                        { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
                     )
 
                     if (selectedDate == null &&
@@ -135,8 +135,7 @@ class CalendarFragment2 : Fragment()
                         day.date.monthValue - 1  == currentMonth &&
                         day.date.year == currentYear)
                     {
-                        container.selected = true
-                        selectedDate = container
+                        changeSelectedDate(container, day)
                     }
 
                     container.view.setOnClickListener {
@@ -169,6 +168,7 @@ class CalendarFragment2 : Fragment()
             }
         }
 
+
         // Calendar view setup
         val currentMonth = YearMonth.now()
         val firstMonth = currentMonth.minusMonths(10)
@@ -183,15 +183,15 @@ class CalendarFragment2 : Fragment()
 
     fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
     {
-        selectedDate?.selected = false
-        container.selected = true
-        selectedDate?.day?.let { it -> calendarView.notifyDateChanged(it.date) }
-        calendarView.notifyDateChanged(day.date)
+        container.selectDay(true)
+        selectedDate?.selectDay(false)
+
         selectedDate = container
         viewModel.changeCurrentDate(
             day.date.year,
             day.date.monthValue - 1,
-            day.date.dayOfMonth)
+            day.date.dayOfMonth
+        )
     }
 
     fun deleteDBObject(container: DayViewContainer,day: CalendarDay)
@@ -264,11 +264,13 @@ class CalendarFragment2 : Fragment()
         private val notifTextView: TextView = view.findViewById(R.id.dayNotification)
         lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
+        private val gradientDrawable = layout.background as GradientDrawable
 
-        var selected = false
+        private var selected = false
 
-        enum class DayDisplay {
-            DISABLED, ENABLED, INVISIBLE
+        init
+        {
+            selectDay(false)
         }
 
         fun attachBingoGrid(bingoGrid: LiveData<BingoGrid>)
@@ -280,8 +282,7 @@ class CalendarFragment2 : Fragment()
         {
             this@DayViewContainer.day = day
             textView.text = day.date.dayOfMonth.toString()
-            if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, dayBingoGrid.value)
-                else setDayDisplay(DayDisplay.INVISIBLE, dayBingoGrid.value)
+            if (day.owner != DayOwner.THIS_MONTH) makeInvisible()
         }
 
         private fun changeNotificationVisibility(visibility: Boolean)
@@ -289,39 +290,41 @@ class CalendarFragment2 : Fragment()
             notifTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
         }
 
-        private fun setDayDisplay(display: DayDisplay, bingoGrid: BingoGrid?)
+        fun makeInvisible()
         {
-            val gradientDrawable = layout.background as GradientDrawable
-            when(display)
+            gradientDrawable.setColor(defaultBackGroundColor)
+            textView.setTextColor(defaultTextColor)
+            changeNotificationVisibility(false)
+            layout.visibility = View.INVISIBLE
+        }
+
+        fun updateDayDisplayWithGrid(bingoGrid: BingoGrid?)
+        {
+            if (bingoGrid == null)
             {
-                DayDisplay.DISABLED ->
-                {
-                    gradientDrawable.setColor(defaultBackGroundColor)
-                    textView.setTextColor(textDisabledColor)
-                    changeNotificationVisibility(false)
-                    layout.visibility = View.VISIBLE
-                }
-                DayDisplay.INVISIBLE ->
-                {
-                    gradientDrawable.setColor(defaultBackGroundColor)
-                    textView.setTextColor(defaultTextColor)
-                    changeNotificationVisibility(false)
-                    layout.visibility = View.INVISIBLE
-                }
-                DayDisplay.ENABLED ->
-                {
-                    gradientDrawable.setColor(
-                        ColorConverter.interpolateFromRGB(
-                            (bingoGrid!!.totalValue - minValue).toFloat() / (maxValue - minValue),
-                            backGroundColorMin,
-                            backGroundColorMax,
-                        )
-                    )
-                    textView.setTextColor(defaultTextColor)
-                    changeNotificationVisibility(bingoGrid.editingBoolInput)
-                    layout.visibility = View.VISIBLE
-                }
+                gradientDrawable.setColor(defaultBackGroundColor)
+                textView.setTextColor(textDisabledColor)
+                changeNotificationVisibility(false)
+                layout.visibility = View.VISIBLE
             }
+            else
+            {
+                gradientDrawable.setColor(
+                    ColorConverter.interpolateFromRGB(
+                        (bingoGrid.totalValue - minValue).toFloat() / (maxValue - minValue),
+                        backGroundColorMin,
+                        backGroundColorMax,
+                    )
+                )
+                textView.setTextColor(defaultTextColor)
+                changeNotificationVisibility(bingoGrid.editingBoolInput)
+                layout.visibility = View.VISIBLE
+            }
+        }
+
+        fun selectDay(selected: Boolean)
+        {
+            this.selected = selected
             if (selected)
             {
                 gradientDrawable.setStroke(8, selectedBorderColor)
@@ -331,18 +334,6 @@ class CalendarFragment2 : Fragment()
             {
                 gradientDrawable.setStroke(2, defaultBorderColor)
                 textView.setTypeface(null, Typeface.NORMAL)
-            }
-        }
-
-        fun updateDayDisplay(bingoGrid: BingoGrid?)
-        {
-            if (bingoGrid == null)
-            {
-                setDayDisplay(DayDisplay.DISABLED, null)
-            }
-            else
-            {
-                setDayDisplay(DayDisplay.ENABLED, bingoGrid)
             }
         }
 

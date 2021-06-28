@@ -107,6 +107,8 @@ class CalendarFragment2 : Fragment()
         val borderColor = value.data
         requireContext().theme.resolveAttribute(R.attr.calendar_day_selected_border_color, value, true)
         val selectedBorderColor = value.data
+        DayViewContainer.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor, borderColor, selectedBorderColor)
+        DayViewContainer.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
 
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
             // Called only when a new container is needed.
@@ -115,8 +117,6 @@ class CalendarFragment2 : Fragment()
             // Called every time we need to reuse a container.
             override fun bind(container: DayViewContainer, day: CalendarDay) {
                 container.setDayVar(day)
-                container.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor, borderColor, selectedBorderColor)
-                container.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
@@ -264,18 +264,8 @@ class CalendarFragment2 : Fragment()
         private val notifTextView: TextView = view.findViewById(R.id.dayNotification)
         lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
-        private var defaultBackGroundColor: Int = 0
-        private var defaultTextColor: Int = 0
-        private var backGroundColorMin: Int = 0
-        private var backGroundColorMax: Int = 0
-        private var textDisabledColor: Int = 0
-        private var defaultBorderColor: Int = 0
-        private var selectedBorderColor: Int = 0
 
         var selected = false
-
-        private var minValue = 0
-        private var maxValue = 0
 
         enum class DayDisplay {
             DISABLED, ENABLED, INVISIBLE
@@ -292,12 +282,6 @@ class CalendarFragment2 : Fragment()
             textView.text = day.date.dayOfMonth.toString()
             if (day.owner == DayOwner.THIS_MONTH) setDayDisplay(DayDisplay.DISABLED, dayBingoGrid.value)
                 else setDayDisplay(DayDisplay.INVISIBLE, dayBingoGrid.value)
-        }
-
-        fun setMinMaxValues(min: Int, max: Int)
-        {
-            minValue = min
-            maxValue = max
         }
 
         private fun changeNotificationVisibility(visibility: Boolean)
@@ -362,18 +346,38 @@ class CalendarFragment2 : Fragment()
             }
         }
 
-        fun setColors(defaultBackGroundColor: Int,defaultTextColor: Int,
-                      backGroundColorMin:Int,backGroundColorMax: Int,
-                      textDisabledColor: Int,
-                      defaultBorderColor: Int, selectedBorderColor: Int)
+        companion object
         {
-            this.defaultBackGroundColor=defaultBackGroundColor
-            this.defaultTextColor= defaultTextColor
-            this.backGroundColorMin=backGroundColorMin
-            this.backGroundColorMax=backGroundColorMax
-            this.textDisabledColor=textDisabledColor
-            this.defaultBorderColor = defaultBorderColor
-            this.selectedBorderColor = selectedBorderColor
+            private var defaultBackGroundColor: Int = 0
+            private var defaultTextColor: Int = 0
+            private var backGroundColorMin: Int = 0
+            private var backGroundColorMax: Int = 0
+            private var textDisabledColor: Int = 0
+            private var defaultBorderColor: Int = 0
+            private var selectedBorderColor: Int = 0
+
+            private var minValue = 0
+            private var maxValue = 0
+
+            fun setColors(defaultBackGroundColor: Int,defaultTextColor: Int,
+                          backGroundColorMin:Int,backGroundColorMax: Int,
+                          textDisabledColor: Int,
+                          defaultBorderColor: Int, selectedBorderColor: Int)
+            {
+                this.defaultBackGroundColor=defaultBackGroundColor
+                this.defaultTextColor= defaultTextColor
+                this.backGroundColorMin=backGroundColorMin
+                this.backGroundColorMax=backGroundColorMax
+                this.textDisabledColor=textDisabledColor
+                this.defaultBorderColor = defaultBorderColor
+                this.selectedBorderColor = selectedBorderColor
+            }
+
+            fun setMinMaxValues(min: Int, max: Int)
+            {
+                minValue = min
+                maxValue = max
+            }
         }
     }
 

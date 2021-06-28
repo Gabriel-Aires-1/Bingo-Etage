@@ -153,7 +153,7 @@ class CalendarFragment2 : Fragment()
 
                     // Set OnLongClickListener to prompt to remove database row
                     container.view.setOnLongClickListener {
-                        deleteDBObject(day)
+                        deleteDBObject(container,day)
                         true
                     }
                 }
@@ -225,7 +225,7 @@ class CalendarFragment2 : Fragment()
     // Function to prompt for database row deletion
     // If Yes, delete the row
     // Display is automatically updated
-    fun deleteDBObject(day: CalendarDay)
+    fun deleteDBObject(container: DayViewContainer, day: CalendarDay)
     {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
         alertDialogBuilder.setTitle(resources.getString(R.string.delete_DB_object_title))
@@ -235,7 +235,8 @@ class CalendarFragment2 : Fragment()
         ) { _, _ ->
             // Proceed with delete operation
             viewModel.deleteGrid(day.date.dayOfMonth, day.date.monthValue - 1, day.date.year)
-            //changeSelectedDate(container, day)
+            // Select deleted date to update bingoFragment
+            changeSelectedDate(container, day)
         }
         alertDialogBuilder.setNegativeButton(resources.getString(
             R.string.delete_DB_object_no_button_text),

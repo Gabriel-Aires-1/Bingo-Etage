@@ -175,7 +175,8 @@ class BingoViewModel @Inject constructor(
     // Delete the grid corresponding to these values
     fun deleteGrid(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
     {
-        viewModelScope.launch(Dispatchers.IO)
+        // In main thread in order to update calendar afterwards if needed
+        viewModelScope.launch(Dispatchers.Main.immediate)
         {
             repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
         }

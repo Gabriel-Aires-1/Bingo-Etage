@@ -30,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
+import kotlin.math.sqrt
 
 
 // the fragment initialization parameters keys
@@ -348,7 +349,9 @@ class CalendarFragment2 : Fragment()
                 // Otherwise, uses BingoGrid value to calculate the background color by interpolation
                 gradientDrawable.setColor(
                     ColorConverter.interpolateFromRGB(
-                        (bingoGrid.totalValue - minValue).toFloat() / (maxValue - minValue),
+                        // Using square root to add more spaces between low values and reduce space between high values
+                        // helps using the color range better
+                        sqrt((bingoGrid.totalValue - minValue).toFloat() / (maxValue - minValue)),
                         backGroundColorMin,
                         backGroundColorMax,
                     )

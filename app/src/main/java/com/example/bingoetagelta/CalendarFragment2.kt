@@ -334,6 +334,7 @@ class CalendarFragment2 : Fragment()
         // to be called on LiveData update
         fun updateDayDisplayWithGrid(bingoGrid: BingoGrid?)
         {
+            layout.visibility = View.VISIBLE
             if (bingoGrid == null)
             {
                 // If BingoGrid is null (= no data in database)

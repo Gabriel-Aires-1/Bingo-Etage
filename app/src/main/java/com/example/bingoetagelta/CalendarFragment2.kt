@@ -204,7 +204,6 @@ class CalendarFragment2 : Fragment()
         ) { _, _ ->
             // Continue with delete operation
             viewModel.deleteGrid(day.date.dayOfMonth, day.date.monthValue - 1, day.date.year)
-            changeSelectedDate(container, day)
         }
         alertDialogBuilder.setNegativeButton(resources.getString(
             R.string.delete_DB_object_no_button_text),

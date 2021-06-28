@@ -203,8 +203,8 @@ class CalendarFragment2 : Fragment()
     // Update the viewModel
     fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
     {
-        container.selectDay(true)
         selectedDate?.selectDay(false)
+        container.selectDay(true)
 
         selectedDate = container
 

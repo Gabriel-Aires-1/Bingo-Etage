@@ -60,6 +60,9 @@ class MainActivity : AppCompatActivity(),
                         }
         }.attach()
 
+        // Loading all tabs at once
+        viewPager.offscreenPageLimit = 2
+
         // Set listener for theme preference
         PreferenceManager.getDefaultSharedPreferences(this)
             .registerOnSharedPreferenceChangeListener(this)

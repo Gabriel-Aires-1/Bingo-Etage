@@ -95,8 +95,14 @@ class MainActivity : AppCompatActivity(),
     {
         R.id.calendar_menu ->
         {
-            //calendarFragment.setDateCalendarView(Calendar.getInstance())
+            calendarFragment.setSelectedDateToCurrent()
             viewPager.currentItem = 0
+            Toast.makeText(
+                this,
+                resources.getString(R.string.calendar_toast_text),
+                Toast.LENGTH_SHORT
+            ).show()
+
             true
         }
         R.id.setting_menu ->

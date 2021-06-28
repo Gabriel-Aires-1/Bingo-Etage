@@ -9,6 +9,7 @@
     <string name="first_tab_name">Grille</string>
     <string name="second_tab_name">Calendrier</string>
     <string name="unknown_tab">Onglet inconnu</string>
+    <string name="calendar_toast_text">Sélection de la date courante</string>
 
 
     <!-- Bingo fragment strings -->

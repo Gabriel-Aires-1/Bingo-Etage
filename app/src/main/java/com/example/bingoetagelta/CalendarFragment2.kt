@@ -51,6 +51,7 @@ class CalendarFragment2 : Fragment()
     private var currentYear: Int = 1
 
     private var selectedDate: DayViewContainer? = null
+    private lateinit var todayDate: DayViewContainer
     // Views
     private lateinit var calendarView: CalendarView
 
@@ -142,6 +143,7 @@ class CalendarFragment2 : Fragment()
                         day.date.year == currentYear)
                     {
                         changeSelectedDate(container, day)
+                        todayDate = container
                     }
 
                     // Set OnClickListener to change selected date and update ViewModel
@@ -212,6 +214,12 @@ class CalendarFragment2 : Fragment()
             day.date.monthValue - 1,
             day.date.dayOfMonth
         )
+    }
+
+    // Function to select current date
+    fun setSelectedDateToCurrent()
+    {
+        changeSelectedDate(todayDate, todayDate.day)
     }
 
     // Function to prompt for database row deletion

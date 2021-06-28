@@ -120,16 +120,21 @@ class CalendarFragment2 : Fragment()
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
+
+                    // Attach bingo grid LiveData to DayViewContainer
                     container.attachBingoGrid(viewModel.getDayBingoGrid(
                         day.date.dayOfMonth,
                         day.date.monthValue-1,
                         day.date.year)
                     )
+
+                    // Attach observer to container to update display with value
                     container.dayBingoGrid.observe(
                         viewLifecycleOwner,
                         { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
                     )
 
+                    // Select the current date if no other date was selected
                     if (selectedDate == null &&
                         day.date.dayOfMonth == currentDay &&
                         day.date.monthValue - 1  == currentMonth &&
@@ -138,9 +143,12 @@ class CalendarFragment2 : Fragment()
                         changeSelectedDate(container, day)
                     }
 
+                    // Set OnClickListener to change selected date and update ViewModel
                     container.view.setOnClickListener {
                         changeSelectedDate(container, day)
                     }
+
+                    // Set OnLongClickListener to prompt to remove database row
                     container.view.setOnLongClickListener {
                         deleteDBObject(container, day)
                         true
@@ -153,6 +161,8 @@ class CalendarFragment2 : Fragment()
             override fun create(view: View) = MonthViewContainer(view)
 
             override fun bind(container: MonthViewContainer, month: CalendarMonth) {
+
+                // Set the month and year TextView to current local
                 container.monthYearTextView.text =
                     resources.getString(R.string.calendar_header_date).
                         format(
@@ -160,7 +170,10 @@ class CalendarFragment2 : Fragment()
                             String.format("%1\$tY", month.yearMonth)
                         )
 
+                // Attach month bingoGrid LiveData to corresponding header
                 container.attachBingoGrids(viewModel.getYearMonthBingoGrids(month.yearMonth.monthValue-1, month.yearMonth.year))
+
+                // Observe LiveData to change the average result
                 container.yearMonthBingoGrids.observe(
                     viewLifecycleOwner,
                     { bingoGridList -> updateAverageTextView(container.averageTextView, bingoGridList) }
@@ -181,12 +194,18 @@ class CalendarFragment2 : Fragment()
         return fragView
     }
 
+    // Method to change the selected date
+    // Select the container passed in argument
+    // Unselect the container in selectedDate variable
+    // Update the viewModel
     fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
     {
         container.selectDay(true)
         selectedDate?.selectDay(false)
 
         selectedDate = container
+
+        // Update the viewModel
         viewModel.changeCurrentDate(
             day.date.year,
             day.date.monthValue - 1,
@@ -194,6 +213,9 @@ class CalendarFragment2 : Fragment()
         )
     }
 
+    // Function to prompt for database row deletion
+    // If Yes, delete the row
+    // Display is automatically updated
     fun deleteDBObject(container: DayViewContainer,day: CalendarDay)
     {
         val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -202,7 +224,7 @@ class CalendarFragment2 : Fragment()
         alertDialogBuilder.setPositiveButton(resources.getString(
             R.string.delete_DB_object_yes_button_text)
         ) { _, _ ->
-            // Continue with delete operation
+            // Proceed with delete operation
             viewModel.deleteGrid(day.date.dayOfMonth, day.date.monthValue - 1, day.date.year)
         }
         alertDialogBuilder.setNegativeButton(resources.getString(
@@ -212,6 +234,7 @@ class CalendarFragment2 : Fragment()
         alertDialogBuilder.show()
     }
 
+    // Update the monthYear TextView with the new average value of corresponding month
     fun updateAverageTextView(averageTextView: TextView, bingoGridList: List<BingoGrid>?)
     {
         averageTextView.text = resources.getString(
@@ -219,6 +242,8 @@ class CalendarFragment2 : Fragment()
         ).format(getAverageValue(bingoGridList))
     }
 
+    // Calculate the average total value of BingoGrids given in argument
+    // Only validated list (editing boolean to false) are accounted for
     private fun getAverageValue(bingoGridList: List<BingoGrid>?): Float
     {
         if (bingoGridList == null || bingoGridList.isEmpty()) return 0.0f
@@ -257,6 +282,7 @@ class CalendarFragment2 : Fragment()
             }
     }
 
+    // Container for DayViews
     class DayViewContainer(view: View) : ViewContainer(view) {
         private val textView: TextView = view.findViewById(R.id.dayText)
         private val layout: ConstraintLayout = view.findViewById(R.id.dayLayout)
@@ -267,16 +293,20 @@ class CalendarFragment2 : Fragment()
 
         private var selected = false
 
+        // Reset selected state at initialisation
         init
         {
             selectDay(false)
         }
 
+        // Attach the given BingoGrid LiveData to current DayViewContainer
         fun attachBingoGrid(bingoGrid: LiveData<BingoGrid>)
         {
             dayBingoGrid = bingoGrid
         }
 
+        // Attach the given CalendarDay to current DayViewContainer,
+        // update text accordingly and make invisible if not in current month
         fun setDayVar(day: CalendarDay)
         {
             this@DayViewContainer.day = day
@@ -284,11 +314,13 @@ class CalendarFragment2 : Fragment()
             if (day.owner != DayOwner.THIS_MONTH) makeInvisible()
         }
 
+        // Function to set the notification Visibility
         private fun changeNotificationVisibility(visibility: Boolean)
         {
             notifTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
         }
 
+        // Function to make current DayViewContainer invisible
         fun makeInvisible()
         {
             gradientDrawable.setColor(defaultBackGroundColor)
@@ -297,17 +329,21 @@ class CalendarFragment2 : Fragment()
             layout.visibility = View.INVISIBLE
         }
 
+        // Function to update the background color in accordance with a given BingoGrid
+        // to be called on LiveData update
         fun updateDayDisplayWithGrid(bingoGrid: BingoGrid?)
         {
             if (bingoGrid == null)
             {
+                // If BingoGrid is null (= no data in database)
+                // set display to default, no notifications
                 gradientDrawable.setColor(defaultBackGroundColor)
                 textView.setTextColor(textDisabledColor)
                 changeNotificationVisibility(false)
-                layout.visibility = View.VISIBLE
             }
             else
             {
+                // Otherwise, uses BingoGrid value to calculate the background color by interpolation
                 gradientDrawable.setColor(
                     ColorConverter.interpolateFromRGB(
                         (bingoGrid.totalValue - minValue).toFloat() / (maxValue - minValue),
@@ -317,10 +353,10 @@ class CalendarFragment2 : Fragment()
                 )
                 textView.setTextColor(defaultTextColor)
                 changeNotificationVisibility(bingoGrid.editingBoolInput)
-                layout.visibility = View.VISIBLE
             }
         }
 
+        // Function to change selected day and display accordingly
         fun selectDay(selected: Boolean)
         {
             this.selected = selected
@@ -336,6 +372,7 @@ class CalendarFragment2 : Fragment()
             }
         }
 
+        // Companion object to encapsulate glabal variables and functions (setters)
         companion object
         {
             private var defaultBackGroundColor: Int = 0
@@ -371,11 +408,13 @@ class CalendarFragment2 : Fragment()
         }
     }
 
+    // Container for MonthViews
     class MonthViewContainer(view: View) : ViewContainer(view) {
         val monthYearTextView: TextView = view.findViewById(R.id.headerMonthYearText)
         val averageTextView: TextView = view.findViewById(R.id.headerAverageText)
         var yearMonthBingoGrids: LiveData<List<BingoGrid>> = MutableLiveData()
 
+        // Attach the given LiveData to current MonthView
         fun attachBingoGrids(bingoGrids: LiveData<List<BingoGrid>>)
         {
             yearMonthBingoGrids = bingoGrids

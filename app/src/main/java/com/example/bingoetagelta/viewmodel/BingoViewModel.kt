@@ -77,6 +77,7 @@ class BingoViewModel @Inject constructor(
         _bingoGrid.value = tmpBingoGrid
     }
 
+    // generate a bingo grid from current date or return from database
     private fun generateBingoGrid(): BingoGrid
     {
         var bingoGrid : BingoGrid?
@@ -90,6 +91,7 @@ class BingoViewModel @Inject constructor(
         return bingoGrid ?: generateBingoGridFromCurrentDate()
     }
 
+    // Generate bingo grid from current date and username hashcode
     private fun generateBingoGridFromCurrentDate(): BingoGrid
     {
         val nonNullDay = currentDate.value ?: Calendar.getInstance()
@@ -117,6 +119,7 @@ class BingoViewModel @Inject constructor(
         )
     }
 
+    // Calculate the bingo total
     private fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
     {
         fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
@@ -201,7 +204,9 @@ class BingoViewModel @Inject constructor(
         currentMonthBingoGrids = _currentMonthBingoGrids
     }
 
+    // Get the grids from database corresponding to given month and year
     fun getYearMonthBingoGrids(month: Int, year: Int) = repository.getBingoGridsFromYearMonthFlow(year,month).distinctUntilChanged().asLiveData()
 
+    // Get the grid from database corresponding to the given day
     fun getDayBingoGrid(day: Int, month: Int, year: Int) = repository.getBingoGridFlow(day, month, year).distinctUntilChanged().asLiveData()
 }

@@ -1,6 +1,6 @@
-# Bingo-Etage-LTA
+# Bingo-Etage
 
-Application Android pour gérer le bingo des étages à LTA.
+Application Android pour gérer un bingo des étages.
 
 Comme les ascenseurs peuvent s'arrêter à de nombreux étages, cette application permet de garder la trace des étages auxquels l'ascenseur s'arrête en remplissant une grille de bingo.
 

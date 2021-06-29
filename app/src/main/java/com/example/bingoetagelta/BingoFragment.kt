@@ -12,7 +12,6 @@ import android.widget.ToggleButton
 import androidx.fragment.app.activityViewModels
 import com.example.bingoetagelta.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.text.SimpleDateFormat
 import java.util.*
 
 // the fragment initialization parameters keys
@@ -171,7 +170,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         // Update the view model with current states (checked buttons)
         // The update of the viewModel calls back the observer on the livedata to update the display
         val buttonStateArray = Array(numberOfButton) { i -> buttonArray[i].isChecked }
-        viewModel.updateCheckedValues(buttonStateArray.toList(), editingBool)
+        viewModel.updateCheckedValuesAndSave(buttonStateArray.toList(), editingBool)
     }
 
     private fun updateBingoCount()

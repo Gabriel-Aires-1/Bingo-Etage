@@ -60,14 +60,21 @@ class BingoViewModel @Inject constructor(
         return cal
     }
 
-    fun updateCheckedValues(checkedValues: List<Boolean>, editingBool: Boolean)
+    // Update the values of current BingoGrid var and save it to database
+    fun updateCheckedValuesAndSave(checkedValues: List<Boolean>, editingBool: Boolean)
+    {
+        updateCheckedValues(checkedValues, editingBool)
+        saveCurrentGrid()
+    }
+
+    // Update the values of current BingoGrid var
+    private fun updateCheckedValues(checkedValues: List<Boolean>, editingBool: Boolean)
     {
         val tmpBingoGrid = bingoGrid.value!!
         tmpBingoGrid.checkedArrayInput = checkedValues
         tmpBingoGrid.editingBoolInput = editingBool
         tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray())
         _bingoGrid.value = tmpBingoGrid
-        saveCurrentGrid()
     }
 
     private fun generateBingoGrid(): BingoGrid
@@ -176,10 +183,15 @@ class BingoViewModel @Inject constructor(
     fun deleteGrid(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
     {
         // In main thread in order to update calendar afterwards if needed
-        viewModelScope.launch(Dispatchers.Main.immediate)
+        viewModelScope.launch(Dispatchers.IO)
         {
             repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
         }
+        // Update the values in current bingoGrid var to reflect the database deletion
+        updateCheckedValues(
+            BooleanArray(numberOfButton) { false }.toList(),
+            true
+        )
     }
 
     // Change the month reflected in currentMonthBingoGrids

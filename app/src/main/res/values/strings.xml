@@ -2,7 +2,7 @@
 
 
     <!-- App level strings -->
-    <string name="app_name">BingoEtageLTA</string>
+    <string name="app_name">BingoEtage</string>
 
 
     <!-- Main activity strings -->
@@ -43,7 +43,7 @@
     <string name="theme_dark">Thème nuit</string>
 
     <string name="username_text">Votre nom</string>
-    <string name="main_toolbar_title">Bingo LTA</string>
+    <string name="main_toolbar_title">Bingo des étages</string>
     <string name="settings_toolbar_title">Paramètres</string>
 
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options

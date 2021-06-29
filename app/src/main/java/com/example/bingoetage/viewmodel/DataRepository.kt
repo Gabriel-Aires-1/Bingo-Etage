@@ -1,10 +1,10 @@
-package com.example.bingoetagelta.viewmodel
+package com.example.bingoetage.viewmodel
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import com.example.bingoetagelta.R
+import com.example.bingoetage.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton

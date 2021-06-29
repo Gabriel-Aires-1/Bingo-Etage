@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

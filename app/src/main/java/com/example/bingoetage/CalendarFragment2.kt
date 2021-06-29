@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.app.AlertDialog
 import android.graphics.Typeface
@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.bingoetagelta.colors.ColorConverter
-import com.example.bingoetagelta.viewmodel.BingoGrid
-import com.example.bingoetagelta.viewmodel.BingoViewModel
+import com.example.bingoetage.colors.ColorConverter
+import com.example.bingoetage.viewmodel.BingoGrid
+import com.example.bingoetage.viewmodel.BingoViewModel
 import com.kizitonwose.calendarview.CalendarView
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.CalendarMonth

@@ -1,4 +1,4 @@
-package com.example.bingoetagelta.viewmodel
+package com.example.bingoetage.viewmodel
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

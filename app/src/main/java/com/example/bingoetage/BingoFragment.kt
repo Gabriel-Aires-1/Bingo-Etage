@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,7 +10,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.fragment.app.activityViewModels
-import com.example.bingoetagelta.viewmodel.BingoViewModel
+import com.example.bingoetage.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 

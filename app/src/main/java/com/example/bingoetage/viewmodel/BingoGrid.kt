@@ -1,8 +1,7 @@
-package com.example.bingoetagelta.viewmodel
+package com.example.bingoetage.viewmodel
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 
 @Entity(primaryKeys = ["day", "month", "year"])

@@ -1,4 +1,4 @@
-package com.example.bingoetagelta.colors
+package com.example.bingoetage.colors
 
 import android.graphics.Color
 

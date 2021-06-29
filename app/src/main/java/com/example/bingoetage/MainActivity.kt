@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,7 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.bingoetagelta.viewmodel.BingoViewModel
+import com.example.bingoetage.viewmodel.BingoViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity(),
         {
             // User chose the "Settings" item, show the app settings UI...
             val intent = Intent()
-            intent.setClassName(this, "com.example.bingoetagelta.SettingsActivity")
+            intent.setClassName(this, "com.example.bingoetage.SettingsActivity")
             startActivity(intent)
 
             true

@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

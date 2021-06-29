@@ -27,6 +27,7 @@ import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
@@ -137,12 +138,15 @@ class CalendarFragment2 : Fragment()
                     )
 
                     // Select the current date if no other date was selected
-                    if (selectedDate == null &&
-                        day.date.dayOfMonth == currentDay &&
+                    if (day.date.dayOfMonth == currentDay &&
                         day.date.monthValue - 1  == currentMonth &&
                         day.date.year == currentYear)
                     {
-                        changeSelectedDate(container, day)
+                        // At calendar initialisation, the selected date is null
+                        // set the selected date to current day
+                        if (selectedDate == null)
+                            changeSelectedDate(container, day)
+
                         todayDate = container
                     }
 
@@ -201,7 +205,7 @@ class CalendarFragment2 : Fragment()
     // Select the container passed in argument
     // Unselect the container in selectedDate variable
     // Update the viewModel
-    fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
+    private fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
     {
         selectedDate?.selectDay(false)
         container.selectDay(true)
@@ -217,8 +221,9 @@ class CalendarFragment2 : Fragment()
     }
 
     // Function to select current date
-    fun setSelectedDateToCurrent()
+    fun setSelectedDateToToday()
     {
+        calendarView.notifyDateChanged(LocalDate.now())
         changeSelectedDate(todayDate, todayDate.day)
     }
 

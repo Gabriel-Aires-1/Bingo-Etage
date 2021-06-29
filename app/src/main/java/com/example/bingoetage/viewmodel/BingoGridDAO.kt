@@ -1,4 +1,4 @@
-package com.example.bingoetagelta.viewmodel
+package com.example.bingoetage.viewmodel
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +11,15 @@ interface BingoGridDAO
 
     @Delete
     suspend fun delete(bingoGrid: BingoGrid)
+
+    @Query("""
+        DELETE FROM BingoGrid
+        WHERE 
+                day = :bingoGridDay 
+            AND month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    suspend fun deleteDay(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
 
     @Query("""
         SELECT * FROM bingoGrid 
@@ -32,6 +41,23 @@ interface BingoGridDAO
         WHERE month = :bingoGridMonth 
         """)
     fun loadForMonthFlow(bingoGridMonth: Int): Flow<List<BingoGrid>>
+
+    @Query("""
+        SELECT * FROM bingoGrid 
+        WHERE 
+                month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    fun loadForYearMonthFlow(bingoGridYear: Int, bingoGridMonth: Int): Flow<List<BingoGrid>>
+
+    @Query("""
+        SELECT * FROM bingoGrid 
+        WHERE  
+                day = :bingoGridDay 
+            AND month = :bingoGridMonth 
+            AND year = :bingoGridYear
+        """)
+    fun loadFlow(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int): Flow<BingoGrid>
 
     @Query("DELETE FROM bingoGrid")
     suspend fun deleteDatabase()

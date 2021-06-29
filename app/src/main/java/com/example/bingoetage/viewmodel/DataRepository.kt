@@ -1,10 +1,10 @@
-package com.example.bingoetagelta.viewmodel
+package com.example.bingoetage.viewmodel
 
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
 import androidx.room.Room
-import com.example.bingoetagelta.R
+import com.example.bingoetage.R
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,6 +27,12 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         bingoGridDAO.loadForMonth(bingoGridMonth)
     fun getBingoGridsFromMonthFlow(bingoGridMonth: Int)=
         bingoGridDAO.loadForMonthFlow(bingoGridMonth)
+    fun getBingoGridsFromYearMonthFlow(bingoGridYear: Int, bingoGridMonth: Int)=
+        bingoGridDAO.loadForYearMonthFlow(bingoGridYear, bingoGridMonth)
+    fun getBingoGridFlow(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)=
+        bingoGridDAO.loadFlow(bingoGridDay,bingoGridMonth,bingoGridYear)
+    suspend fun deleteDay(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int) =
+        bingoGridDAO.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
 
 
     fun getUsername() = pref.getString("username", "")
@@ -52,5 +58,7 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         context.resources.getIntArray(R.array.diagArray_1),
     )
     val bonusArray = context.resources.getIntArray(R.array.bonusArray)
+
+    val floorList = listOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 
 }

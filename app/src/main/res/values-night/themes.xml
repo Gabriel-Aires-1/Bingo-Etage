@@ -1,24 +1,58 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.BingoEtageLTA" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.BingoEtage" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/grey_1</item>
+        <!--<item name="colorPrimary">@color/grey_1</item>
         <item name="colorPrimaryVariant">@color/black</item>
-        <item name="colorOnPrimary">@color/grey_10</item>
+        <item name="colorOnPrimary">@color/grey_10</item>-->
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/purple_700</item>
+        <!--<item name="colorSecondary">@color/purple_700</item>
         <item name="colorSecondaryVariant">@color/purple_500</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/black</item>-->
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+<!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
-        <item name="textColor">@color/white</item>
-        <item name="textColorSecondary">@color/grey_2</item>
-        <item name="button_background">@drawable/button_night</item>
+        <!--<item name="textColor">@color/white</item>
+        <item name="textColorSecondary">@color/grey_2</item>-->
+
+
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
+
+        <item name="colorPrimary">@color/accent_darkblue</item>
+        <item name="colorPrimaryVariant">?attr/colorPrimary</item>
+        <item name="colorOnPrimary">@color/md_white_1000</item>
+        <item name="colorSecondary">?attr/colorPrimary</item>
+        <item name="colorSecondaryVariant">?attr/colorPrimaryVariant</item>
+        <item name="colorOnSecondary">?attr/colorOnPrimary</item>
+        <!--<item name="colorToolbar">?attr/colorSurface</item>
+        <item name="colorOnToolbar">?attr/colorOnSurface</item>-->
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="android:colorBackground">@color/background_dark</item>
+        <item name="android:divider">@color/divider_dark</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarDividerColor" tools:targetApi="o_mr1">@null</item>
+        <item name="android:enforceNavigationBarContrast" tools:targetApi="Q">false</item>
+<!--        <item name="android:backgroundDimAmount">0.32</item>-->
+<!--        <item name="windowActionModeOverlay">true</item>-->
+
+
+        <item name="button_background">@drawable/button_bingo</item>
         <item name="edit_button_icon">@drawable/ic_baseline_edit_white</item>
         <!-- Toolbar -->
         <item name="setting_icon">@drawable/ic_baseline_settings_white</item>
         <item name="calendar_icon">@drawable/ic_baseline_calendar_white</item>
+
+        <!--        Calendar-->
+        <item name="calendar_day_default_background_color">@color/background_dark</item>
+        <item name="calendar_day_default_text_color">@color/md_white_1000</item>
+        <item name="calendar_day_border_color">@color/divider_dark</item>
+        <item name="calendar_day_selected_border_color">@color/accent_lightblue</item>
+        <item name="calendar_day_background_color_min">@color/md_green_500</item>
+        <item name="calendar_day_background_color_max">@color/md_red_A700</item>
+        <item name="calendar_day_text_disabled_color">@color/md_white_1000_50</item>
+        <item name="calendar_day_notification_color">@color/md_purple_A700</item>
     </style>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.bingoetagelta
+package com.example.bingoetage
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -15,7 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.bingoetagelta.viewmodel.BingoViewModel
+import com.example.bingoetage.viewmodel.BingoViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(),
 {
 
     private lateinit var bingoFragment : BingoFragment
-    private lateinit var calendarFragment: CalendarFragment
+    private lateinit var calendarFragment: CalendarFragment2
     private lateinit var viewPager: ViewPager2
     private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
     private lateinit var tabLayout: TabLayout
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(),
         viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
         viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment
+        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment2
 
         viewPager.adapter = viewPagerAdapter
 
@@ -59,6 +59,9 @@ class MainActivity : AppCompatActivity(),
                             else -> resources.getString(R.string.unknown_tab)
                         }
         }.attach()
+
+        // Loading all tabs at once
+        viewPager.offscreenPageLimit = 2
 
         // Set listener for theme preference
         PreferenceManager.getDefaultSharedPreferences(this)
@@ -92,15 +95,21 @@ class MainActivity : AppCompatActivity(),
     {
         R.id.calendar_menu ->
         {
-            calendarFragment.setDateCalendarView(Calendar.getInstance())
+            calendarFragment.setSelectedDateToToday()
             viewPager.currentItem = 0
+            Toast.makeText(
+                this,
+                resources.getString(R.string.calendar_toast_text),
+                Toast.LENGTH_SHORT
+            ).show()
+
             true
         }
         R.id.setting_menu ->
         {
             // User chose the "Settings" item, show the app settings UI...
             val intent = Intent()
-            intent.setClassName(this, "com.example.bingoetagelta.SettingsActivity")
+            intent.setClassName(this, "com.example.bingoetage.SettingsActivity")
             startActivity(intent)
 
             true
@@ -126,8 +135,8 @@ class MainActivity : AppCompatActivity(),
                 null,
                 false
             ),
-            CalendarFragment.newInstance(
-                currentDate.get(Calendar.DAY_OF_YEAR),
+            CalendarFragment2.newInstance(
+                currentDate.get(Calendar.DAY_OF_MONTH),
                 currentDate.get(Calendar.MONTH),
                 currentDate.get(Calendar.YEAR)
             ),

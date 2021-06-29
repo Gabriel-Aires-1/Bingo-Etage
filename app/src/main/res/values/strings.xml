@@ -2,13 +2,14 @@
 
 
     <!-- App level strings -->
-    <string name="app_name">BingoEtageLTA</string>
+    <string name="app_name">BingoEtage</string>
 
 
     <!-- Main activity strings -->
     <string name="first_tab_name">Grille</string>
     <string name="second_tab_name">Calendrier</string>
     <string name="unknown_tab">Onglet inconnu</string>
+    <string name="calendar_toast_text">Sélection de la date courante</string>
 
 
     <!-- Bingo fragment strings -->
@@ -31,7 +32,8 @@
 
 
     <!-- Calendar fragment strings -->
-    <string name="text_calendar_average">Moyenne du mois courant :\n%1$s</string>
+    <string name="calendar_header_date">%1$s %2$s</string>
+    <string name="calendar_header_average">Moyenne : %.2f</string>
 
 
     <!-- Settings strings -->
@@ -41,13 +43,27 @@
     <string name="theme_dark">Thème nuit</string>
 
     <string name="username_text">Votre nom</string>
-    <string name="main_toolbar_title">Bingo LTA</string>
+    <string name="main_toolbar_title">Bingo des étages</string>
     <string name="settings_toolbar_title">Paramètres</string>
 
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
+
+<!--    Calendar view-->
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Aller à la date courante</string>
+    
+    <string name="trigram_day_1">LUN</string>
+    <string name="trigram_day_2">MAR</string>
+    <string name="trigram_day_3">MER</string>
+    <string name="trigram_day_4">JEU</string>
+    <string name="trigram_day_5">VEN</string>
+    <string name="trigram_day_6">SAM</string>
+    <string name="trigram_day_7">DIM</string>
 
+    <string name="delete_DB_object_yes_button_text">Oui</string>
+    <string name="delete_DB_object_no_button_text">Non</string>
+    <string name="delete_DB_object_title">Suppression</string>
+    <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
 
 </resources>

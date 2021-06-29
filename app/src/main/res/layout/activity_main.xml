@@ -21,8 +21,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_main"
-        app:tabSelectedTextColor="?attr/textColor"
-        app:textColor="?attr/textColorSecondary">
+
+        >
+<!--        app:tabSelectedTextColor="?attr/textColor"-->
+<!--        app:textColor="?attr/textColorSecondary"-->
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

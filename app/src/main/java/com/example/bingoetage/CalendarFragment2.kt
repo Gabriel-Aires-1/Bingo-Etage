@@ -41,7 +41,7 @@ private const val CURRENT_YEAR = "currentYear"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CalendarFragment.newInstance] factory method to
+ * Use the [CalendarFragment2.newInstance] factory method to
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
@@ -169,12 +169,18 @@ class CalendarFragment2 : Fragment()
 
             override fun bind(container: MonthViewContainer, month: CalendarMonth) {
 
+                // tB and tY not working with YearMonth class for API 25 and lower so converting to
+                // calendar before formatting
+                val calFmt = Calendar.getInstance()
+                calFmt.set(Calendar.MONTH, month.yearMonth.monthValue - 1)
+                calFmt.set(Calendar.YEAR, month.yearMonth.year)
+
                 // Set the month and year TextView to current local
                 container.monthYearTextView.text =
                     resources.getString(R.string.calendar_header_date).
                         format(
-                            String.format("%1\$tB", month.yearMonth).capitalize(Locale.ROOT),
-                            String.format("%1\$tY", month.yearMonth)
+                            String.format("%1\$tB", calFmt).capitalize(Locale.ROOT),
+                            String.format("%1\$tY", calFmt)
                         )
 
                 // Attach month bingoGrid LiveData to corresponding header

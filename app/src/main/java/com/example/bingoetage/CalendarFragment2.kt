@@ -232,6 +232,8 @@ class CalendarFragment2 : Fragment()
     {
         calendarView.notifyDateChanged(LocalDate.now())
         changeSelectedDate(todayDate, todayDate.day)
+        // Scroll to date in case it is not currently displayed
+        calendarView.scrollToDate(todayDate.day.date)
     }
 
     // Function to prompt for database row deletion

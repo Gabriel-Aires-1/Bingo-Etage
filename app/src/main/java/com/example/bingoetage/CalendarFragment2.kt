@@ -89,7 +89,7 @@ class CalendarFragment2 : Fragment()
         fragView.findViewById<LinearLayout>(R.id.legendLayout).children.forEachIndexed { index, view ->
             (view as TextView).apply {
                 cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek + index)
-                text = String.format("%1\$ta", cal).toUpperCase(Locale.ROOT)
+                text = String.format("%1\$ta", cal).uppercase(Locale.ROOT)
             }
         }
 
@@ -179,7 +179,8 @@ class CalendarFragment2 : Fragment()
                 container.monthYearTextView.text =
                     resources.getString(R.string.calendar_header_date).
                         format(
-                            String.format("%1\$tB", calFmt).capitalize(Locale.ROOT),
+                            String.format("%1\$tB", calFmt)
+                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
                             String.format("%1\$tY", calFmt)
                         )
 

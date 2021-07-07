@@ -259,14 +259,11 @@ class CalendarFragment2 : Fragment()
     fun setSelectedDateToToday()
     {
         todayDate = LocalDate.now()
-        val oldDate = selectedDate
-        selectedDate = todayDate
-
-        oldDate?.let { calendarView.notifyDateChanged(it) }
-        calendarView.notifyDateChanged(todayDate)
 
         // Scroll to date in case it is not currently displayed
         calendarView.scrollToMonth(todayDate.yearMonth)
+
+        changeSelectedDate(todayDate)
     }
 
     // Function to prompt for database row deletion

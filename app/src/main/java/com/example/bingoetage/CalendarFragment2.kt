@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
@@ -142,10 +141,7 @@ class CalendarFragment2 : Fragment()
                     {
                         // At calendar initialisation, the selected date is null
                         // set the selected date to current day
-                        if (selectedDate == null)
-                        {
-                            selectedDate = day.date
-                        }
+                        if (selectedDate == null) selectedDate = day.date
 
                         todayDate = day.date
                     }
@@ -470,8 +466,9 @@ class CalendarFragment2 : Fragment()
 
     // Container for MonthViews
     class MonthViewContainer(view: View) : ViewContainer(view) {
-        val monthYearTextView: TextView = view.findViewById(R.id.headerMonthYearText)
-        val averageTextView: TextView = view.findViewById(R.id.headerAverageText)
+        private val binding = FragmentCalendar2HeaderBinding.bind(view)
+        val monthYearTextView: TextView = binding.headerMonthYearText
+        val averageTextView: TextView = binding.headerAverageText
         var yearMonthBingoGrids: LiveData<List<BingoGrid>> = MutableLiveData()
 
         // Attach the given LiveData to current MonthView

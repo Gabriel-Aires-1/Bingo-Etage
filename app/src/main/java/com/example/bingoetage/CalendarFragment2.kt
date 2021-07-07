@@ -17,6 +17,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.bingoetage.colors.ColorConverter
+import com.example.bingoetage.databinding.FragmentCalendar2Binding
+import com.example.bingoetage.databinding.FragmentCalendar2DayBinding
+import com.example.bingoetage.databinding.FragmentCalendar2HeaderBinding
 import com.example.bingoetage.viewmodel.BingoGrid
 import com.example.bingoetage.viewmodel.BingoViewModel
 import com.kizitonwose.calendarview.CalendarView
@@ -59,6 +62,8 @@ class CalendarFragment2 : Fragment()
     private lateinit var lastMonth: YearMonth
 
     // Views
+    private var _binding: FragmentCalendar2Binding? = null
+    private val binding get() = _binding!!
     private lateinit var calendarView: CalendarView
 
     private val viewModel: BingoViewModel by activityViewModels()
@@ -77,13 +82,14 @@ class CalendarFragment2 : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
+    ): View
     {
         // Inflate the layout for this fragment
-        val fragView = inflater.inflate(R.layout.fragment_calendar2, container, false)
+        _binding = FragmentCalendar2Binding.inflate(inflater, container, false)
+        val fragView = binding.root
 
         // calendarView setup
-        calendarView = fragView.findViewById(R.id.calendarView2)
+        calendarView = binding.calendarView2
 
         // Set the day legend to current local
         val cal = Calendar.getInstance()
@@ -91,7 +97,7 @@ class CalendarFragment2 : Fragment()
         cal.set(Calendar.MINUTE,0)
         cal.set(Calendar.SECOND,0)
         cal.set(Calendar.MILLISECOND,0)
-        fragView.findViewById<LinearLayout>(R.id.legendLayout).children.forEachIndexed { index, view ->
+        binding.legendLayout.root.children.forEachIndexed { index, view ->
             (view as TextView).apply {
                 cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek + index)
                 text = String.format("%1\$ta", cal).uppercase(Locale.ROOT)
@@ -311,6 +317,12 @@ class CalendarFragment2 : Fragment()
         return average
     }
 
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 
     companion object
@@ -337,9 +349,10 @@ class CalendarFragment2 : Fragment()
 
     // Container for DayViews
     class DayViewContainer(view: View) : ViewContainer(view) {
-        private val textView: TextView = view.findViewById(R.id.dayText)
-        private val layout: ConstraintLayout = view.findViewById(R.id.dayLayout)
-        private val notifTextView: TextView = view.findViewById(R.id.dayNotification)
+        private val binding = FragmentCalendar2DayBinding.bind(view)
+        private val textView: TextView = binding.dayText
+        private val layout: ConstraintLayout = binding.dayLayout
+        private val notifTextView: TextView = binding.dayNotification
         lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable

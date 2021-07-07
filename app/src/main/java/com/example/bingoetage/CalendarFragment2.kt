@@ -208,11 +208,25 @@ class CalendarFragment2 : Fragment()
 
         // Calendar view setup
         val currentMonth = YearMonth.now()
-        val firstMonth = currentMonth.minusMonths(10)
-        val lastMonth = currentMonth.plusMonths(10)
+        firstMonth = currentMonth.minusMonths(12)
+        lastMonth = currentMonth.plusMonths(12)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
         calendarView.setup(firstMonth,lastMonth,firstDayOfWeek)
         calendarView.scrollToMonth(currentMonth)
+
+        // Setup calendarViewScrollMonthListener
+        calendarView.monthScrollListener = { month ->
+            if(firstMonth.plusMonths(2)>month.yearMonth)
+            {
+                firstMonth = firstMonth.minusMonths(12)
+                calendarView.updateMonthRange(firstMonth, lastMonth)
+            }
+            else if(lastMonth.minusMonths(2)<month.yearMonth)
+            {
+                lastMonth = lastMonth.plusMonths(12)
+                calendarView.updateMonthRange(firstMonth, lastMonth)
+            }
+        }
 
         // Return fragment
         return fragView

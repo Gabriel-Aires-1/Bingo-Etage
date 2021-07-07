@@ -51,8 +51,13 @@ class CalendarFragment2 : Fragment()
     private var currentMonth: Int = 1
     private var currentYear: Int = 1
 
-    private var selectedDate: DayViewContainer? = null
-    private lateinit var todayDate: DayViewContainer
+    private var selectedDate: LocalDate? = null
+    private lateinit var todayDate: LocalDate
+
+    // First and last months
+    private lateinit var firstMonth: YearMonth
+    private lateinit var lastMonth: YearMonth
+
     // Views
     private lateinit var calendarView: CalendarView
 
@@ -124,6 +129,21 @@ class CalendarFragment2 : Fragment()
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
 
+                    // Select the current date if no other date was selected
+                    if (day.date.dayOfMonth == currentDay &&
+                        day.date.monthValue - 1  == currentMonth &&
+                        day.date.year == currentYear)
+                    {
+                        // At calendar initialisation, the selected date is null
+                        // set the selected date to current day
+                        if (selectedDate == null)
+                        {
+                            selectedDate = day.date
+                        }
+
+                        todayDate = day.date
+                    }
+
                     // Attach bingo grid LiveData to DayViewContainer
                     container.attachBingoGrid(viewModel.getDayBingoGrid(
                         day.date.dayOfMonth,
@@ -137,22 +157,12 @@ class CalendarFragment2 : Fragment()
                         { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
                     )
 
-                    // Select the current date if no other date was selected
-                    if (day.date.dayOfMonth == currentDay &&
-                        day.date.monthValue - 1  == currentMonth &&
-                        day.date.year == currentYear)
-                    {
-                        // At calendar initialisation, the selected date is null
-                        // set the selected date to current day
-                        if (selectedDate == null)
-                            changeSelectedDate(container, day)
-
-                        todayDate = container
-                    }
+                    // Change selected state in accordance with selected date data
+                    container.selectDay(selectedDate == day.date)
 
                     // Set OnClickListener to change selected date and update ViewModel
                     container.view.setOnClickListener {
-                        changeSelectedDate(container, day)
+                        changeSelectedDate(day.date)
                     }
 
                     // Set OnLongClickListener to prompt to remove database row
@@ -212,28 +222,34 @@ class CalendarFragment2 : Fragment()
     // Select the container passed in argument
     // Unselect the container in selectedDate variable
     // Update the viewModel
-    private fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
+    private fun changeSelectedDate(date: LocalDate)
     {
-        selectedDate?.selectDay(false)
-        container.selectDay(true)
+        val oldDate = selectedDate
+        selectedDate = date
 
-        selectedDate = container
+        calendarView.notifyDateChanged(date)
+        oldDate?.let { calendarView.notifyDateChanged(it) }
 
         // Update the viewModel
         viewModel.changeCurrentDate(
-            day.date.year,
-            day.date.monthValue - 1,
-            day.date.dayOfMonth
+            date.year,
+            date.monthValue - 1,
+            date.dayOfMonth
         )
     }
 
     // Function to select current date
     fun setSelectedDateToToday()
     {
-        calendarView.notifyDateChanged(LocalDate.now())
-        changeSelectedDate(todayDate, todayDate.day)
+        todayDate = LocalDate.now()
+        val oldDate = selectedDate
+        selectedDate = todayDate
+
+        oldDate?.let { calendarView.notifyDateChanged(it) }
+        calendarView.notifyDateChanged(todayDate)
+
         // Scroll to date in case it is not currently displayed
-        calendarView.scrollToDate(todayDate.day.date)
+        calendarView.scrollToDate(todayDate)
     }
 
     // Function to prompt for database row deletion
@@ -314,14 +330,6 @@ class CalendarFragment2 : Fragment()
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable
 
-        private var selected = false
-
-        // Reset selected state at initialisation
-        init
-        {
-            selectDay(false)
-        }
-
         // Attach the given BingoGrid LiveData to current DayViewContainer
         fun attachBingoGrid(bingoGrid: LiveData<BingoGrid>)
         {
@@ -383,10 +391,9 @@ class CalendarFragment2 : Fragment()
         }
 
         // Function to change selected day and display accordingly
-        fun selectDay(selected: Boolean)
+        fun selectDay(selectedState: Boolean)
         {
-            this.selected = selected
-            if (selected)
+            if (selectedState)
             {
                 gradientDrawable.setStroke(8, selectedBorderColor)
                 textView.setTypeface(null, Typeface.BOLD)

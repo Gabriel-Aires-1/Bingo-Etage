@@ -28,6 +28,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import com.kizitonwose.calendarview.utils.yearMonth
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
@@ -265,7 +266,7 @@ class CalendarFragment2 : Fragment()
         calendarView.notifyDateChanged(todayDate)
 
         // Scroll to date in case it is not currently displayed
-        calendarView.scrollToDate(todayDate)
+        calendarView.scrollToMonth(todayDate.yearMonth)
     }
 
     // Function to prompt for database row deletion
@@ -349,7 +350,7 @@ class CalendarFragment2 : Fragment()
         private val textView: TextView = binding.dayText
         private val layout: ConstraintLayout = binding.dayLayout
         private val notifTextView: TextView = binding.dayNotification
-        lateinit var day: CalendarDay
+        private lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable
 
@@ -375,7 +376,7 @@ class CalendarFragment2 : Fragment()
         }
 
         // Function to make current DayViewContainer invisible
-        fun makeInvisible()
+        private fun makeInvisible()
         {
             gradientDrawable.setColor(defaultBackGroundColor)
             textView.setTextColor(defaultTextColor)

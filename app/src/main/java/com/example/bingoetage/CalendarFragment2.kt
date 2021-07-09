@@ -218,12 +218,12 @@ class CalendarFragment2 : Fragment()
 
         // Setup calendarViewScrollMonthListener
         calendarView.monthScrollListener = { month ->
-            if(firstMonth.plusMonths(2)>month.yearMonth)
+            if(firstMonth.plusMonths(6)>month.yearMonth)
             {
                 firstMonth = firstMonth.minusMonths(12)
                 calendarView.updateMonthRange(firstMonth, lastMonth)
             }
-            else if(lastMonth.minusMonths(2)<month.yearMonth)
+            else if(lastMonth.minusMonths(6)<month.yearMonth)
             {
                 lastMonth = lastMonth.plusMonths(12)
                 calendarView.updateMonthRange(firstMonth, lastMonth)

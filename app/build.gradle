@@ -87,6 +87,9 @@ dependencies {
     // calendarView
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation 'com.github.kizitonwose:CalendarView:1.0.4'
+
+    // Stat fragment
+    implementation 'com.jjoe64:graphview:4.2.2'
 }
 
 kapt {

@@ -61,4 +61,11 @@ interface BingoGridDAO
 
     @Query("DELETE FROM bingoGrid")
     suspend fun deleteDatabase()
+
+    @Query("""
+        SELECT * FROM bingoGrid 
+        WHERE 
+                editingBoolInput = :editing
+        """)
+    fun loadAllFromEditing(editing: Boolean): Flow<List<BingoGrid>>
 }

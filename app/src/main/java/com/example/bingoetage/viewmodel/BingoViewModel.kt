@@ -209,4 +209,6 @@ class BingoViewModel @Inject constructor(
 
     // Get the grid from database corresponding to the given day
     fun getDayBingoGrid(day: Int, month: Int, year: Int) = repository.getBingoGridFlow(day, month, year).distinctUntilChanged().asLiveData()
+
+    fun getEditingBingoGrids(editing: Boolean) = repository.getEditingBingoGrids(editing).distinctUntilChanged().asLiveData()
 }

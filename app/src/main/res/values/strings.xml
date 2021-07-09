@@ -65,5 +65,6 @@
     <string name="delete_DB_object_no_button_text">Non</string>
     <string name="delete_DB_object_title">Suppression</string>
     <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
+    <string name="third_tab_name">Statistiques</string>
 
 </resources>

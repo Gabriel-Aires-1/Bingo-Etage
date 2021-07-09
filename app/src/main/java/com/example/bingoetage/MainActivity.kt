@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(),
 
     private lateinit var bingoFragment : BingoFragment
     private lateinit var calendarFragment: CalendarFragment2
+    private lateinit var statFragment: StatFragment
     private lateinit var viewPager: ViewPager2
     private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
     private lateinit var tabLayout: TabLayout
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(),
         viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
         bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
         calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment2
+        statFragment = viewPagerAdapter.getFragment(2) as StatFragment
 
         viewPager.adapter = viewPagerAdapter
 
@@ -56,6 +58,7 @@ class MainActivity : AppCompatActivity(),
                         {
                             0 -> resources.getString(R.string.first_tab_name)
                             1 -> resources.getString(R.string.second_tab_name)
+                            2 -> resources.getString(R.string.third_tab_name)
                             else -> resources.getString(R.string.unknown_tab)
                         }
         }.attach()
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity(),
                 currentDate.get(Calendar.MONTH),
                 currentDate.get(Calendar.YEAR)
             ),
+            StatFragment.newInstance(),
         )
 
 

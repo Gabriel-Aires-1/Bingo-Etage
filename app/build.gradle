@@ -89,7 +89,7 @@ dependencies {
     implementation 'com.github.kizitonwose:CalendarView:1.0.4'
 
     // Stat fragment
-    implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
 }
 
 kapt {

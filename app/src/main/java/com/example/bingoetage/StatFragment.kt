@@ -9,9 +9,11 @@ import androidx.fragment.app.activityViewModels
 import com.example.bingoetage.databinding.FragmentStatBinding
 import com.example.bingoetage.viewmodel.BingoGrid
 import com.example.bingoetage.viewmodel.BingoViewModel
+import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.GridLabelRenderer
+import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -43,6 +45,40 @@ class StatFragment : Fragment() {
         _binding = FragmentStatBinding.inflate(inflater, container, false)
 
         graphAveragePerMonths = binding.graphAveragePerMonths
+        graphAveragePerMonths.title = resources.getString(R.string.average_graph_title)
+        graphAveragePerMonths.viewport.isScrollable = true
+        graphAveragePerMonths.viewport.isXAxisBoundsManual = true
+        graphAveragePerMonths.viewport.setMinX(202100.0)
+        graphAveragePerMonths.viewport.setMaxX(202105.0)
+        graphAveragePerMonths.gridLabelRenderer.horizontalAxisTitle = resources.getString(R.string.average_graph_x_title)
+        graphAveragePerMonths.gridLabelRenderer.verticalAxisTitle = resources.getString(R.string.average_graph_y_title)
+        graphAveragePerMonths.gridLabelRenderer.gridStyle = GridLabelRenderer.GridStyle.BOTH
+        graphAveragePerMonths.gridLabelRenderer.numHorizontalLabels = 6
+
+        graphAveragePerMonths.gridLabelRenderer.labelFormatter = object : DefaultLabelFormatter() {
+            override fun formatLabel(value: Double, isValueX: Boolean): String {
+                return if (isValueX) {
+                    // X values month and year
+                    val year = value.toInt()/100
+                    val month = value.toInt() % 100
+
+                    val calFmt = Calendar.getInstance()
+                    calFmt.set(Calendar.MONTH, month)
+                    calFmt.set(Calendar.YEAR, year)
+
+                    resources.getString(R.string.average_graph_x_label_format)
+                        .format(
+                            //((value.toInt() + 1) % 100).toString(),
+                            String.format("%1\$tb", calFmt)
+                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                            (value.toInt()/100).toString()
+                        )
+                } else {
+                    // y values converted to Int
+                    value.toInt().toString()
+                }
+            }
+        }
 
         // Setup observer for month average graph view
         viewModel.getEditingBingoGrids(false).observe(
@@ -71,20 +107,27 @@ class StatFragment : Fragment() {
 
         val datapoints = mutableListOf<DataPoint>()
 
-        averagePerMonths.forEach { (yearMonth, average) ->
-            datapoints.add(
-                DataPoint(
-                    yearMonth.first*100+yearMonth.second.toDouble(),
-                    average
+        averagePerMonths
+            .toSortedMap(compareBy({it.first}, {it.second}))
+            .forEach { (yearMonth, average) ->
+                datapoints.add(
+                    DataPoint(
+                        yearMonth.first*100+yearMonth.second.toDouble(),
+                        average
+                    )
                 )
-            )
-        }
+            }
 
-        val series = LineGraphSeries(
+        val series = BarGraphSeries(
             datapoints.toTypedArray()
         )
 
         graphAveragePerMonths.addSeries(series)
+        graphAveragePerMonths.viewport.setMinY(0.0)
+        graphAveragePerMonths.viewport.isYAxisBoundsManual = true
+        series.isDrawValuesOnTop = true
+        series.valuesOnTopColor = graphAveragePerMonths.titleColor
+        series.spacing = 50
     }
 
     override fun onDestroyView()

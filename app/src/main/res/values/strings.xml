@@ -68,9 +68,7 @@
     <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
 
     <!--    Statistic view-->
+    <string name="average_month_tab_title">Moyenne</string>
     <string name="average_graph_title">Moyenne par mois</string>
-    <string name="average_graph_x_title">Mois</string>
-    <string name="average_graph_y_title">Moyenne</string>
-    <string name="average_graph_x_label_format">%1$s\n%2$s</string>
 
 </resources>

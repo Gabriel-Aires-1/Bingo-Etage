@@ -105,36 +105,25 @@ class AveragePerMonthFragment : Fragment() {
         val sumResultAndCountPerMonths = mutableMapOf<Pair<Int, Int>, Pair<Int, Int>>()
 
         bingoGridList?.forEach { bingoGrid ->
-            val yearMonthPair = Pair<Int, Int>(bingoGrid.year, bingoGrid.month)
-            sumResultAndCountPerMonths[yearMonthPair] = Pair(
-                sumResultAndCountPerMonths[yearMonthPair]?.first?.plus(bingoGrid.totalValue) ?: bingoGrid.totalValue,
-                sumResultAndCountPerMonths[yearMonthPair]?.second?.plus(1) ?: 1,
+            sumResultAndCountPerMonths[bingoGrid.month] = Pair(
+                sumResultAndCountPerMonths[bingoGrid.month]?.first?.plus(bingoGrid.totalValue) ?: bingoGrid.totalValue,
+                sumResultAndCountPerMonths[bingoGrid.month]?.second?.plus(1) ?: 1,
             )
         }
 
-        val averagePerMonths = mutableMapOf<Pair<Int, Int>, Double>()
-        sumResultAndCountPerMonths.forEach { (yearMonth, sumCount) ->
-            averagePerMonths[yearMonth] = sumCount.first / sumCount.second.toDouble()
-        }
+        val sortedAveragePerMonths = mutableMapOf<Int, Double>()
+        for (i in 0..11) sortedAveragePerMonths[i] = 0.0
 
-        val sortedAveragePerMonths = averagePerMonths.toSortedMap(compareBy({it.first}, {it.second}))
-        val firstData = sortedAveragePerMonths.firstKey()
-        val lastData = sortedAveragePerMonths.lastKey()
-        for (i in 0..((lastData.first-firstData.first)*12+(lastData.second-firstData.second)))
-        {
-            val key = Pair(firstData.first+(firstData.second+i)/12, (firstData.second+i)%12)
-            if(!sortedAveragePerMonths.containsKey(key))
-                sortedAveragePerMonths[key] = 0.0
+        sumResultAndCountPerMonths.forEach { (month, sumCount) ->
+            sortedAveragePerMonths[month] = sumCount.first / sumCount.second.toDouble()
         }
-
 
         val dataEntries = mutableListOf<DataEntry>()
         val calFmt = Calendar.getInstance()
 
         sortedAveragePerMonths
-            .forEach { (yearMonth, average) ->
-                calFmt.set(Calendar.MONTH, yearMonth.second)
-                calFmt.set(Calendar.YEAR, yearMonth.first)
+            .forEach { (month, average) ->
+                calFmt.set(Calendar.MONTH, month)
 
                 dataEntries.add(
                     ValueDataEntry(

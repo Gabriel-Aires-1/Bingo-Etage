@@ -69,6 +69,8 @@
 
     <!--    Statistic view-->
     <string name="average_month_tab_title">Moyenne</string>
+    <!--    average per month-->
+    <string name="spinner_text_year">Année : </string>
     <string name="average_graph_title">Moyenne par mois</string>
 
 </resources>

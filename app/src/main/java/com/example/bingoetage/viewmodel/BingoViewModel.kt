@@ -211,4 +211,8 @@ class BingoViewModel @Inject constructor(
     fun getDayBingoGrid(day: Int, month: Int, year: Int) = repository.getBingoGridFlow(day, month, year).distinctUntilChanged().asLiveData()
 
     fun getEditingBingoGrids(editing: Boolean) = repository.getEditingBingoGrids(editing).distinctUntilChanged().asLiveData()
+
+    fun getYearEditingBingoGrids(year:Int, editing: Boolean) = repository.getYearEditingBingoGrids(year, editing).distinctUntilChanged().asLiveData()
+
+    fun getDistinctYears() = repository.getDistinctYears().distinctUntilChanged().asLiveData()
 }

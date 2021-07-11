@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.anychart.APIlib
@@ -35,6 +37,7 @@ class AveragePerMonthFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var graphAveragePerMonths: AnyChartView
+    private lateinit var spinner: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +52,21 @@ class AveragePerMonthFragment : Fragment() {
 
         graphAveragePerMonths = binding.graphAveragePerMonths
         graphAveragePerMonths.setProgressBar(binding.progressBar)
+
+        spinner = binding.spinner
+        viewModel.getDistinctYears().observe(
+            viewLifecycleOwner,
+            { yearList ->
+                val mutableYearList = yearList.toMutableList()
+                if (mutableYearList.isEmpty())
+                    viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
+                val adapter =
+                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableYearList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+                spinner.adapter = adapter
+            }
+        )
 
         val vertical: Cartesian = AnyChart.vertical()
 

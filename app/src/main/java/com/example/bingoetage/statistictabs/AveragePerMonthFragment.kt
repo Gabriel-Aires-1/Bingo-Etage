@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import com.anychart.APIlib
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.DataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.charts.Cartesian
+import com.anychart.core.cartesian.series.Bar
 import com.anychart.data.Set
 import com.example.bingoetage.R
 import com.example.bingoetage.databinding.FragmentAveragePerMonthBinding
@@ -29,7 +32,7 @@ import java.util.*
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class AveragePerMonthFragment : Fragment() {
+class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private val viewModel: BingoViewModel by activityViewModels()
 
@@ -37,7 +40,9 @@ class AveragePerMonthFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var graphAveragePerMonths: AnyChartView
+    private lateinit var bar: Bar
     private lateinit var spinner: Spinner
+    private var bingoGridList: LiveData<List<BingoGrid>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,21 +58,6 @@ class AveragePerMonthFragment : Fragment() {
         graphAveragePerMonths = binding.graphAveragePerMonths
         graphAveragePerMonths.setProgressBar(binding.progressBar)
 
-        spinner = binding.spinner
-        viewModel.getDistinctYears().observe(
-            viewLifecycleOwner,
-            { yearList ->
-                val mutableYearList = yearList.toMutableList()
-                if (mutableYearList.isEmpty())
-                    viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
-                val adapter =
-                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableYearList)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-                spinner.adapter = adapter
-            }
-        )
-
         val vertical: Cartesian = AnyChart.vertical()
 
         vertical.animation(true)
@@ -75,7 +65,7 @@ class AveragePerMonthFragment : Fragment() {
 
         val set = Set.instantiate()
         val barData = set.mapAs("{ x: 'x', value: 'value' }")
-        val bar = vertical.bar(barData)
+        bar = vertical.bar(barData)
         bar.labels().format("{%Value}")
 
         vertical.yScale().minimum(0.0)
@@ -83,26 +73,47 @@ class AveragePerMonthFragment : Fragment() {
             .xAxis(true)
             .yAxis(true)
 
-        vertical.xScroller(true)
-
-        vertical.xZoom().setToPointsCount(6, false, vertical.xScale())
-        vertical.xScroller().allowRangeChange(false)
-            .thumbs(false)
+        vertical.xZoom().setToPointsCount(12, false, vertical.xScale())
 
 
         graphAveragePerMonths.setChart(vertical)
 
-        // Setup observer for month average graph view
-        viewModel.getEditingBingoGrids(false).observe(
+        spinner = binding.spinner
+        spinner.onItemSelectedListener = this
+        viewModel.getDistinctYears().observe(
             viewLifecycleOwner,
-            { bingoGridList -> bar.data(getListForGraphAPM( bingoGridList )) }
+            { yearList ->
+
+                val mutableYearList = yearList.toMutableList()
+                val selectedYear = spinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(Calendar.YEAR)
+
+                if (mutableYearList.isEmpty())
+                    viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
+                val adapter =
+                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableYearList)
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+                spinner.adapter = adapter
+                spinner.setSelection(mutableYearList.indexOf(selectedYear))
+            }
         )
 
         return binding.root
     }
 
-    private fun getListForGraphAPM(bingoGridList: List<BingoGrid>?): MutableList<DataEntry> {
-        val sumResultAndCountPerMonths = mutableMapOf<Pair<Int, Int>, Pair<Int, Int>>()
+    private fun updateBarChart(year: Int)
+    {
+        bingoGridList?.removeObservers(viewLifecycleOwner)
+        bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
+        bingoGridList!!.observe(
+            viewLifecycleOwner,
+            { bingoGridList -> bar.data(getListForGraphAPM(bingoGridList)) }
+        )
+    }
+
+    private fun getListForGraphAPM(bingoGridList: List<BingoGrid>?): MutableList<DataEntry>
+    {
+        val sumResultAndCountPerMonths = mutableMapOf<Int, Pair<Int, Int>>()
 
         bingoGridList?.forEach { bingoGrid ->
             sumResultAndCountPerMonths[bingoGrid.month] = Pair(
@@ -152,5 +163,14 @@ class AveragePerMonthFragment : Fragment() {
          */
         @JvmStatic
         fun newInstance() = AveragePerMonthFragment()
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        if (parent != null) {
+            updateBarChart(parent.getItemAtPosition(position).toString().toInt())
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 }

@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.anychart.APIlib
 import com.example.bingoetage.databinding.FragmentStatBinding
 import com.example.bingoetage.statistictabs.AveragePerMonthFragment
+import com.example.bingoetage.statistictabs.FloorPieChartFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ class StatFragment : Fragment() {
     private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
     private lateinit var tabLayout: TabLayout
     private lateinit var averagePerMonthFragment : AveragePerMonthFragment
+    private lateinit var floorPieChartFragment : FloorPieChartFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,7 @@ class StatFragment : Fragment() {
         viewPagerAdapter =
             ViewPagerFragmentAdapter(childFragmentManager, lifecycle)
         averagePerMonthFragment = viewPagerAdapter.getFragment(0) as AveragePerMonthFragment
+        floorPieChartFragment = viewPagerAdapter.getFragment(1) as FloorPieChartFragment
 
         viewPager.adapter = viewPagerAdapter
 
@@ -59,6 +62,7 @@ class StatFragment : Fragment() {
             tab.text = when(position)
             {
                 0 -> resources.getString(R.string.average_month_tab_title)
+                1 -> resources.getString(R.string.floor_pie_chart_tab_title)
                 else -> resources.getString(R.string.unknown_tab)
             }
         }.attach()
@@ -94,6 +98,7 @@ class StatFragment : Fragment() {
     {
         private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
             AveragePerMonthFragment.newInstance(),
+            FloorPieChartFragment.newInstance(),
         )
 
         override fun getItemCount(): Int

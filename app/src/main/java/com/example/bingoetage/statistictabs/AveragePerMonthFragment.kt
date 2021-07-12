@@ -101,13 +101,20 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
+    }
+
     private fun updateBarChart(year: Int)
     {
         bingoGridList?.removeObservers(viewLifecycleOwner)
         bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
         bingoGridList!!.observe(
             viewLifecycleOwner,
-            { bingoGridList -> bar.data(getListForGraphAPM(bingoGridList)) }
+            { bingoGridList ->
+                APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
+                bar.data(getListForGraphAPM(bingoGridList)) }
         )
     }
 

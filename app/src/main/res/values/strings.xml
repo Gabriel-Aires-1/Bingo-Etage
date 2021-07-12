@@ -69,8 +69,11 @@
 
     <!--    Statistic view-->
     <string name="average_month_tab_title">Moyenne</string>
+    <string name="floor_pie_chart_tab_title">Etages</string>
     <!--    average per month-->
     <string name="spinner_text_year">Année : </string>
     <string name="average_graph_title">Moyenne par mois</string>
+    <!--    floor pie chart-->
+    <string name="floor_pie_chart_title">Répartition des étages</string>
 
 </resources>

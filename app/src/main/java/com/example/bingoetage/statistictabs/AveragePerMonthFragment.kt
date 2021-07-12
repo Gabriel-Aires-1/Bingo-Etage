@@ -114,7 +114,9 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
             viewLifecycleOwner,
             { bingoGridList ->
                 APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
-                bar.data(getListForGraphAPM(bingoGridList)) }
+                bar.data(getListForGraphAPM(bingoGridList))
+                bar.name(year.toString())
+            }
         )
     }
 
@@ -151,6 +153,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     )
                 )
             }
+
         return dataEntries
     }
 

@@ -66,7 +66,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val set = Set.instantiate()
         val barData = set.mapAs("{ x: 'x', value: 'value' }")
         bar = vertical.bar(barData)
-        bar.labels().format("{%Value}")
+        bar.labels().format("{%Value}{decimalsCount:2}")
 
         vertical.yScale().minimum(0.0)
         vertical.labels(true)

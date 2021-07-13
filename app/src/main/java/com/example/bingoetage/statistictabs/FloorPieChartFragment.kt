@@ -33,6 +33,8 @@ class FloorPieChartFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var floorPieChart: AnyChartView
+    private lateinit var pie: Pie
+    private var seriesValues: List<DataEntry>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +50,7 @@ class FloorPieChartFragment : Fragment() {
         floorPieChart = binding.floorPieChart
         floorPieChart.setProgressBar(binding.progressBar)
 
-        val pie: Pie = AnyChart.pie()
+        pie = AnyChart.pie()
 
         pie.animation(true)
             .title(resources.getString(R.string.floor_pie_chart_title))
@@ -70,8 +72,9 @@ class FloorPieChartFragment : Fragment() {
         viewModel.getEditingBingoGrids(false).observe(
             viewLifecycleOwner,
             { bingoGridList ->
-                APIlib.getInstance().setActiveAnyChartView(floorPieChart)
-                pie.data(getListForFPC(bingoGridList)) }
+                seriesValues = getListForFPC(bingoGridList)
+                updatePieChartDisplay()
+            }
         )
 
         return binding.root
@@ -79,7 +82,7 @@ class FloorPieChartFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        APIlib.getInstance().setActiveAnyChartView(floorPieChart)
+        updatePieChartDisplay()
     }
 
     private fun getListForFPC(bingoGridList: List<BingoGrid>?): List<DataEntry>
@@ -113,6 +116,12 @@ class FloorPieChartFragment : Fragment() {
                 )
             }
         return dataEntries
+    }
+
+    private fun updatePieChartDisplay()
+    {
+        APIlib.getInstance().setActiveAnyChartView(floorPieChart)
+        pie.data(seriesValues)
     }
 
     override fun onDestroyView()

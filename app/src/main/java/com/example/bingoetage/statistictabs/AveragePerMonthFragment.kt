@@ -43,6 +43,8 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var bar: Bar
     private lateinit var spinner: Spinner
     private var bingoGridList: LiveData<List<BingoGrid>>? = null
+    private var seriesValues: List<DataEntry>? = null
+    private var seriesName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,26 +103,34 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         return binding.root
     }
 
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
-        APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
+        updateBarChartDisplay()
     }
 
-    private fun updateBarChart(year: Int)
+    private fun updateBarChartValues(year: Int)
     {
         bingoGridList?.removeObservers(viewLifecycleOwner)
         bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
         bingoGridList!!.observe(
             viewLifecycleOwner,
             { bingoGridList ->
-                APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
-                bar.data(getListForGraphAPM(bingoGridList))
-                bar.name(year.toString())
+                seriesValues = getListForGraphAPM(bingoGridList)
+                seriesName = year.toString()
+                updateBarChartDisplay()
             }
         )
     }
 
-    private fun getListForGraphAPM(bingoGridList: List<BingoGrid>?): MutableList<DataEntry>
+    private fun updateBarChartDisplay()
+    {
+        APIlib.getInstance().setActiveAnyChartView(graphAveragePerMonths)
+        bar.data(seriesValues)
+        bar.name(seriesName)
+    }
+
+    private fun getListForGraphAPM(bingoGridList: List<BingoGrid>?): List<DataEntry>
     {
         val sumResultAndCountPerMonths = mutableMapOf<Int, Pair<Int, Int>>()
 
@@ -153,7 +163,6 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     )
                 )
             }
-
         return dataEntries
     }
 
@@ -177,7 +186,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         if (parent != null) {
-            updateBarChart(parent.getItemAtPosition(position).toString().toInt())
+            updateBarChartValues(parent.getItemAtPosition(position).toString().toInt())
         }
     }
 

@@ -41,7 +41,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var graphAveragePerMonths: AnyChartView
     private lateinit var bar: Bar
-    private lateinit var spinner: Spinner
+    private lateinit var yearSpinner: Spinner
     private var bingoGridList: LiveData<List<BingoGrid>>? = null
     private var seriesValues: List<DataEntry>? = null
     private var seriesName = ""
@@ -80,14 +80,14 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         graphAveragePerMonths.setChart(vertical)
 
-        spinner = binding.spinner
-        spinner.onItemSelectedListener = this
+        yearSpinner = binding.yearSpinner
+        yearSpinner.onItemSelectedListener = this
         viewModel.getDistinctYears().observe(
             viewLifecycleOwner,
             { yearList ->
 
                 val mutableYearList = yearList.toMutableList()
-                val selectedYear = spinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(Calendar.YEAR)
+                val selectedYear = yearSpinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(Calendar.YEAR)
 
                 if (mutableYearList.isEmpty())
                     viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
@@ -95,10 +95,12 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableYearList)
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-                spinner.adapter = adapter
-                spinner.setSelection(mutableYearList.indexOf(selectedYear))
+                yearSpinner.adapter = adapter
+                yearSpinner.setSelection(mutableYearList.indexOf(selectedYear))
             }
         )
+
+        binding.typeSpinner.onItemSelectedListener = this
 
         return binding.root
     }
@@ -109,11 +111,14 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         updateBarChartDisplay()
     }
 
-    private fun updateBarChartValues(year: Int)
+    private fun updateBarChartValues(year: Int?)
     {
         bingoGridList?.removeObservers(viewLifecycleOwner)
-        bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
-        bingoGridList!!.observe(
+        if(year != null)
+        {
+            bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
+        }
+        bingoGridList?.observe(
             viewLifecycleOwner,
             { bingoGridList ->
                 seriesValues = getListForGraphAPM(bingoGridList)
@@ -132,11 +137,19 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun getListForGraphAPM(bingoGridList: List<BingoGrid>?): List<DataEntry>
     {
+        fun bingoGridValue(bingoGrid: BingoGrid) =
+            when(binding.typeSpinner.selectedItemPosition)
+            {
+                0 -> {bingoGrid.totalValue}
+                1 -> {bingoGrid.checkedArrayInput.count { it }}
+                else -> {bingoGrid.totalValue}
+            }
+
         val sumResultAndCountPerMonths = mutableMapOf<Int, Pair<Int, Int>>()
 
         bingoGridList?.forEach { bingoGrid ->
             sumResultAndCountPerMonths[bingoGrid.month] = Pair(
-                sumResultAndCountPerMonths[bingoGrid.month]?.first?.plus(bingoGrid.totalValue) ?: bingoGrid.totalValue,
+                sumResultAndCountPerMonths[bingoGrid.month]?.first?.plus(bingoGridValue(bingoGrid)) ?: bingoGridValue(bingoGrid),
                 sumResultAndCountPerMonths[bingoGrid.month]?.second?.plus(1) ?: 1,
             )
         }
@@ -185,8 +198,14 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        if (parent != null) {
-            updateBarChartValues(parent.getItemAtPosition(position).toString().toInt())
+        when(parent?.id)
+        {
+            R.id.yearSpinner -> updateBarChartValues(
+                parent.getItemAtPosition(position).toString().toInt()
+            )
+            R.id.typeSpinner -> updateBarChartValues(
+                null
+            )
         }
     }
 

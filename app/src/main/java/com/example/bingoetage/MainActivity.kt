@@ -165,7 +165,11 @@ class MainActivity : AppCompatActivity(),
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?)
     {
-        if(key.equals("theme_preference")) applyDayNightMode()
+        when(key)
+        {
+            "theme_preference" -> applyDayNightMode()
+            "username" -> reloadBingoGrid()
+        }
     }
 
     private fun applyDayNightMode()
@@ -182,4 +186,6 @@ class MainActivity : AppCompatActivity(),
             }
         )
     }
+
+    private fun reloadBingoGrid() = viewModel.reloadBingoGrid()
 }

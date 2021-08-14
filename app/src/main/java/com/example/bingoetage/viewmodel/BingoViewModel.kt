@@ -186,15 +186,9 @@ class BingoViewModel @Inject constructor(
     fun deleteGrid(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
     {
         // In main thread in order to update calendar afterwards if needed
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
-        }
+        runBlocking { repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear) }
         // Update the values in current bingoGrid var to reflect the database deletion
-        updateCheckedValues(
-            BooleanArray(numberOfButton) { false }.toList(),
-            true
-        )
+        reloadBingoGrid()
     }
 
     // Change the month reflected in currentMonthBingoGrids
@@ -215,4 +209,13 @@ class BingoViewModel @Inject constructor(
     fun getYearEditingBingoGrids(year:Int, editing: Boolean) = repository.getYearEditingBingoGrids(year, editing).distinctUntilChanged().asLiveData()
 
     fun getDistinctYears() = repository.getDistinctYears().distinctUntilChanged().asLiveData()
+
+    fun reloadBingoGrid()
+    {
+        changeCurrentDate(
+            currentDate.value!!.get(Calendar.YEAR),
+            currentDate.value!!.get(Calendar.MONTH),
+            currentDate.value!!.get(Calendar.DAY_OF_MONTH),
+        )
+    }
 }

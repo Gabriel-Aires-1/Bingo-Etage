@@ -65,8 +65,6 @@ class FloorPieChartFragment : Fragment() {
             .itemsLayout(LegendLayout.HORIZONTAL)
             .align(Align.CENTER)*/
 
-        pie.animation(true)
-
         floorPieChart.setChart(pie)
 
         viewModel.getEditingBingoGrids(false).observe(

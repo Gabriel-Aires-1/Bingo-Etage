@@ -29,6 +29,12 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         bingoGridDAO.loadForMonthFlow(bingoGridMonth)
     fun getBingoGridsFromYearMonthFlow(bingoGridYear: Int, bingoGridMonth: Int)=
         bingoGridDAO.loadForYearMonthFlow(bingoGridYear, bingoGridMonth)
+    fun getEditingBingoGrids(editing: Boolean)=
+        bingoGridDAO.loadAllFromEditing(editing)
+    fun getYearEditingBingoGrids(year:Int, editing: Boolean)=
+        bingoGridDAO.loadAllYearFromEditing(year, editing)
+    fun getDistinctYears()=
+        bingoGridDAO.loadDistinctYears()
     fun getBingoGridFlow(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)=
         bingoGridDAO.loadFlow(bingoGridDay,bingoGridMonth,bingoGridYear)
     suspend fun deleteDay(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int) =

@@ -11,4 +11,9 @@
         <item>light</item>
         <item>dark</item>
     </string-array>
+
+    <string-array name="spinner_average_chart_type">
+        <item>Bingo</item>
+        <item>Nombre d\'arrêt</item>
+    </string-array>
 </resources>

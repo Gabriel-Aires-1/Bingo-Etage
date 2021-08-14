@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.children
@@ -17,6 +16,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.bingoetage.colors.ColorConverter
+import com.example.bingoetage.databinding.FragmentCalendar2Binding
+import com.example.bingoetage.databinding.FragmentCalendar2DayBinding
+import com.example.bingoetage.databinding.FragmentCalendar2HeaderBinding
 import com.example.bingoetage.viewmodel.BingoGrid
 import com.example.bingoetage.viewmodel.BingoViewModel
 import com.kizitonwose.calendarview.CalendarView
@@ -26,6 +28,7 @@ import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
 import com.kizitonwose.calendarview.ui.MonthHeaderFooterBinder
 import com.kizitonwose.calendarview.ui.ViewContainer
+import com.kizitonwose.calendarview.utils.yearMonth
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
@@ -41,7 +44,7 @@ private const val CURRENT_YEAR = "currentYear"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [CalendarFragment.newInstance] factory method to
+ * Use the [CalendarFragment2.newInstance] factory method to
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
@@ -51,12 +54,31 @@ class CalendarFragment2 : Fragment()
     private var currentMonth: Int = 1
     private var currentYear: Int = 1
 
-    private var selectedDate: DayViewContainer? = null
-    private lateinit var todayDate: DayViewContainer
+    private var selectedDate: LocalDate? = null
+    private lateinit var todayDate: LocalDate
+
+    // First and last months
+    private lateinit var firstMonth: YearMonth
+    private lateinit var lastMonth: YearMonth
+
     // Views
+    private var _binding: FragmentCalendar2Binding? = null
+    private val binding get() = _binding!!
     private lateinit var calendarView: CalendarView
 
     private val viewModel: BingoViewModel by activityViewModels()
+
+    // Colors for day view variables
+    private var defaultDayBackGroundColor: Int = 0
+    private var defaultDayTextColor: Int = 0
+    private var dayBackGroundColorMin: Int = 0
+    private var dayBackGroundColorMax: Int = 0
+    private var dayTextDisabledColor: Int = 0
+    private var defaultDayBorderColor: Int = 0
+    private var selectedDayBorderColor: Int = 0
+
+    private var dayMinValue = 0
+    private var dayMaxValue = 0
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -72,13 +94,14 @@ class CalendarFragment2 : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
+    ): View
     {
         // Inflate the layout for this fragment
-        val fragView = inflater.inflate(R.layout.fragment_calendar2, container, false)
+        _binding = FragmentCalendar2Binding.inflate(inflater, container, false)
+        val fragView = binding.root
 
         // calendarView setup
-        calendarView = fragView.findViewById(R.id.calendarView2)
+        calendarView = binding.calendarView2
 
         // Set the day legend to current local
         val cal = Calendar.getInstance()
@@ -86,31 +109,29 @@ class CalendarFragment2 : Fragment()
         cal.set(Calendar.MINUTE,0)
         cal.set(Calendar.SECOND,0)
         cal.set(Calendar.MILLISECOND,0)
-        fragView.findViewById<LinearLayout>(R.id.legendLayout).children.forEachIndexed { index, view ->
+        binding.legendLayout.root.children.forEachIndexed { index, view ->
             (view as TextView).apply {
                 cal.set(Calendar.DAY_OF_WEEK, cal.firstDayOfWeek + index)
-                text = String.format("%1\$ta", cal).toUpperCase(Locale.ROOT)
+                text = String.format("%1\$ta", cal).uppercase(Locale.ROOT)
             }
         }
 
         // Get colors from theme
-        val value = TypedValue()
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_default_background_color, value, true)
-        val defaultBackGroundColor = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_default_text_color, value, true)
-        val defaultTextColor = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_background_color_min, value, true)
-        val backGroundColorMin = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_background_color_max, value, true)
-        val backGroundColorMax = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_text_disabled_color, value, true)
-        val textDisabledColor = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_border_color, value, true)
-        val borderColor = value.data
-        requireContext().theme.resolveAttribute(R.attr.calendar_day_selected_border_color, value, true)
-        val selectedBorderColor = value.data
-        DayViewContainer.setColors(defaultBackGroundColor, defaultTextColor, backGroundColorMin, backGroundColorMax, textDisabledColor, borderColor, selectedBorderColor)
-        DayViewContainer.setMinMaxValues(viewModel.minValue, viewModel.maxValue)
+        val getColorFromTheme = { resid: Int ->
+            val value = TypedValue()
+            requireContext().theme.resolveAttribute(resid, value, true)
+            value.data
+        }
+        defaultDayBackGroundColor = getColorFromTheme(R.attr.calendar_day_default_background_color)
+        defaultDayTextColor = getColorFromTheme(R.attr.calendar_day_default_text_color)
+        dayBackGroundColorMin = getColorFromTheme(R.attr.calendar_day_background_color_min)
+        dayBackGroundColorMax = getColorFromTheme(R.attr.calendar_day_background_color_max)
+        dayTextDisabledColor = getColorFromTheme(R.attr.calendar_day_text_disabled_color)
+        defaultDayBorderColor = getColorFromTheme(R.attr.calendar_day_border_color)
+        selectedDayBorderColor = getColorFromTheme(R.attr.calendar_day_selected_border_color)
+
+        dayMinValue = viewModel.minValue
+        dayMaxValue = viewModel.maxValue
 
 
         calendarView.dayBinder = object : DayBinder<DayViewContainer> {
@@ -123,6 +144,18 @@ class CalendarFragment2 : Fragment()
 
                 if (day.owner == DayOwner.THIS_MONTH) {
                     // If date in current month
+
+                    // Select the current date if no other date was selected
+                    if (day.date.dayOfMonth == currentDay &&
+                        day.date.monthValue - 1  == currentMonth &&
+                        day.date.year == currentYear)
+                    {
+                        // At calendar initialisation, the selected date is null
+                        // set the selected date to current day
+                        if (selectedDate == null) selectedDate = day.date
+
+                        todayDate = day.date
+                    }
 
                     // Attach bingo grid LiveData to DayViewContainer
                     container.attachBingoGrid(viewModel.getDayBingoGrid(
@@ -137,29 +170,8 @@ class CalendarFragment2 : Fragment()
                         { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
                     )
 
-                    // Select the current date if no other date was selected
-                    if (day.date.dayOfMonth == currentDay &&
-                        day.date.monthValue - 1  == currentMonth &&
-                        day.date.year == currentYear)
-                    {
-                        // At calendar initialisation, the selected date is null
-                        // set the selected date to current day
-                        if (selectedDate == null)
-                            changeSelectedDate(container, day)
-
-                        todayDate = container
-                    }
-
-                    // Set OnClickListener to change selected date and update ViewModel
-                    container.view.setOnClickListener {
-                        changeSelectedDate(container, day)
-                    }
-
-                    // Set OnLongClickListener to prompt to remove database row
-                    container.view.setOnLongClickListener {
-                        deleteDBObject(day)
-                        true
-                    }
+                    // Change selected state in accordance with selected date data
+                    container.selectDay(selectedDate == day.date)
                 }
             }
         }
@@ -169,12 +181,19 @@ class CalendarFragment2 : Fragment()
 
             override fun bind(container: MonthViewContainer, month: CalendarMonth) {
 
+                // tB and tY not working with YearMonth class for API 25 and lower so converting to
+                // calendar before formatting
+                val calFmt = Calendar.getInstance()
+                calFmt.set(Calendar.MONTH, month.yearMonth.monthValue - 1)
+                calFmt.set(Calendar.YEAR, month.yearMonth.year)
+
                 // Set the month and year TextView to current local
                 container.monthYearTextView.text =
                     resources.getString(R.string.calendar_header_date).
                         format(
-                            String.format("%1\$tB", month.yearMonth).capitalize(Locale.ROOT),
-                            String.format("%1\$tY", month.yearMonth)
+                            String.format("%1\$tB", calFmt)
+                                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() },
+                            String.format("%1\$tY", calFmt)
                         )
 
                 // Attach month bingoGrid LiveData to corresponding header
@@ -191,11 +210,25 @@ class CalendarFragment2 : Fragment()
 
         // Calendar view setup
         val currentMonth = YearMonth.now()
-        val firstMonth = currentMonth.minusMonths(10)
-        val lastMonth = currentMonth.plusMonths(10)
+        firstMonth = currentMonth.minusMonths(12)
+        lastMonth = currentMonth.plusMonths(12)
         val firstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek
         calendarView.setup(firstMonth,lastMonth,firstDayOfWeek)
         calendarView.scrollToMonth(currentMonth)
+
+        // Setup calendarViewScrollMonthListener
+        calendarView.monthScrollListener = { month ->
+            if(firstMonth.plusMonths(6)>month.yearMonth)
+            {
+                firstMonth = firstMonth.minusMonths(12)
+                calendarView.updateMonthRange(firstMonth, lastMonth)
+            }
+            else if(lastMonth.minusMonths(6)<month.yearMonth)
+            {
+                lastMonth = lastMonth.plusMonths(12)
+                calendarView.updateMonthRange(firstMonth, lastMonth)
+            }
+        }
 
         // Return fragment
         return fragView
@@ -205,26 +238,31 @@ class CalendarFragment2 : Fragment()
     // Select the container passed in argument
     // Unselect the container in selectedDate variable
     // Update the viewModel
-    private fun changeSelectedDate(container: DayViewContainer, day: CalendarDay)
+    private fun changeSelectedDate(date: LocalDate)
     {
-        selectedDate?.selectDay(false)
-        container.selectDay(true)
+        val oldDate = selectedDate
+        selectedDate = date
 
-        selectedDate = container
+        calendarView.notifyDateChanged(date)
+        oldDate?.let { calendarView.notifyDateChanged(it) }
 
         // Update the viewModel
         viewModel.changeCurrentDate(
-            day.date.year,
-            day.date.monthValue - 1,
-            day.date.dayOfMonth
+            date.year,
+            date.monthValue - 1,
+            date.dayOfMonth
         )
     }
 
     // Function to select current date
     fun setSelectedDateToToday()
     {
-        calendarView.notifyDateChanged(LocalDate.now())
-        changeSelectedDate(todayDate, todayDate.day)
+        todayDate = LocalDate.now()
+
+        // Scroll to date in case it is not currently displayed
+        calendarView.scrollToMonth(todayDate.yearMonth)
+
+        changeSelectedDate(todayDate)
     }
 
     // Function to prompt for database row deletion
@@ -272,6 +310,12 @@ class CalendarFragment2 : Fragment()
         return average
     }
 
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 
     companion object
@@ -297,20 +341,26 @@ class CalendarFragment2 : Fragment()
     }
 
     // Container for DayViews
-    class DayViewContainer(view: View) : ViewContainer(view) {
-        private val textView: TextView = view.findViewById(R.id.dayText)
-        private val layout: ConstraintLayout = view.findViewById(R.id.dayLayout)
-        private val notifTextView: TextView = view.findViewById(R.id.dayNotification)
-        lateinit var day: CalendarDay
+    inner class DayViewContainer(view: View) : ViewContainer(view) {
+        private val binding = FragmentCalendar2DayBinding.bind(view)
+        private val textView: TextView = binding.dayText
+        private val layout: ConstraintLayout = binding.dayLayout
+        private val notifTextView: TextView = binding.dayNotification
+        private lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable
 
-        private var selected = false
+        init {
+            // Set OnClickListener to change selected date and update ViewModel
+            layout.setOnClickListener {
+                changeSelectedDate(day.date)
+            }
 
-        // Reset selected state at initialisation
-        init
-        {
-            selectDay(false)
+            // Set OnLongClickListener to prompt to remove database row
+            layout.setOnLongClickListener {
+                deleteDBObject(day)
+                true
+            }
         }
 
         // Attach the given BingoGrid LiveData to current DayViewContainer
@@ -335,10 +385,10 @@ class CalendarFragment2 : Fragment()
         }
 
         // Function to make current DayViewContainer invisible
-        fun makeInvisible()
+        private fun makeInvisible()
         {
-            gradientDrawable.setColor(defaultBackGroundColor)
-            textView.setTextColor(defaultTextColor)
+            gradientDrawable.setColor(defaultDayBackGroundColor)
+            textView.setTextColor(defaultDayTextColor)
             changeNotificationVisibility(false)
             layout.visibility = View.INVISIBLE
         }
@@ -352,8 +402,8 @@ class CalendarFragment2 : Fragment()
             {
                 // If BingoGrid is null (= no data in database)
                 // set display to default, no notifications
-                gradientDrawable.setColor(defaultBackGroundColor)
-                textView.setTextColor(textDisabledColor)
+                gradientDrawable.setColor(defaultDayBackGroundColor)
+                textView.setTextColor(dayTextDisabledColor)
                 changeNotificationVisibility(false)
             }
             else
@@ -363,72 +413,37 @@ class CalendarFragment2 : Fragment()
                     ColorConverter.interpolateFromRGB(
                         // Using square root to add more spaces between low values and reduce space between high values
                         // helps using the color range better
-                        sqrt((bingoGrid.totalValue - minValue).toFloat() / (maxValue - minValue)),
-                        backGroundColorMin,
-                        backGroundColorMax,
+                        sqrt((bingoGrid.totalValue - dayMinValue).toFloat() / (dayMaxValue - dayMinValue)),
+                        dayBackGroundColorMin,
+                        dayBackGroundColorMax,
                     )
                 )
-                textView.setTextColor(defaultTextColor)
+                textView.setTextColor(defaultDayTextColor)
                 changeNotificationVisibility(bingoGrid.editingBoolInput)
             }
         }
 
         // Function to change selected day and display accordingly
-        fun selectDay(selected: Boolean)
+        fun selectDay(selectedState: Boolean)
         {
-            this.selected = selected
-            if (selected)
+            if (selectedState)
             {
-                gradientDrawable.setStroke(8, selectedBorderColor)
+                gradientDrawable.setStroke(8, selectedDayBorderColor)
                 textView.setTypeface(null, Typeface.BOLD)
             }
             else
             {
-                gradientDrawable.setStroke(2, defaultBorderColor)
+                gradientDrawable.setStroke(2, defaultDayBorderColor)
                 textView.setTypeface(null, Typeface.NORMAL)
-            }
-        }
-
-        // Companion object to encapsulate glabal variables and functions (setters)
-        companion object
-        {
-            private var defaultBackGroundColor: Int = 0
-            private var defaultTextColor: Int = 0
-            private var backGroundColorMin: Int = 0
-            private var backGroundColorMax: Int = 0
-            private var textDisabledColor: Int = 0
-            private var defaultBorderColor: Int = 0
-            private var selectedBorderColor: Int = 0
-
-            private var minValue = 0
-            private var maxValue = 0
-
-            fun setColors(defaultBackGroundColor: Int,defaultTextColor: Int,
-                          backGroundColorMin:Int,backGroundColorMax: Int,
-                          textDisabledColor: Int,
-                          defaultBorderColor: Int, selectedBorderColor: Int)
-            {
-                this.defaultBackGroundColor=defaultBackGroundColor
-                this.defaultTextColor= defaultTextColor
-                this.backGroundColorMin=backGroundColorMin
-                this.backGroundColorMax=backGroundColorMax
-                this.textDisabledColor=textDisabledColor
-                this.defaultBorderColor = defaultBorderColor
-                this.selectedBorderColor = selectedBorderColor
-            }
-
-            fun setMinMaxValues(min: Int, max: Int)
-            {
-                minValue = min
-                maxValue = max
             }
         }
     }
 
     // Container for MonthViews
     class MonthViewContainer(view: View) : ViewContainer(view) {
-        val monthYearTextView: TextView = view.findViewById(R.id.headerMonthYearText)
-        val averageTextView: TextView = view.findViewById(R.id.headerAverageText)
+        private val binding = FragmentCalendar2HeaderBinding.bind(view)
+        val monthYearTextView: TextView = binding.headerMonthYearText
+        val averageTextView: TextView = binding.headerAverageText
         var yearMonthBingoGrids: LiveData<List<BingoGrid>> = MutableLiveData()
 
         // Attach the given LiveData to current MonthView

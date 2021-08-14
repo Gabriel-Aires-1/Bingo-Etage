@@ -9,55 +9,46 @@
     <ToggleButton
         android:id="@+id/button1"
         style="@style/ToggleButtonStyle"
-        android:layout_marginEnd="32dp"
         android:text="@string/text_button_1"
         android:textOff="@string/text_button_1"
         android:textOn="@string/text_button_1"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
         app:layout_constraintEnd_toStartOf="@+id/button2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft" />
 
     <ToggleButton
         android:id="@+id/button2"
         style="@style/ToggleButtonStyle"
-        android:layout_marginBottom="32dp"
-        android:layout_marginTop="32dp"
         android:text="@string/text_button_2"
         android:textOff="@string/text_button_2"
         android:textOn="@string/text_button_2"
         app:layout_constraintBottom_toTopOf="@+id/button5"
         app:layout_constraintEnd_toStartOf="@+id/button3"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHUp"
+        app:layout_constraintVertical_chainStyle="spread" />
 
     <ToggleButton
         android:id="@+id/button3"
         style="@style/ToggleButtonStyle"
-        android:layout_marginStart="32dp"
         android:text="@string/text_button_3"
         android:textOff="@string/text_button_3"
         android:textOn="@string/text_button_3"
         app:layout_constraintBaseline_toBaselineOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
         app:layout_constraintStart_toEndOf="@+id/button2" />
 
     <ToggleButton
         android:id="@+id/button4"
         style="@style/ToggleButtonStyle"
-        android:layout_marginEnd="32dp"
         android:text="@string/text_button_4"
         android:textOff="@string/text_button_4"
         android:textOn="@string/text_button_4"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
         app:layout_constraintEnd_toStartOf="@+id/button5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft" />
 
     <ToggleButton
         android:id="@+id/button5"
@@ -67,99 +58,86 @@
         android:textOn="@string/text_button_5"
         app:layout_constraintBottom_toTopOf="@+id/button8"
         app:layout_constraintEnd_toStartOf="@+id/button6"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button4"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <ToggleButton
         android:id="@+id/button6"
         style="@style/ToggleButtonStyle"
-        android:layout_marginStart="32dp"
         android:text="@string/text_button_6"
         android:textOff="@string/text_button_6"
         android:textOn="@string/text_button_6"
         app:layout_constraintBaseline_toBaselineOf="@+id/button5"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
         app:layout_constraintStart_toEndOf="@+id/button5" />
 
     <ToggleButton
         android:id="@+id/button7"
         style="@style/ToggleButtonStyle"
-        android:layout_marginEnd="32dp"
         android:text="@string/text_button_7"
         android:textOff="@string/text_button_7"
         android:textOn="@string/text_button_7"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
         app:layout_constraintEnd_toStartOf="@+id/button8"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft" />
 
     <ToggleButton
         android:id="@+id/button8"
         style="@style/ToggleButtonStyle"
-        android:layout_marginTop="32dp"
         android:text="@string/text_button_8"
         android:textOff="@string/text_button_8"
         android:textOn="@string/text_button_8"
         app:layout_constraintBottom_toTopOf="@+id/button10"
         app:layout_constraintEnd_toStartOf="@+id/button9"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/button7"
         app:layout_constraintTop_toBottomOf="@+id/button5" />
 
     <ToggleButton
         android:id="@+id/button9"
         style="@style/ToggleButtonStyle"
-        android:layout_marginStart="32dp"
         android:text="@string/text_button_9"
         android:textOff="@string/text_button_9"
         android:textOn="@string/text_button_9"
         app:layout_constraintBaseline_toBaselineOf="@+id/button8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
         app:layout_constraintStart_toEndOf="@+id/button8" />
 
     <ToggleButton
         android:id="@+id/button10"
         style="@style/ToggleButtonStyle"
-        android:layout_marginTop="32dp"
         android:text="@string/text_button_10"
         android:textOff="@string/text_button_10"
         android:textOn="@string/text_button_10"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/textViewBingoCount"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft"
         app:layout_constraintTop_toBottomOf="@+id/button8" />
 
     <TextView
         android:id="@+id/textViewBingoCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
         android:text="@string/text_bingo_count"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/okButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button10" />
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft"
+        app:layout_constraintTop_toBottomOf="@+id/guidelineHDown"
+        app:layout_constraintVertical_chainStyle="spread" />
     <!--        android:textColor="?attr/textColor"-->
 
     <Button
         android:id="@+id/okButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:text="@string/text_ok_button"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guidelineVRight"
+        app:layout_constraintStart_toStartOf="@id/guidelineVLeft"
         app:layout_constraintTop_toBottomOf="@+id/textViewBingoCount" />
 
     <ImageButton
@@ -180,9 +158,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
         android:text="@string/date_format"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineHUp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineHDown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

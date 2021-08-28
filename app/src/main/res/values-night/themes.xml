@@ -53,6 +53,9 @@
         <item name="calendar_day_background_color_max">@color/md_red_A700</item>
         <item name="calendar_day_text_disabled_color">@color/md_white_1000_50</item>
         <item name="calendar_day_notification_color">@color/md_purple_A700</item>
+
+        <!--        Stat-->
+        <item name="stat_tab_text_color">@color/md_white_1000</item>
     </style>
 
 </resources>

@@ -75,6 +75,7 @@ class FloorPieChartFragment : Fragment() {
         return binding.root
     }
 
+    // Transform the data to a list usable by the chart
     private fun getListForFPC(bingoGridList: List<BingoGrid>?): List<PieEntry>
     {
         val floorCount = mutableMapOf<Int, Int>()
@@ -110,6 +111,7 @@ class FloorPieChartFragment : Fragment() {
         return dataEntries
     }
 
+    // Update the chart display given the list of values
     private fun updatePieChartDisplay(seriesValues: List<PieEntry>)
     {
         val dataSet = PieDataSet(seriesValues, "")

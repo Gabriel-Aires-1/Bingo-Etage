@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.anychart.APIlib
 import com.example.bingoetage.databinding.FragmentStatBinding
 import com.example.bingoetage.statistictabs.AveragePerMonthFragment
 import com.example.bingoetage.statistictabs.FloorPieChartFragment
@@ -78,7 +77,6 @@ class StatFragment : Fragment() {
     {
         super.onDestroyView()
         _binding = null
-        APIlib.getInstance().setActiveAnyChartView(null)
     }
 
     companion object {

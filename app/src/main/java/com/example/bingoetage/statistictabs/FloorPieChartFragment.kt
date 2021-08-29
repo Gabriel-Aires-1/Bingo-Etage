@@ -64,7 +64,7 @@ class FloorPieChartFragment : Fragment() {
         floorPieChart.isRotationEnabled = false
 
         // entry label styling
-        floorPieChart.setEntryLabelColor(Color.WHITE)
+        floorPieChart.setEntryLabelColor(textColor)
         floorPieChart.setEntryLabelTextSize(20f)
 
         viewModel.getEditingBingoGrids(false).observe(
@@ -139,7 +139,7 @@ class FloorPieChartFragment : Fragment() {
             }
         )
         data.setValueTextSize(18f)
-        data.setValueTextColor(Color.WHITE)
+        data.setValueTextColor(textColor)
         floorPieChart.data = data
 
         // undo all highlights

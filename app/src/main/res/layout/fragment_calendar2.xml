@@ -6,7 +6,8 @@
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical"
-    tools:context=".CalendarFragment2">
+    tools:context=".CalendarFragment2"
+    android:background="?android:colorBackground">
 
     <include
         android:id="@+id/legendLayout"

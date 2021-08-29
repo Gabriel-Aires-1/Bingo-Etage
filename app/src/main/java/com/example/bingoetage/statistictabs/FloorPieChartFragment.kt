@@ -37,7 +37,8 @@ class FloorPieChartFragment : Fragment() {
     private var _binding: FragmentFloorPieChartBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var floorPieChart: PieChart
+    private var _floorPieChart: PieChart? = null
+    private val floorPieChart get() = _floorPieChart!!
 
     @ColorInt private var textColor = 0
 
@@ -53,7 +54,7 @@ class FloorPieChartFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentFloorPieChartBinding.inflate(inflater, container, false)
 
-        floorPieChart = binding.floorPieChart
+        _floorPieChart = binding.floorPieChart
 
         // display settings
         floorPieChart.animateY(1000, Easing.EaseInOutQuad)
@@ -150,6 +151,7 @@ class FloorPieChartFragment : Fragment() {
     {
         super.onDestroyView()
         _binding = null
+        _floorPieChart = null
     }
 
     companion object {

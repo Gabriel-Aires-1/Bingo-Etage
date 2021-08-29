@@ -50,8 +50,10 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var _binding: FragmentAveragePerMonthBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var graphAveragePerMonths: HorizontalBarChart
-    private lateinit var yearSpinner: Spinner
+    private var _graphAveragePerMonths: HorizontalBarChart? = null
+    private val graphAveragePerMonths get() = _graphAveragePerMonths!!
+    private var _yearSpinner: Spinner? = null
+    private val yearSpinner get() = _yearSpinner!!
     private var bingoGridList: LiveData<List<BingoGrid>>? = null
 
     @ColorInt private var textColor = 0
@@ -72,7 +74,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // Inflate the layout for this fragment
         _binding = FragmentAveragePerMonthBinding.inflate(inflater, container, false)
 
-        graphAveragePerMonths = binding.graphAveragePerMonths
+        _graphAveragePerMonths = binding.graphAveragePerMonths
 
         // display settings
         graphAveragePerMonths.setDrawBarShadow(false)
@@ -143,7 +145,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // Year spinner
         // On year list data update, change the year list in the spinner
         // On selection change, change the livedata observed for graph update
-        yearSpinner = binding.yearSpinner
+        _yearSpinner = binding.yearSpinner
         yearSpinner.onItemSelectedListener = this
         viewModel.getDistinctYears().observe(
             viewLifecycleOwner,
@@ -266,6 +268,8 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     {
         super.onDestroyView()
         _binding = null
+        _graphAveragePerMonths = null
+        _yearSpinner = null
     }
 
     companion object {

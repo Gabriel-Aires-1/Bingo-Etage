@@ -15,7 +15,6 @@ import com.example.bingoetage.statistictabs.FloorPieChartFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 
 /**
@@ -29,11 +28,12 @@ class StatFragment : Fragment() {
     private var _binding: FragmentStatBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewPager: ViewPager2
-    private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
-    private lateinit var tabLayout: TabLayout
-    private lateinit var averagePerMonthFragment : AveragePerMonthFragment
-    private lateinit var floorPieChartFragment : FloorPieChartFragment
+    private var _viewPager: ViewPager2? = null
+    private val viewPager get() = _viewPager!!
+    private var _viewPagerAdapter: ViewPagerFragmentAdapter? = null
+    private val viewPagerAdapter get() = _viewPagerAdapter!!
+    private var _tabLayout: TabLayout? = null
+    private val tabLayout get() = _tabLayout!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,15 +46,13 @@ class StatFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentStatBinding.inflate(inflater, container, false)
 
-        viewPager = binding.viewPagerStat
-        viewPagerAdapter =
+        _viewPager = binding.viewPagerStat
+        _viewPagerAdapter =
             ViewPagerFragmentAdapter(childFragmentManager, lifecycle)
-        averagePerMonthFragment = viewPagerAdapter.getFragment(0) as AveragePerMonthFragment
-        floorPieChartFragment = viewPagerAdapter.getFragment(1) as FloorPieChartFragment
 
         viewPager.adapter = viewPagerAdapter
 
-        tabLayout = binding.tabLayoutStat
+        _tabLayout = binding.tabLayoutStat
 
         TabLayoutMediator(tabLayout, viewPager)
         { tab, position ->
@@ -76,6 +74,10 @@ class StatFragment : Fragment() {
     override fun onDestroyView()
     {
         super.onDestroyView()
+        _viewPagerAdapter = null
+        viewPager.adapter = null
+        _viewPager = null
+        _tabLayout = null
         _binding = null
     }
 
@@ -94,24 +96,16 @@ class StatFragment : Fragment() {
     class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         FragmentStateAdapter(fragmentManager, lifecycle)
     {
-        private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
-            AveragePerMonthFragment.newInstance(),
-            FloorPieChartFragment.newInstance(),
-        )
-
-        override fun getItemCount(): Int
-        {
-            return fragmentArray.size
-        }
+        override fun getItemCount(): Int = 2
 
         override fun createFragment(position: Int): Fragment
         {
-            return fragmentArray[position]
-        }
-
-        fun getFragment(position: Int): Fragment
-        {
-            return fragmentArray[position]
+            return when(position)
+            {
+                0 -> AveragePerMonthFragment.newInstance()
+                1 -> FloorPieChartFragment.newInstance()
+                else -> Fragment()
+            }
         }
     }
 }

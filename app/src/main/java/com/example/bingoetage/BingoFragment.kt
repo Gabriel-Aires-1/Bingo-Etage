@@ -34,11 +34,16 @@ class BingoFragment : Fragment(), View.OnClickListener
     private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
     private var editingBool: Boolean = false
 
-    private lateinit var buttonArray : Array<ToggleButton>
-    private lateinit var textVBingoCount : TextView
-    private lateinit var okButton : Button
-    private lateinit var editButton: ImageButton
-    private lateinit var textViewDate: TextView
+    private var _buttonArray : Array<ToggleButton>? = null
+    private val buttonArray get() = _buttonArray!!
+    private var _textVBingoCount : TextView? = null
+    private val textVBingoCount get() = _textVBingoCount!!
+    private var _okButton : Button? = null
+    private val okButton get() = _okButton!!
+    private var _editButton: ImageButton? = null
+    private val editButton get() = _editButton!!
+    private var _textViewDate: TextView? = null
+    private val textViewDate get() = _textViewDate!!
 
     private val viewModel: BingoViewModel by activityViewModels()
 
@@ -63,7 +68,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         // Input initialization
 
         // array of bingo buttons
-        buttonArray = Array(numberOfButton)
+        _buttonArray = Array(numberOfButton)
         {
                 i -> fragView.findViewById(
             resources.getIdentifier(
@@ -75,18 +80,18 @@ class BingoFragment : Fragment(), View.OnClickListener
         for (button in buttonArray) button.setOnClickListener(this)
 
         // Validation button
-        okButton = fragView.findViewById(R.id.okButton)
+        _okButton = fragView.findViewById(R.id.okButton)
         okButton.setOnClickListener(this)
 
         // Edition button
-        editButton = fragView.findViewById(R.id.editButton)
+        _editButton = fragView.findViewById(R.id.editButton)
         editButton.setOnClickListener(this)
 
         // Bingo value textView
-        textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
+        _textVBingoCount = fragView.findViewById(R.id.textViewBingoCount)
 
         // Text view for date display
-        textViewDate = fragView.findViewById(R.id.textViewDate)
+        _textViewDate = fragView.findViewById(R.id.textViewDate)
 
         // Initialize TextView and Buttons
         changeBingoGrid()
@@ -99,6 +104,16 @@ class BingoFragment : Fragment(), View.OnClickListener
 
         // return the view
         return fragView
+    }
+
+    override fun onDestroyView()
+    {
+        super.onDestroyView()
+        _buttonArray = null
+        _textVBingoCount = null
+        _editButton = null
+        _okButton = null
+        _textViewDate = null
     }
 
     // Get the viewModel values and update display

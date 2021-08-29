@@ -26,6 +26,11 @@ class BingoViewModel @Inject constructor(
     private val _currentDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
     val currentDate: LiveData<Calendar> = _currentDate
 
+    // Current date displayed in the app
+    // Updated by the CalendarFragment on selection
+    private val _changeSelectedDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
+    val changeSelectedDate: LiveData<Calendar> = _changeSelectedDate
+
     // Database object
     // Updated when the date has been changed or when the user changed selection
     // Observed by the BingoFragment to update display
@@ -217,5 +222,10 @@ class BingoViewModel @Inject constructor(
             currentDate.value!!.get(Calendar.MONTH),
             currentDate.value!!.get(Calendar.DAY_OF_MONTH),
         )
+    }
+
+    fun changeSelectedDateTo(cal: Calendar)
+    {
+        _changeSelectedDate.value = cal
     }
 }

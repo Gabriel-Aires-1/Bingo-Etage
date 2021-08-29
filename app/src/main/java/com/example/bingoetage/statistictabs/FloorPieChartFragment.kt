@@ -61,6 +61,7 @@ class FloorPieChartFragment : Fragment() {
         floorPieChart.legend.isEnabled = false
         floorPieChart.isDrawHoleEnabled = false
         floorPieChart.description.isEnabled = false
+        floorPieChart.isRotationEnabled = false
 
         // entry label styling
         floorPieChart.setEntryLabelColor(Color.WHITE)

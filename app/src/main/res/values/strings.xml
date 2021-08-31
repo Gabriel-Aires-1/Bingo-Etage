@@ -78,6 +78,8 @@
     <string name="spinner_text_year">Année : </string>
     <string name="spinner_text_type">Type : </string>
     <string name="average_graph_title">Moyenne par mois</string>
+    <string name="spinner_type_option_1">Bingo</string>
+    <string name="spinner_type_option_2">Arrêts</string>
     <!--    floor pie chart-->
     <string name="floor_pie_chart_title">Répartition des étages</string>
 

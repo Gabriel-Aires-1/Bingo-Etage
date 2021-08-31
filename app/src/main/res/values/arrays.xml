@@ -23,7 +23,7 @@
     </string-array>
 
     <string-array name="spinner_average_chart_type">
-        <item>Bingo</item>
-        <item>Arrêts</item>
+        <item>@string/spinner_type_option_1</item>
+        <item>@string/spinner_type_option_2</item>
     </string-array>
 </resources>

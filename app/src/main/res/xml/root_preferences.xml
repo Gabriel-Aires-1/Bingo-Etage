@@ -1,4 +1,4 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
@@ -22,5 +22,16 @@
         app:allowDividerBelow="true"
         />
 <!--    app:textColor="?attr/textColor"-->
+
+    <ListPreference
+        app:entries="@array/number_floors_entries"
+        app:entryValues="@array/number_floors_values"
+        app:defaultValue="10"
+        app:key="number_floors"
+        app:title="@string/number_floors_title"
+        app:useSimpleSummaryProvider="true"
+        app:allowDividerAbove="true"
+        app:allowDividerBelow="true"
+        />
 
 </PreferenceScreen>

@@ -50,6 +50,10 @@
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
 
+    <string name="number_floors_title">Nombre d\'étages à générer</string>
+    <string name="number_floors_10">10</string>
+    <string name="number_floors_7">7</string>
+
     <!--    Calendar view-->
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Aller à la date courante</string>

@@ -47,9 +47,9 @@ class BingoViewModel @Inject constructor(
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
         val cal = Calendar.getInstance()
-        cal.set(Calendar.YEAR, year)
-        cal.set(Calendar.MONTH, month)
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        cal.set(Calendar.MONTH, month)
+        cal.set(Calendar.YEAR, year)
         setCalendarTime(cal)
         _currentDate.value = cal
         _bingoGrid.value = generateBingoGrid()

@@ -149,9 +149,9 @@ class BingoFragment : Fragment(), View.OnClickListener
     private fun updateDateDisplay()
     {
         val date = Calendar.getInstance()
-        date.set(Calendar.YEAR, viewModel.bingoGrid.value!!.year)
-        date.set(Calendar.MONTH, viewModel.bingoGrid.value!!.month)
         date.set(Calendar.DAY_OF_MONTH, viewModel.bingoGrid.value!!.day)
+        date.set(Calendar.MONTH, viewModel.bingoGrid.value!!.month)
+        date.set(Calendar.YEAR, viewModel.bingoGrid.value!!.year)
         textViewDate.text = String.format(resources.getString(R.string.date_format), date)
     }
 

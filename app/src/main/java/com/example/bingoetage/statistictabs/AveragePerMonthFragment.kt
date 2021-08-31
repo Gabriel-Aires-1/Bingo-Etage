@@ -107,6 +107,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
             override fun getFormattedValue(value: Float): String {
                 val calFmt = Calendar.getInstance()
                 // Negative month value for top to bottom ordering in chart
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
                 calFmt.set(Calendar.MONTH, -value.toInt())
                 return String.format("%1\$tb", calFmt)
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
@@ -133,6 +134,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 override fun getFormattedValue(value: Float): String {
                     val calFmt = Calendar.getInstance()
                     // Negative month value for top to bottom ordering in chart
+                    calFmt.set(Calendar.DAY_OF_MONTH, 1)
                     calFmt.set(Calendar.MONTH, -value.toInt())
                     return String.format("%1\$tB", calFmt)
                         .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
@@ -250,6 +252,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         sortedAveragePerMonths
             .forEach { (month, average) ->
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
                 calFmt.set(Calendar.MONTH, month)
 
                 dataEntries.add(

@@ -185,6 +185,7 @@ class CalendarFragment2 : Fragment()
                 // tB and tY not working with YearMonth class for API 25 and lower so converting to
                 // calendar before formatting
                 val calFmt = Calendar.getInstance()
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
                 calFmt.set(Calendar.MONTH, month.yearMonth.monthValue - 1)
                 calFmt.set(Calendar.YEAR, month.yearMonth.year)
 

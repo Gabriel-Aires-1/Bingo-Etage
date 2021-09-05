@@ -30,7 +30,7 @@
     <string name="main_toolbar_title">Floor bingo</string>
     <string name="settings_toolbar_title">Parameters</string>
     <string name="username_empty_reply">Please change the username in the parameters to generate personalized grids</string>
-    <string name="date_format">%1\\$td/%1\\$tm/%1\\$tY</string>
+    <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Go to current date</string>
     <string name="trigram_day_1">MON</string>
     <string name="trigram_day_2">TUE</string>

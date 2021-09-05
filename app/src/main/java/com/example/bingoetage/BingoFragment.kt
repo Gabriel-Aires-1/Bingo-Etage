@@ -64,7 +64,7 @@ class BingoFragment : Fragment(), View.OnClickListener
     ): View?
     {
         // Inflate the layout for this fragment
-        val fragView = inflater.inflate(R.layout.fragment_bingo, container, false)
+        val fragView = inflater.inflate(R.layout.fragment_bingo_10, container, false)
         // Input initialization
 
         // array of bingo buttons

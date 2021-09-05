@@ -227,7 +227,13 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
             when(binding.typeSpinner.selectedItemPosition)
             {
                 0 -> {bingoGrid.totalValue}
-                1 -> {bingoGrid.checkedArrayInput.count { it }}
+                1 -> {
+                    var count = 0
+                    bingoGrid.numberListShuffledInput.forEachIndexed { index, s ->
+                        if (s != "null" && bingoGrid.checkedArrayInput[index]) count++
+                    }
+                    count
+                }
                 else -> {bingoGrid.totalValue}
             }
 

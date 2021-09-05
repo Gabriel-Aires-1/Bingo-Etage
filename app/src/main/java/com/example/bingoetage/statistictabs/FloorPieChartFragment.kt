@@ -84,7 +84,7 @@ class FloorPieChartFragment : Fragment() {
         bingoGridList?.forEach { bingoGrid ->
             bingoGrid.checkedArrayInput
                 .forEachIndexed { index, b ->
-                    if(b)
+                    if(b && bingoGrid.numberListShuffledInput[index] != "null")
                     {
                         floorCount[
                                 bingoGrid.numberListShuffledInput[index]

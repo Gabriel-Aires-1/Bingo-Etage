@@ -216,7 +216,7 @@ class BingoFragment : Fragment(), View.OnClickListener
             }
             button.isChecked = checkedArray[index]
         }
-        updateBingoCount()
+        updateBingoCountTV()
     }
 
     override fun onClick(v: View?)
@@ -227,6 +227,12 @@ class BingoFragment : Fragment(), View.OnClickListener
             R.id.okButton -> editingBool = false
             R.id.editButton -> editingBool = true
         }
+        updateBingoCountInVM()
+    }
+
+    private fun updateBingoCountInVM()
+    {
+
         // Common part
         // Update the view model with current states (checked buttons)
         // The update of the viewModel calls back the observer on the livedata to update the display
@@ -234,7 +240,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         viewModel.updateCheckedValuesAndSave(buttonStateArray.toList(), editingBool)
     }
 
-    private fun updateBingoCount()
+    private fun updateBingoCountTV()
     {
         textVBingoCount.text = resources.getString(
             R.string.text_bingo_count,

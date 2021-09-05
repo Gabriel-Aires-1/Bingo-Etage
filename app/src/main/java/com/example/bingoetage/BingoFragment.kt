@@ -204,7 +204,16 @@ class BingoFragment : Fragment(), View.OnClickListener
 
         for ((index, button) in buttonArray.withIndex())
         {
-            updateText(button, numberArrayShuffled[index])
+            // If string is null, disable the button and check it
+            if (numberArrayShuffled[index] == "null")
+            {
+                updateText(button, "-")
+                button.isEnabled = false
+            }
+            else
+            {
+                updateText(button, numberArrayShuffled[index])
+            }
             button.isChecked = checkedArray[index]
         }
         updateBingoCount()

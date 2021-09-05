@@ -116,12 +116,14 @@ class BingoViewModel @Inject constructor(
         val arrayShuffled = repository.floorListMap[repository.getLayout()]!!.toMutableList()
         arrayShuffled.shuffle(Random(getSeed()))
 
+        val checkedStateArray = Array<Boolean>(numberOfButton) { it -> arrayShuffled[it] == "null" }
+
         return BingoGrid(
             nonNullDay.get(Calendar.DAY_OF_MONTH),
             nonNullDay.get(Calendar.MONTH),
             nonNullDay.get(Calendar.YEAR),
             arrayShuffled,
-            BooleanArray(numberOfButton).toList(),
+            checkedStateArray.toList(),
             true,
             calculateBingoCount(checkedStateArray, repository.getLayout()),
             repository.getLayout()

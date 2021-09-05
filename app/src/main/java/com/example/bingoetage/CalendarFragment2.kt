@@ -64,7 +64,8 @@ class CalendarFragment2 : Fragment()
     // Views
     private var _binding: FragmentCalendar2Binding? = null
     private val binding get() = _binding!!
-    private lateinit var calendarView: CalendarView
+    private var _calendarView: CalendarView? = null
+    private val calendarView get() = _calendarView!!
 
     private val viewModel: BingoViewModel by activityViewModels()
 
@@ -101,7 +102,7 @@ class CalendarFragment2 : Fragment()
         val fragView = binding.root
 
         // calendarView setup
-        calendarView = binding.calendarView2
+        _calendarView = binding.calendarView2
 
         // Set the day legend to current local
         val cal = Calendar.getInstance()
@@ -184,6 +185,7 @@ class CalendarFragment2 : Fragment()
                 // tB and tY not working with YearMonth class for API 25 and lower so converting to
                 // calendar before formatting
                 val calFmt = Calendar.getInstance()
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
                 calFmt.set(Calendar.MONTH, month.yearMonth.monthValue - 1)
                 calFmt.set(Calendar.YEAR, month.yearMonth.year)
 
@@ -230,6 +232,24 @@ class CalendarFragment2 : Fragment()
             }
         }
 
+        // Allow to change the selected date from outside event
+        viewModel.changeSelectedDate.observe(
+            viewLifecycleOwner,
+            { selectedCal ->
+                // converts the calendar instance to LocalDate
+                val date = LocalDate.of(
+                    selectedCal.get(Calendar.YEAR),
+                    selectedCal.get(Calendar.MONTH) + 1,
+                    selectedCal.get(Calendar.DAY_OF_MONTH),
+                )
+
+                // Scroll to date in case it is not currently displayed
+                calendarView.scrollToMonth(date.yearMonth)
+
+                changeSelectedDate(date)
+            }
+        )
+
         // Return fragment
         return fragView
     }
@@ -252,17 +272,6 @@ class CalendarFragment2 : Fragment()
             date.monthValue - 1,
             date.dayOfMonth
         )
-    }
-
-    // Function to select current date
-    fun setSelectedDateToToday()
-    {
-        todayDate = LocalDate.now()
-
-        // Scroll to date in case it is not currently displayed
-        calendarView.scrollToMonth(todayDate.yearMonth)
-
-        changeSelectedDate(todayDate)
     }
 
     // Function to prompt for database row deletion
@@ -314,6 +323,7 @@ class CalendarFragment2 : Fragment()
     {
         super.onDestroyView()
         _binding = null
+        _calendarView = null
     }
 
 

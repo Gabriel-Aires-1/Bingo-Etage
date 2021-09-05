@@ -12,8 +12,18 @@
         <item>dark</item>
     </string-array>
 
+    <string-array name="floor_layout_entries">
+        <item>@string/floor_21</item>
+        <item>@string/floor_18</item>
+    </string-array>
+
+    <string-array name="floor_layout_values">
+        <item>21</item>
+        <item>18</item>
+    </string-array>
+
     <string-array name="spinner_average_chart_type">
-        <item>Bingo</item>
-        <item>Nombre d\'arrêt</item>
+        <item>@string/spinner_type_option_1</item>
+        <item>@string/spinner_type_option_2</item>
     </string-array>
 </resources>

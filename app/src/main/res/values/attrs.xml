@@ -16,4 +16,7 @@
     <attr name="calendar_day_background_color_max" format="color" />
     <attr name="calendar_day_text_disabled_color" format="color" />
     <attr name="calendar_day_notification_color" format="color" />
+
+    <!--    stat-->
+    <attr name="stat_tab_text_color" format="color" />
 </resources>

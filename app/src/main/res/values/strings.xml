@@ -50,6 +50,10 @@
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
 
+    <string name="floor_layout_title">Etage</string>
+    <string name="floor_21">21</string>
+    <string name="floor_18">18</string>
+
     <!--    Calendar view-->
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Aller à la date courante</string>
@@ -74,6 +78,8 @@
     <string name="spinner_text_year">Année : </string>
     <string name="spinner_text_type">Type : </string>
     <string name="average_graph_title">Moyenne par mois</string>
+    <string name="spinner_type_option_1">Bingo</string>
+    <string name="spinner_type_option_2">Arrêts</string>
     <!--    floor pie chart-->
     <string name="floor_pie_chart_title">Répartition des étages</string>
 

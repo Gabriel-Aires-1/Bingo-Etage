@@ -26,13 +26,12 @@ import java.util.*
 class MainActivity : AppCompatActivity(),
     SharedPreferences.OnSharedPreferenceChangeListener
 {
-
-    private lateinit var bingoFragment : BingoFragment
-    private lateinit var calendarFragment: CalendarFragment2
-    private lateinit var statFragment: StatFragment
-    private lateinit var viewPager: ViewPager2
-    private lateinit var viewPagerAdapter: ViewPagerFragmentAdapter
-    private lateinit var tabLayout: TabLayout
+    private var _viewPager: ViewPager2? = null
+    private val viewPager get() = _viewPager!!
+    private var _viewPagerAdapter: ViewPagerFragmentAdapter? = null
+    private val viewPagerAdapter get() = _viewPagerAdapter!!
+    private var _tabLayout: TabLayout? = null
+    private val tabLayout get() = _tabLayout!!
     private val viewModel: BingoViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -42,15 +41,12 @@ class MainActivity : AppCompatActivity(),
         setSupportActionBar(findViewById(R.id.toolbar_main))
 
         // ViewPager
-        viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
-        viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
-        bingoFragment = viewPagerAdapter.getFragment(0) as BingoFragment
-        calendarFragment = viewPagerAdapter.getFragment(1) as CalendarFragment2
-        statFragment = viewPagerAdapter.getFragment(2) as StatFragment
+        _viewPager = findViewById<ViewPager2>(R.id.view_pager_main)
+        _viewPagerAdapter = ViewPagerFragmentAdapter(supportFragmentManager, lifecycle, viewModel)
 
         viewPager.adapter = viewPagerAdapter
 
-        tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
+        _tabLayout = findViewById<TabLayout>(R.id.tab_layout_main)
 
         TabLayoutMediator(tabLayout, viewPager)
         { tab, position ->
@@ -72,6 +68,15 @@ class MainActivity : AppCompatActivity(),
         applyDayNightMode()
 
         usernameCheck()
+    }
+
+    override fun onDestroy()
+    {
+        super.onDestroy()
+        viewPager.adapter = null
+        _viewPager = null
+        _viewPagerAdapter = null
+        _tabLayout = null
     }
 
     private fun usernameCheck()
@@ -98,7 +103,7 @@ class MainActivity : AppCompatActivity(),
     {
         R.id.calendar_menu ->
         {
-            calendarFragment.setSelectedDateToToday()
+            viewModel.changeSelectedDateTo(Calendar.getInstance())
             viewPager.currentItem = 0
             Toast.makeText(
                 this,
@@ -132,40 +137,44 @@ class MainActivity : AppCompatActivity(),
         // Retrieve the current date from viewModel
         private val currentDate = viewModel.currentDate.value ?: Calendar.getInstance()
 
-        private val fragmentArray = arrayOf<Fragment>( //Initialize fragments views
-            BingoFragment.newInstance(
-                null,
-                null,
-                false
-            ),
-            CalendarFragment2.newInstance(
-                currentDate.get(Calendar.DAY_OF_MONTH),
-                currentDate.get(Calendar.MONTH),
-                currentDate.get(Calendar.YEAR)
-            ),
-            StatFragment.newInstance(),
-        )
-
-
-        override fun getItemCount(): Int
-        {
-            return fragmentArray.size
-        }
+        override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment
         {
-            return fragmentArray[position]
-        }
-
-        fun getFragment(position: Int): Fragment
-        {
-            return fragmentArray[position]
+            return when(position)
+            {
+                0 -> BingoFragment.newInstance(
+                    null,
+                    null,
+                    false
+                )
+                1 -> CalendarFragment2.newInstance(
+                    currentDate.get(Calendar.DAY_OF_MONTH),
+                    currentDate.get(Calendar.MONTH),
+                    currentDate.get(Calendar.YEAR)
+                )
+                2-> StatFragment.newInstance()
+                else -> Fragment()
+            }
         }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?)
     {
-        if(key.equals("theme_preference")) applyDayNightMode()
+        when(key)
+        {
+            "theme_preference" -> applyDayNightMode()
+            "username" -> reloadBingoGrid()
+            "number_floors" ->
+            {
+                reloadBingoGrid()
+                reloadBingoGridFragment()
+            }
+        }
+    }
+
+    fun reloadBingoGridFragment(){
+        viewPagerAdapter.notifyItemChanged(0)
     }
 
     private fun applyDayNightMode()
@@ -182,4 +191,6 @@ class MainActivity : AppCompatActivity(),
             }
         )
     }
+
+    private fun reloadBingoGrid() = viewModel.reloadBingoGrid()
 }

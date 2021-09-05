@@ -18,8 +18,8 @@ class BingoViewModel @Inject constructor(
 {
     // Number of bingo buttons
     var numberOfButton = repository.floorListMap[repository.getLayout()]!!.size
-    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "10")
-    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "10")
+    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "21")
+    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "21")
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection

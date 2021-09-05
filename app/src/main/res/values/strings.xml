@@ -50,9 +50,9 @@
     <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
         afin de générer des grilles personnalisées</string>
 
-    <string name="number_floors_title">Nombre d\'étages à générer</string>
-    <string name="number_floors_10">10</string>
-    <string name="number_floors_7">7</string>
+    <string name="floor_layout_title">Etage</string>
+    <string name="floor_21">21</string>
+    <string name="floor_18">18</string>
 
     <!--    Calendar view-->
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>

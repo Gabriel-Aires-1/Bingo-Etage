@@ -24,11 +24,11 @@
 <!--    app:textColor="?attr/textColor"-->
 
     <ListPreference
-        app:entries="@array/number_floors_entries"
-        app:entryValues="@array/number_floors_values"
-        app:defaultValue="10"
+        app:entries="@array/floor_layout_entries"
+        app:entryValues="@array/floor_layout_values"
+        app:defaultValue="21"
         app:key="number_floors"
-        app:title="@string/number_floors_title"
+        app:title="@string/floor_layout_title"
         app:useSimpleSummaryProvider="true"
         app:allowDividerAbove="true"
         app:allowDividerBelow="true"

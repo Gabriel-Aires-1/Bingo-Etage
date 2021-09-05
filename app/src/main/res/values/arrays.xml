@@ -12,14 +12,14 @@
         <item>dark</item>
     </string-array>
 
-    <string-array name="number_floors_entries">
-        <item>@string/number_floors_10</item>
-        <item>@string/number_floors_7</item>
+    <string-array name="floor_layout_entries">
+        <item>@string/floor_21</item>
+        <item>@string/floor_18</item>
     </string-array>
 
-    <string-array name="number_floors_values">
-        <item>10</item>
-        <item>7</item>
+    <string-array name="floor_layout_values">
+        <item>21</item>
+        <item>18</item>
     </string-array>
 
     <string-array name="spinner_average_chart_type">

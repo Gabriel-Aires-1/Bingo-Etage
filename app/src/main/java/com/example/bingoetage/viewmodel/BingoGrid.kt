@@ -10,18 +10,19 @@ data class BingoGrid
     @ColumnInfo(name = "day") var day: Int,
     @ColumnInfo(name = "month") var month: Int,
     @ColumnInfo(name = "year") var year: Int,
-    @ColumnInfo(name = "numberArrayShuffledInput") var numberArrayShuffledInput: List<Int>,
-    @ColumnInfo(name = "checkedArrayInput") var checkedArrayInput: List<Boolean>,
+    @ColumnInfo(name = "numberListShuffledInput") var numberListShuffledInput: List<String>,
+    @ColumnInfo(name = "checkedListInput") var checkedArrayInput: List<Boolean>,
     @ColumnInfo(name = "editingBoolInput") var editingBoolInput: Boolean,
     @ColumnInfo(name = "totalValue") var totalValue: Int,
+    @ColumnInfo(name = "layout") var layout: String,
 )
 
 class Converters
 {
     @TypeConverter
-    fun fromStrToListInt(str: String): List<Int> = str.split(",").map { it.toInt() }
+    fun fromStrToListStr(str: String): List<String> = str.split(",")
     @TypeConverter
-    fun fromListIntToStr(list: List<Int>): String = list.joinToString(",")
+    fun fromListStrToStr(list: List<String>): String = list.joinToString(",")
 
     @TypeConverter
     fun fromStrToListBool(str: String): List<Boolean> = str.split(",").map { it.toBoolean() }

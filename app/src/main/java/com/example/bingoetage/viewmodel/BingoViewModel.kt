@@ -17,14 +17,19 @@ class BingoViewModel @Inject constructor(
     ): ViewModel()
 {
     // Number of bingo buttons
-    val numberOfButton = repository.floorList.size
-    val minValue = calculateBingoCount(BooleanArray(numberOfButton) { false }.toTypedArray())
-    val maxValue = calculateBingoCount(BooleanArray(numberOfButton) { true }.toTypedArray())
+    var numberOfButton = repository.floorListMap[repository.getLayout()]!!.size
+    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "21")
+    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "21")
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection
     private val _currentDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
     val currentDate: LiveData<Calendar> = _currentDate
+
+    // Current date displayed in the app
+    // Updated by the CalendarFragment on selection
+    private val _changeSelectedDate = MutableLiveData(setCalendarTime(Calendar.getInstance()))
+    val changeSelectedDate: LiveData<Calendar> = _changeSelectedDate
 
     // Database object
     // Updated when the date has been changed or when the user changed selection
@@ -42,9 +47,9 @@ class BingoViewModel @Inject constructor(
     fun changeCurrentDate(year: Int, month: Int, dayOfMonth: Int)
     {
         val cal = Calendar.getInstance()
-        cal.set(Calendar.YEAR, year)
-        cal.set(Calendar.MONTH, month)
         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+        cal.set(Calendar.MONTH, month)
+        cal.set(Calendar.YEAR, year)
         setCalendarTime(cal)
         _currentDate.value = cal
         _bingoGrid.value = generateBingoGrid()
@@ -73,7 +78,7 @@ class BingoViewModel @Inject constructor(
         val tmpBingoGrid = bingoGrid.value!!
         tmpBingoGrid.checkedArrayInput = checkedValues
         tmpBingoGrid.editingBoolInput = editingBool
-        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray())
+        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray(), tmpBingoGrid.layout)
         _bingoGrid.value = tmpBingoGrid
     }
 
@@ -88,6 +93,9 @@ class BingoViewModel @Inject constructor(
                 currentDate.value!!.get(Calendar.YEAR),
             )
         }
+        numberOfButton = if (bingoGrid==null) repository.floorListMap[repository.getLayout()]!!.size
+                            else bingoGrid!!.numberListShuffledInput.size
+
         return bingoGrid ?: generateBingoGridFromCurrentDate()
     }
 
@@ -105,25 +113,30 @@ class BingoViewModel @Inject constructor(
             return nonNullDay.hashCode() xor nameHashCode
         }
 
-        val arrayShuffled = repository.floorList.toMutableList()
+        val arrayShuffled = repository.floorListMap[repository.getLayout()]!!.toMutableList()
         arrayShuffled.shuffle(Random(getSeed()))
+
+        val checkedStateArray = Array<Boolean>(numberOfButton) { it -> arrayShuffled[it] == "null" }
 
         return BingoGrid(
             nonNullDay.get(Calendar.DAY_OF_MONTH),
             nonNullDay.get(Calendar.MONTH),
             nonNullDay.get(Calendar.YEAR),
             arrayShuffled,
-            BooleanArray(numberOfButton).toList(),
+            checkedStateArray.toList(),
             true,
-            0
+            calculateBingoCount(checkedStateArray, repository.getLayout()),
+            repository.getLayout()
         )
     }
 
     // Calculate the bingo total
-    private fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
+    private fun calculateBingoCount(checkedStateArray: Array<Boolean>, layout: String): Int
     {
-        fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
+        fun loop2DArrayAndSum(array: Array<IntArray>?, value: Int): Int
         {
+            array ?: return 0
+
             var result = 0
             for (line in array)
             {
@@ -143,10 +156,10 @@ class BingoViewModel @Inject constructor(
         val diagValue = repository.diagValue
         val bonusValue = repository.bonusValue
 
-        val line2DArray = repository.line2DArray
-        val column2DArray = repository.column2DArray
-        val diag2DArray = repository.diag2DArray
-        val bonusArray = repository.bonusArray
+        val line2DArray = repository.linesMap[layout]
+        val column2DArray = repository.columnMap[layout]
+        val diag2DArray = repository.diagMap[layout]
+        val bonusArray = repository.bonusMap[layout]
 
         var result = 0
 
@@ -165,10 +178,13 @@ class BingoViewModel @Inject constructor(
         result += loop2DArrayAndSum(diag2DArray,diagValue)
 
         // bonus check
-        for (caseNum in bonusArray)
-        {
-            if (checkedStateArray[caseNum]) result += bonusValue
+        bonusArray?.let {
+            for (caseNum in it)
+            {
+                if (checkedStateArray[caseNum]) result += bonusValue
+            }
         }
+
 
         return result
     }
@@ -186,15 +202,9 @@ class BingoViewModel @Inject constructor(
     fun deleteGrid(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int)
     {
         // In main thread in order to update calendar afterwards if needed
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
-        }
+        runBlocking { repository.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear) }
         // Update the values in current bingoGrid var to reflect the database deletion
-        updateCheckedValues(
-            BooleanArray(numberOfButton) { false }.toList(),
-            true
-        )
+        reloadBingoGrid()
     }
 
     // Change the month reflected in currentMonthBingoGrids
@@ -215,4 +225,18 @@ class BingoViewModel @Inject constructor(
     fun getYearEditingBingoGrids(year:Int, editing: Boolean) = repository.getYearEditingBingoGrids(year, editing).distinctUntilChanged().asLiveData()
 
     fun getDistinctYears() = repository.getDistinctYears().distinctUntilChanged().asLiveData()
+
+    fun reloadBingoGrid()
+    {
+        changeCurrentDate(
+            currentDate.value!!.get(Calendar.YEAR),
+            currentDate.value!!.get(Calendar.MONTH),
+            currentDate.value!!.get(Calendar.DAY_OF_MONTH),
+        )
+    }
+
+    fun changeSelectedDateTo(cal: Calendar)
+    {
+        _changeSelectedDate.value = cal
+    }
 }

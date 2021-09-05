@@ -312,7 +312,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     class XYMarkerView(context: Context?, private val valueFormatter: ValueFormatter) :
         MarkerView(context, R.layout.custom_hor_bar_chart_marker_view) {
         private val tvContent: TextView = findViewById(R.id.mvContent)
-        private val format: DecimalFormat = DecimalFormat("###.0")
+        private val format: DecimalFormat = DecimalFormat("0.0")
 
         // runs every time the MarkerView is redrawn, can be used to update the
         // content (user-interface)

@@ -93,6 +93,9 @@ class BingoViewModel @Inject constructor(
                 currentDate.value!!.get(Calendar.YEAR),
             )
         }
+        numberOfButton = if (bingoGrid==null) repository.floorListMap[repository.getLayout()]!!.size
+                            else bingoGrid!!.numberListShuffledInput.size
+
         return bingoGrid ?: generateBingoGridFromCurrentDate()
     }
 
@@ -128,8 +131,10 @@ class BingoViewModel @Inject constructor(
     // Calculate the bingo total
     private fun calculateBingoCount(checkedStateArray: Array<Boolean>, layout: String): Int
     {
-        fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
+        fun loop2DArrayAndSum(array: Array<IntArray>?, value: Int): Int
         {
+            array ?: return 0
+
             var result = 0
             for (line in array)
             {
@@ -171,10 +176,13 @@ class BingoViewModel @Inject constructor(
         result += loop2DArrayAndSum(diag2DArray,diagValue)
 
         // bonus check
-        for (caseNum in bonusArray)
-        {
-            if (checkedStateArray[caseNum]) result += bonusValue
+        bonusArray?.let {
+            for (caseNum in it)
+            {
+                if (checkedStateArray[caseNum]) result += bonusValue
+            }
         }
+
 
         return result
     }

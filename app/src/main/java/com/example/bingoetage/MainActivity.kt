@@ -165,7 +165,16 @@ class MainActivity : AppCompatActivity(),
         {
             "theme_preference" -> applyDayNightMode()
             "username" -> reloadBingoGrid()
+            "number_floors" ->
+            {
+                reloadBingoGrid()
+                reloadBingoGridFragment()
+            }
         }
+    }
+
+    fun reloadBingoGridFragment(){
+        viewPagerAdapter.notifyItemChanged(0)
     }
 
     private fun applyDayNightMode()

@@ -1,5 +1,6 @@
 package com.example.bingoetage
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -45,6 +46,11 @@ class BingoFragment : Fragment(), View.OnClickListener
     private var _textViewDate: TextView? = null
     private val textViewDate get() = _textViewDate!!
 
+    private val layoutsMap = hashMapOf(
+        10 to R.layout.fragment_bingo_10,
+        9  to R.layout.fragment_bingo_7,
+    )
+
     private val viewModel: BingoViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -63,8 +69,9 @@ class BingoFragment : Fragment(), View.OnClickListener
         savedInstanceState: Bundle?
     ): View?
     {
+        numberOfButton = viewModel.numberOfButton
         // Inflate the layout for this fragment
-        val fragView = inflater.inflate(R.layout.fragment_bingo_10, container, false)
+        val fragView = inflater.inflate(layoutsMap[numberOfButton]!!, container, false)
         // Input initialization
 
         // array of bingo buttons
@@ -74,7 +81,7 @@ class BingoFragment : Fragment(), View.OnClickListener
             resources.getIdentifier(
                 "button${i + 1}",
                 "id",
-                context?.packageName
+                requireContext().packageName
             ))
         }
         for (button in buttonArray) button.setOnClickListener(this)
@@ -124,9 +131,39 @@ class BingoFragment : Fragment(), View.OnClickListener
             viewModel.bingoGrid.value!!.checkedArrayInput.toBooleanArray(),
             viewModel.bingoGrid.value!!.editingBoolInput,
         )
-        setEditing(editingBool)
-        updateDateDisplay()
-        updateBingoGridDisplay()
+        // If number of floors mismatch reload the fragment
+        if (numberOfButton != viewModel.bingoGrid.value!!.numberListShuffledInput.size)
+        {
+            reloadFragment()
+        }
+        else
+        {
+            setEditing(editingBool)
+            updateDateDisplay()
+            updateBingoGridDisplay()
+        }
+    }
+
+    private fun reloadFragment()
+    {
+        val transaction1 = parentFragmentManager.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) transaction1.setReorderingAllowed(false)
+        transaction1.detach(this)
+
+        val transaction2 = parentFragmentManager.beginTransaction()
+        if (Build.VERSION.SDK_INT >= 26) transaction2.setReorderingAllowed(false)
+        transaction2.attach(this)
+
+        try
+        {
+            transaction1.commitNow()
+            transaction2.commitNow()
+            (activity as MainActivity).reloadBingoGridFragment()
+        }catch (e: IllegalStateException)
+        {
+            transaction1.commit()
+            transaction2.commit()
+        }
     }
 
     // Set the variables and bundle to the new values

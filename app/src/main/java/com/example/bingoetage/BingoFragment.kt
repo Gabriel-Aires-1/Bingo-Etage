@@ -30,7 +30,7 @@ class BingoFragment : Fragment(), View.OnClickListener
     // Rewritten in the onCreate function
     private var numberOfButton: Int = 0
 
-    private var numberArrayShuffled: IntArray = IntArray(numberOfButton)
+    private var numberArrayShuffled: Array<String> = Array(numberOfButton){""}
     private var checkedArray: BooleanArray = BooleanArray(numberOfButton)
     private var editingBool: Boolean = false
 
@@ -52,7 +52,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         super.onCreate(savedInstanceState)
         numberOfButton = viewModel.numberOfButton
         arguments?.let {
-            numberArrayShuffled = it.getIntArray(NUMBER_ARRAY_SHUFFLED) ?: IntArray(numberOfButton)
+            numberArrayShuffled = it.getStringArray(NUMBER_ARRAY_SHUFFLED) ?: Array(numberOfButton){""}
             checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: BooleanArray(numberOfButton)
             editingBool = it.getBoolean(EDITING_BOOL)
         }
@@ -120,7 +120,7 @@ class BingoFragment : Fragment(), View.OnClickListener
     private fun changeBingoGrid()
     {
         setBingoGridBundleVar(
-            viewModel.bingoGrid.value!!.numberArrayShuffledInput.toIntArray(),
+            viewModel.bingoGrid.value!!.numberListShuffledInput.toTypedArray(),
             viewModel.bingoGrid.value!!.checkedArrayInput.toBooleanArray(),
             viewModel.bingoGrid.value!!.editingBoolInput,
         )
@@ -130,16 +130,16 @@ class BingoFragment : Fragment(), View.OnClickListener
     }
 
     // Set the variables and bundle to the new values
-    private fun setBingoGridBundleVar(numberArrayShuffledInput: IntArray?,
+    private fun setBingoGridBundleVar(numberArrayShuffledInput: Array<String>?,
                                       checkedArrayInput: BooleanArray?,
                                       editingBoolInput: Boolean)
     {
-        numberArrayShuffled = numberArrayShuffledInput ?: IntArray(numberOfButton)
+        numberArrayShuffled = numberArrayShuffledInput ?: Array(numberOfButton){""}
         checkedArray = checkedArrayInput ?: BooleanArray(numberOfButton)
         editingBool = editingBoolInput
 
         arguments = Bundle().apply {
-            putIntArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
+            putStringArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
             putBooleanArray(CHECKED_ARRAY, checkedArray)
             putBoolean(EDITING_BOOL, editingBool)
         }
@@ -167,7 +167,7 @@ class BingoFragment : Fragment(), View.OnClickListener
 
         for ((index, button) in buttonArray.withIndex())
         {
-            updateText(button, numberArrayShuffled[index].toString())
+            updateText(button, numberArrayShuffled[index])
             button.isChecked = checkedArray[index]
         }
         updateBingoCount()
@@ -216,12 +216,12 @@ class BingoFragment : Fragment(), View.OnClickListener
          * @return A new instance of fragment BingoFragment.
          */
         @JvmStatic
-        fun newInstance(numberArrayShuffled: IntArray?,
+        fun newInstance(numberArrayShuffled: Array<String>?,
                         checkedArray: BooleanArray?,
                         editingBool: Boolean) =
             BingoFragment().apply {
                 arguments = Bundle().apply {
-                    putIntArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
+                    putStringArray(NUMBER_ARRAY_SHUFFLED, numberArrayShuffled)
                     putBooleanArray(CHECKED_ARRAY, checkedArray)
                     putBoolean(EDITING_BOOL, editingBool)
                 }

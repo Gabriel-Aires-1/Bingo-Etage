@@ -17,7 +17,9 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
     private val db = Room.databaseBuilder(
         context,
         BingoGridDatabase::class.java, "database-name"
-    ).build()
+    )
+        .addMigrations(MIGRATION_1_2)
+        .build()
     private val bingoGridDAO = db.bingoGridDAO()
 
     suspend fun saveBingoGrid(bingoGrid: BingoGrid) = bingoGridDAO.insert(bingoGrid)
@@ -65,6 +67,6 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
     )
     val bonusArray = context.resources.getIntArray(R.array.bonusArray)
 
-    val floorList = listOf(11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+    val floorList = listOf("11", "12", "13", "14", "15", "16", "17", "18", "19", "20")
 
 }

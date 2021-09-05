@@ -1,6 +1,5 @@
 package com.example.bingoetage.statistictabs
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -80,7 +79,7 @@ class FloorPieChartFragment : Fragment() {
     // Transform the data to a list usable by the chart
     private fun getListForFPC(bingoGridList: List<BingoGrid>?): List<PieEntry>
     {
-        val floorCount = mutableMapOf<Int, Int>()
+        val floorCount = mutableMapOf<String, Int>()
 
         bingoGridList?.forEach { bingoGrid ->
             bingoGrid.checkedArrayInput
@@ -88,10 +87,10 @@ class FloorPieChartFragment : Fragment() {
                     if(b)
                     {
                         floorCount[
-                                bingoGrid.numberArrayShuffledInput[index]
+                                bingoGrid.numberListShuffledInput[index]
                         ] =
                             floorCount[
-                                    bingoGrid.numberArrayShuffledInput[index]
+                                    bingoGrid.numberListShuffledInput[index]
                             ]?.plus(1) ?: 1
                     }
                 }

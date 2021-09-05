@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [BingoGrid::class], version = 2)
+@Database(entities = [BingoGrid::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class BingoGridDatabase: RoomDatabase()
 {
@@ -36,5 +36,15 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         database.execSQL("DROP TABLE BingoGrid")
         // Change the table name to the correct one
         database.execSQL("ALTER TABLE BingoGrid_new RENAME TO BingoGrid")
+    }
+}
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(database: SupportSQLiteDatabase) {
+        // Add layout column with a default value of "10"
+        database.execSQL(
+            "ALTER TABLE BingoGrid " +
+                    "ADD COLUMN layout TEXT DEFAULT 10 NOT NULL"
+        )
     }
 }

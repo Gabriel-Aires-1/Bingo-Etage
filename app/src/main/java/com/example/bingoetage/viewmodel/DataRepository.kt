@@ -19,6 +19,7 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         BingoGridDatabase::class.java, "database-name"
     )
         .addMigrations(MIGRATION_1_2)
+        .addMigrations(MIGRATION_2_3)
         .build()
     private val bingoGridDAO = db.bingoGridDAO()
 
@@ -44,6 +45,7 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
 
 
     fun getUsername() = pref.getString("username", "")
+    fun getLayout() = pref.getString("number_floors", "21")!!
 
     val caseValue = context.resources.getInteger(R.integer.caseValue)
     val lineValue = context.resources.getInteger(R.integer.lineValue)
@@ -67,6 +69,29 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
     )
     val bonusArray = context.resources.getIntArray(R.array.bonusArray)
 
-    val floorList = listOf("11", "12", "13", "14", "15", "16", "17", "18", "19", "20")
+    val floorListMap = hashMapOf(
+        "21" to listOf("11", "12", "13", "14", "15", "16", "17", "18", "19", "20"),
+        "18"  to listOf("11", "12", "13", "14", "15", "16", "17", "null", "null")
+    )
+
+    val linesMap = hashMapOf<String, Array<IntArray>?>(
+        "21" to line2DArray,
+        "18" to line2DArray,
+    )
+
+    val columnMap = hashMapOf<String, Array<IntArray>?>(
+        "21" to column2DArray,
+        "18" to column2DArray,
+    )
+
+    val diagMap = hashMapOf<String, Array<IntArray>?>(
+        "21" to diag2DArray,
+        "18" to diag2DArray,
+    )
+
+    val bonusMap = hashMapOf<String, IntArray?>(
+        "21" to bonusArray,
+        "18" to null,
+    )
 
 }

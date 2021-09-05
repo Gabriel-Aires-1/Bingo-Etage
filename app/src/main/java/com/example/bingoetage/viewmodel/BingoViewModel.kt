@@ -17,9 +17,9 @@ class BingoViewModel @Inject constructor(
     ): ViewModel()
 {
     // Number of bingo buttons
-    val numberOfButton = repository.floorList.size
-    val minValue = calculateBingoCount(BooleanArray(numberOfButton) { false }.toTypedArray())
-    val maxValue = calculateBingoCount(BooleanArray(numberOfButton) { true }.toTypedArray())
+    var numberOfButton = repository.floorListMap[repository.getLayout()]!!.size
+    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "10")
+    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "10")
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection
@@ -78,7 +78,7 @@ class BingoViewModel @Inject constructor(
         val tmpBingoGrid = bingoGrid.value!!
         tmpBingoGrid.checkedArrayInput = checkedValues
         tmpBingoGrid.editingBoolInput = editingBool
-        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray())
+        tmpBingoGrid.totalValue = calculateBingoCount(checkedValues.toTypedArray(), tmpBingoGrid.layout)
         _bingoGrid.value = tmpBingoGrid
     }
 
@@ -110,7 +110,7 @@ class BingoViewModel @Inject constructor(
             return nonNullDay.hashCode() xor nameHashCode
         }
 
-        val arrayShuffled = repository.floorList.toMutableList()
+        val arrayShuffled = repository.floorListMap[repository.getLayout()]!!.toMutableList()
         arrayShuffled.shuffle(Random(getSeed()))
 
         return BingoGrid(
@@ -120,12 +120,13 @@ class BingoViewModel @Inject constructor(
             arrayShuffled,
             BooleanArray(numberOfButton).toList(),
             true,
-            0
+            calculateBingoCount(checkedStateArray, repository.getLayout()),
+            repository.getLayout()
         )
     }
 
     // Calculate the bingo total
-    private fun calculateBingoCount(checkedStateArray: Array<Boolean>): Int
+    private fun calculateBingoCount(checkedStateArray: Array<Boolean>, layout: String): Int
     {
         fun loop2DArrayAndSum(array: Array<IntArray>, value: Int): Int
         {
@@ -148,10 +149,10 @@ class BingoViewModel @Inject constructor(
         val diagValue = repository.diagValue
         val bonusValue = repository.bonusValue
 
-        val line2DArray = repository.line2DArray
-        val column2DArray = repository.column2DArray
-        val diag2DArray = repository.diag2DArray
-        val bonusArray = repository.bonusArray
+        val line2DArray = repository.linesMap[layout]
+        val column2DArray = repository.columnMap[layout]
+        val diag2DArray = repository.diagMap[layout]
+        val bonusArray = repository.bonusMap[layout]
 
         var result = 0
 

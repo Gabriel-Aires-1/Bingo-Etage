@@ -14,6 +14,7 @@ data class BingoGrid
     @ColumnInfo(name = "checkedListInput") var checkedArrayInput: List<Boolean>,
     @ColumnInfo(name = "editingBoolInput") var editingBoolInput: Boolean,
     @ColumnInfo(name = "totalValue") var totalValue: Int,
+    @ColumnInfo(name = "layout") var layout: String,
 )
 
 class Converters

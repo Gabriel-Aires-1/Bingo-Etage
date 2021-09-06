@@ -28,7 +28,7 @@ private const val EDITING_BOOL = "EDITING_BOOL"
 @AndroidEntryPoint
 class BingoFragment : Fragment(), View.OnClickListener
 {
-    // Rewritten in the onCreate function
+    // Rewritten in the onCreate and onCreateView functions
     private var numberOfButton: Int = 0
 
     private var numberArrayShuffled: Array<String> = Array(numberOfButton){""}
@@ -46,14 +46,17 @@ class BingoFragment : Fragment(), View.OnClickListener
     private var _textViewDate: TextView? = null
     private val textViewDate get() = _textViewDate!!
 
+    // Maps the layouts in the database to the BingoFragment layouts
     private val layoutsMap = hashMapOf(
-        "21" to R.layout.fragment_bingo_10,
-        "18"  to R.layout.fragment_bingo_7,
+        "21" to R.layout.fragment_bingo_21,
+        "18"  to R.layout.fragment_bingo_18,
     )
+    // Maps the layouts in the database to the BingoFragment layouts number of buttons
     private val nbButtonMap = hashMapOf(
         "21" to 10,
         "18"  to 9,
     )
+    // Stores the currently loaded layout (default 21)
     private var loadedLayout = "21"
 
     private val viewModel: BingoViewModel by activityViewModels()
@@ -137,8 +140,9 @@ class BingoFragment : Fragment(), View.OnClickListener
             viewModel.bingoGrid.value!!.checkedArrayInput.toBooleanArray(),
             viewModel.bingoGrid.value!!.editingBoolInput,
         )
-        // If number of floors mismatch reload the fragment
-        if (numberOfButton != viewModel.bingoGrid.value!!.numberListShuffledInput.size)
+        // If the loaded layout and the bingoGrid layout mismatch, reload the fragment
+        // Else pursue with the update
+        if (loadedLayout != viewModel.bingoGrid.value!!.layout)
         {
             reloadFragment()
         }
@@ -150,8 +154,10 @@ class BingoFragment : Fragment(), View.OnClickListener
         }
     }
 
+    // Reloads the fragment. Needed in order to update the loaded layout
     private fun reloadFragment()
     {
+        // transactions should be sequenced in order to prevent optimization from nullifying them
         val transaction1 = parentFragmentManager.beginTransaction()
         if (Build.VERSION.SDK_INT >= 26) transaction1.setReorderingAllowed(false)
         transaction1.detach(this)
@@ -160,6 +166,9 @@ class BingoFragment : Fragment(), View.OnClickListener
         if (Build.VERSION.SDK_INT >= 26) transaction2.setReorderingAllowed(false)
         transaction2.attach(this)
 
+        // If the reload is triggered from a preference change
+        // The first commitNow will throw java.lang.IllegalStateException
+        // In this case, do commit instead of commitNow and the reloadBingoGridFragment will be triggered in the MainActivity
         try
         {
             transaction1.commitNow()
@@ -225,6 +234,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         updateBingoCountTV()
     }
 
+    // Deal with onClick events
     override fun onClick(v: View?)
     {
         if (v==null) return
@@ -236,9 +246,9 @@ class BingoFragment : Fragment(), View.OnClickListener
         updateBingoCountInVM()
     }
 
+    // Update the total in viewModel
     private fun updateBingoCountInVM()
     {
-
         // Common part
         // Update the view model with current states (checked buttons)
         // The update of the viewModel calls back the observer on the livedata to update the display
@@ -246,6 +256,7 @@ class BingoFragment : Fragment(), View.OnClickListener
         viewModel.updateCheckedValuesAndSave(buttonStateArray.toList(), editingBool)
     }
 
+    // Update the total in the textview
     private fun updateBingoCountTV()
     {
         textVBingoCount.text = resources.getString(
@@ -254,6 +265,10 @@ class BingoFragment : Fragment(), View.OnClickListener
         )
     }
 
+    // Sets the editing state of the fragment
+    // False means all buttons are disabled and the edit button is visible
+    // True means the buttons are enabled and the edit button is invisible
+    // The okButton state is the contrary of the edit button
     private fun setEditing(edit: Boolean)
     {
         editingBool = edit

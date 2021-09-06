@@ -16,8 +16,6 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-    // Number of bingo buttons
-    var numberOfButton = repository.floorListMap[repository.getLayout()]!!.size
     val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "21")
     val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "21")
 
@@ -93,8 +91,6 @@ class BingoViewModel @Inject constructor(
                 currentDate.value!!.get(Calendar.YEAR),
             )
         }
-        numberOfButton = if (bingoGrid==null) repository.floorListMap[repository.getLayout()]!!.size
-                            else bingoGrid!!.numberListShuffledInput.size
 
         return bingoGrid ?: generateBingoGridFromCurrentDate()
     }
@@ -116,7 +112,7 @@ class BingoViewModel @Inject constructor(
         val arrayShuffled = repository.floorListMap[repository.getLayout()]!!.toMutableList()
         arrayShuffled.shuffle(Random(getSeed()))
 
-        val checkedStateArray = Array<Boolean>(numberOfButton) { it -> arrayShuffled[it] == "null" }
+        val checkedStateArray = Array<Boolean>(arrayShuffled.size) { it -> arrayShuffled[it] == "null" }
 
         return BingoGrid(
             nonNullDay.get(Calendar.DAY_OF_MONTH),

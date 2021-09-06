@@ -47,16 +47,23 @@ class BingoFragment : Fragment(), View.OnClickListener
     private val textViewDate get() = _textViewDate!!
 
     private val layoutsMap = hashMapOf(
-        10 to R.layout.fragment_bingo_10,
-        9  to R.layout.fragment_bingo_7,
+        "21" to R.layout.fragment_bingo_10,
+        "18"  to R.layout.fragment_bingo_7,
     )
+    private val nbButtonMap = hashMapOf(
+        "21" to 10,
+        "18"  to 9,
+    )
+    private var loadedLayout = "21"
 
     private val viewModel: BingoViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        numberOfButton = viewModel.numberOfButton
+        numberOfButton = viewModel.bingoGrid.value?.layout.let {
+            nbButtonMap[it]
+        } ?: nbButtonMap[loadedLayout]!!
         arguments?.let {
             numberArrayShuffled = it.getStringArray(NUMBER_ARRAY_SHUFFLED) ?: Array(numberOfButton){""}
             checkedArray = it.getBooleanArray(CHECKED_ARRAY) ?: BooleanArray(numberOfButton)
@@ -69,9 +76,11 @@ class BingoFragment : Fragment(), View.OnClickListener
         savedInstanceState: Bundle?
     ): View?
     {
-        numberOfButton = viewModel.numberOfButton
+        loadedLayout = viewModel.bingoGrid.value?.layout ?: loadedLayout
+        numberOfButton = nbButtonMap[loadedLayout]!!
+
         // Inflate the layout for this fragment
-        val fragView = inflater.inflate(layoutsMap[numberOfButton]!!, container, false)
+        val fragView = inflater.inflate(layoutsMap[loadedLayout]!!, container, false)
         // Input initialization
 
         // array of bingo buttons

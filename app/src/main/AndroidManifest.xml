@@ -23,7 +23,8 @@
             android:name="com.example.bingoetage.MainActivity"
             android:launchMode="singleTop"
             android:label="@string/main_toolbar_title"
-            android:configChanges="orientation">
+            android:configChanges="orientation"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

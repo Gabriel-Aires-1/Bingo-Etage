@@ -100,9 +100,6 @@ class BingoFragment : Fragment(), View.OnClickListener
         // Text view for date display
         _textViewDate = fragView.findViewById(R.id.textViewDate)
 
-        // Initialize TextView and Buttons
-        changeBingoGrid()
-
         // Listen to calendar changes
         viewModel.bingoGrid.observe(
             viewLifecycleOwner,

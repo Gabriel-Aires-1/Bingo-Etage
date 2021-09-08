@@ -9,12 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BingoEtage"
-        android:name="com.example.bingoetage.App"
-        android:screenOrientation="portrait">
+        android:name="com.example.bingoetage.App">
         <activity
             android:name="com.example.bingoetage.SettingsActivity"
             android:label="@string/settings_toolbar_title"
-            android:parentActivityName="com.example.bingoetage.MainActivity">
+            android:parentActivityName="com.example.bingoetage.MainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.bingoetage.MainActivity" />
@@ -24,7 +24,8 @@
             android:launchMode="singleTop"
             android:label="@string/main_toolbar_title"
             android:configChanges="orientation"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

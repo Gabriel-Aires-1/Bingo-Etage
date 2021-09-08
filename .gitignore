@@ -16,3 +16,5 @@ local.properties
 /app/schemas/com.example.bingoetage.viewmodel.BingoGridDatabase/1.json
 /app/schemas/com.example.bingoetage.viewmodel.BingoGridDatabase/2.json
 /app/schemas/com.example.bingoetage.viewmodel.BingoGridDatabase/3.json
+/app/debug
+/app/release

@@ -174,6 +174,9 @@ class MainActivity : AppCompatActivity(),
     }
 
     fun reloadBingoGridFragment(){
+        // when the activity reloads the viewPagerAdapter can sometimes be null
+        // In this case, do nothing (the view will be updated when the adapter initializes)
+        _viewPagerAdapter ?: return
         viewPagerAdapter.notifyItemChanged(0)
     }
 

@@ -1,10 +1,32 @@
 package com.example.bingoetage
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.example.bingoetage.updater.GitHubUpdater
+import com.example.bingoetage.updater.UpdateListener
+import com.example.bingoetage.updater.UpdateSummaryContainer
+import com.github.javiersantos.appupdater.AppUpdater
+import com.github.javiersantos.appupdater.AppUpdaterUtils
+import com.github.javiersantos.appupdater.enums.AppUpdaterError
+import com.github.javiersantos.appupdater.enums.Display
+import com.github.javiersantos.appupdater.enums.UpdateFrom
+import com.github.javiersantos.appupdater.objects.Update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import java.io.IOError
+import android.widget.Toast
+
+import android.net.NetworkInfo
+
+import android.net.ConnectivityManager
+import com.example.bingoetage.updater.UpdaterHelper
+
 
 class SettingsActivity : AppCompatActivity()
 {
@@ -61,6 +83,39 @@ class SettingsActivity : AppCompatActivity()
     {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+            this.findPreference<Preference>("update_now")?.setOnPreferenceClickListener {
+/*                AppUpdater(requireContext())
+                    .setDisplay(Display.DIALOG)
+                    .setUpdateFrom(UpdateFrom.GITHUB)
+                    .setGitHubUserAndRepo("RedSpheal", "Bingo-Etage")
+                    .start()*/
+                /*val test = AppUpdaterUtils(requireContext()).withListener(object :
+                    AppUpdaterUtils.UpdateListener {
+                    override fun onSuccess(update: Update?, isUpdateAvailable: Boolean?) {
+                        update ?: return
+                        Log.d("AppUpdater Latest Version", update.latestVersion)
+                        Log.d("AppUpdater Latest Version Code", update.latestVersionCode.toString())
+                        Log.d("AppUpdater Release notes", update.releaseNotes ?: "")
+                        Log.d("AppUpdater URL", update.urlToDownload.toString())
+                        Log.d("AppUpdater Is update available?", isUpdateAvailable.toString())
+                    }
+
+                    override fun onFailed(error: AppUpdaterError?) {
+                        Log.d("AppUpdater Error", "Something went wrong")
+                    }
+                })
+                test
+                    .setUpdateFrom(UpdateFrom.GITHUB)
+                    .setGitHubUserAndRepo("RedSpheal", "Bingo-Etage")
+                    .start()*/
+                UpdaterHelper().startUpdate(
+                    this.requireActivity(),
+                    requireContext(),
+                    GitHubUpdater("RedSpheal", "Bingo-Etage")
+                )
+                true
+            }
         }
 
 /*        override fun onResume()

@@ -83,4 +83,8 @@
     <!--    floor pie chart-->
     <string name="floor_pie_chart_title">Répartition des étages</string>
 
+    <!-- Updater -->
+    <string name="update_category_title">Mise à jour</string>
+    <string name="update_now_text">Vérifier les mises à jour</string>
+
 </resources>

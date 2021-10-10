@@ -54,4 +54,6 @@
     <string name="floor_18">18</string>
     <string name="spinner_type_option_1">Bingo</string>
     <string name="spinner_type_option_2">Stops</string>
+    <string name="update_category_title">Update</string>
+    <string name="update_now_text">Update now</string>
 </resources>

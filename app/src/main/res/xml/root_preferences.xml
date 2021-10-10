@@ -1,4 +1,4 @@
-<PreferenceScreen
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
@@ -31,7 +31,13 @@
         app:title="@string/floor_layout_title"
         app:useSimpleSummaryProvider="true"
         app:allowDividerAbove="true"
-        app:allowDividerBelow="true"
         />
+    <PreferenceCategory android:title="@string/update_category_title">
+        <Preference
+            app:key="update_now"
+            app:title="@string/update_now_text"
+            app:allowDividerBelow="true"
+            />
+    </PreferenceCategory>
 
 </PreferenceScreen>

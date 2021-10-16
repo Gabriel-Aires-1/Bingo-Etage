@@ -1,7 +1,6 @@
 package com.example.bingoetage.updater
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
@@ -13,19 +12,24 @@ import com.example.bingoetage.BuildConfig
 import kotlinx.coroutines.runBlocking
 import java.io.IOError
 
-class UpdaterHelper {
-    fun startUpdate(activity: FragmentActivity, context: Context, updater: Updater){
+class UpdaterHelper
+{
+    fun startUpdate(activity: FragmentActivity, context: Context, updater: Updater)
+    {
 
         if (!checkPermissions(activity, context, Manifest.permission.INTERNET)) return
 
         runBlocking{
-            updater.checkUpdate(context, object: UpdateListener {
-                override fun onSuccess(update: UpdateSummaryContainer) {
-                    Log.d("BELTA", update.downloadURL)
+            updater.checkUpdate(context, object: UpdateListener
+            {
+                override fun onSuccess(update: UpdateSummaryContainer)
+                {
                     Log.d("BELTA", "new version: ${isNewVersionAvailable(update)}")
+                    showVersionDialog(activity, update)
                 }
 
-                override fun onFailed(error: IOError) {
+                override fun onFailed(error: IOError)
+                {
                     Log.d("BELTA", error.toString())
                 }
             }
@@ -36,13 +40,32 @@ class UpdaterHelper {
     private fun isNewVersionAvailable(update: UpdateSummaryContainer) =
         BuildConfig.VERSION_NAME.lowercase() != update.versionNumber.lowercase()
 
-    private fun showVersionDialog(update: UpdateSummaryContainer): Boolean{
+    private fun showVersionDialog(activity: FragmentActivity, update: UpdateSummaryContainer)
+    {
+        val versionDialog = VersionDialog(
+            update,
+            object: VersionDialogListener
+            {
+                override fun onClickPositiveButton()
+                {
+                    TODO("Not yet implemented - Start download")
+                }
 
-        return false
+                override fun onClickNegativeButton()
+                {
+                    // Nothing to do
+                }
+
+            }
+        )
+
+        versionDialog.show(activity.supportFragmentManager, "VersionDialog")
     }
 
-    private fun checkPermissions(activity: FragmentActivity, context: Context, permission: String): Boolean{
-        return when {
+    private fun checkPermissions(activity: FragmentActivity, context: Context, permission: String): Boolean
+    {
+        return when
+        {
             ContextCompat.checkSelfPermission(
                 context,
                 permission

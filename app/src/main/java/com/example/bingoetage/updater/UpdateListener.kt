@@ -2,7 +2,8 @@ package com.example.bingoetage.updater
 
 import java.io.IOError
 
-interface UpdateListener {
+interface UpdateListener
+{
     /**
      * onSuccess method called after it is successful
      * onFailed method called if it can't retrieve the latest version

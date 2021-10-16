@@ -86,5 +86,11 @@
     <!-- Updater -->
     <string name="update_category_title">Mise à jour</string>
     <string name="update_now_text">Vérifier les mises à jour</string>
+    <string name="version_dialog_title">Nouvelle mise à jour disponible</string>
+    <string name="version_dialog_version_label">Numéro de version : %1$s</string>
+    <string name="version_dialog_download_size_label">Taille du téléchargement : %1$s</string>
+    <string name="version_dialog_patch_note_label">Notes de mise à jour : </string>
+    <string name="version_dialog_positive_button">Installer</string>
+    <string name="version_dialog_negative_button">Annuler</string>
 
 </resources>

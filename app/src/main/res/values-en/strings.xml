@@ -56,4 +56,10 @@
     <string name="spinner_type_option_2">Stops</string>
     <string name="update_category_title">Update</string>
     <string name="update_now_text">Update now</string>
+    <string name="version_dialog_title">New update available</string>
+    <string name="version_dialog_version_label">Version: %1$s</string>
+    <string name="version_dialog_download_size_label">Download size: %1$s</string>
+    <string name="version_dialog_patch_note_label">Patch notes: </string>
+    <string name="version_dialog_positive_button">Install</string>
+    <string name="version_dialog_negative_button">Cancel</string>
 </resources>

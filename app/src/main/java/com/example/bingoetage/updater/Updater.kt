@@ -32,8 +32,16 @@ abstract class Updater {
         showVersionDialog(activity, context, updateSummary)
     }
 
-    suspend fun installUpdate(){
-        TODO("Not yet implemented")
+    suspend fun installUpdate(context: Context, localPath: String, downloadID: Long){
+        val installIntent = Intent(Intent.ACTION_VIEW)
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        installIntent.setDataAndType(
+            Uri.parse(localPath),
+            downloadManager.getMimeTypeForDownloadedFile(downloadID)
+        )
+        installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        context.startActivity(installIntent)
     }
 
     private fun showVersionDialog(activity: FragmentActivity, context: Context, update: UpdateSummaryContainer)

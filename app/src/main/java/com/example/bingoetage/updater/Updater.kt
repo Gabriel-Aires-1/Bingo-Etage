@@ -127,6 +127,14 @@ abstract class Updater {
     }
 }
 
+/**
+ * GitHub updater class, retrieves update information from the GitHub repo given in constructor
+ *
+ * checkUpdate method retrieves update information and calls updateListener methods on success or failure
+ *
+ * @param user            name of the owner of the repository
+ * @param repo            name of the repository
+ */
 class GitHubUpdater(user: String, repo: String): Updater() {
 
     private var releaseURL = "${GITHUB_URL}${user}/${repo}/releases/latest"

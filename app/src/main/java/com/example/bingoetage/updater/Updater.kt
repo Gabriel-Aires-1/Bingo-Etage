@@ -17,15 +17,15 @@ import org.json.JSONObject
 import java.io.IOError
 
 
+/**
+ * General updater class, retrieves update information with checkUpdate method,
+ * download update with the downloadUpdate method and install the update with the installUpdate method
+ *
+ * checkUpdate method retrieves update information in background and calls updateListener methods on success or failure
+ * downloadUpdate method download the update described in the updateSummary object in background
+ * installUpdate method installs the update
+ */
 abstract class Updater {
-    /**
-     * General updater class, retrieves update information with checkUpdate method,
-     * download update with the downloadUpdate method and install the update with the installUpdate method
-     *
-     * checkUpdate method retrieves update information in background and calls updateListener methods on success or failure
-     * downloadUpdate method download the update described in the updateSummary object in background
-     * installUpdate method installs the update
-     */
     abstract suspend fun checkUpdate(context: Context, updateListener: UpdateListener)
 
     suspend fun downloadUpdate(activity: FragmentActivity, context: Context, updateSummary: UpdateSummaryContainer){

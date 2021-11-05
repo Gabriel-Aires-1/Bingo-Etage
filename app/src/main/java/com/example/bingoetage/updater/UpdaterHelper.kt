@@ -1,16 +1,23 @@
 package com.example.bingoetage.updater
 
 import android.Manifest
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.util.Log
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
+import android.database.Cursor
+import android.net.Uri
+import androidx.core.app.ActivityCompat.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.example.bingoetage.BuildConfig
+import com.example.bingoetage.R
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import java.io.IOError
+
 
 class UpdaterHelper
 {
@@ -29,7 +36,7 @@ class UpdaterHelper
 
                 override fun onFailed(error: IOError)
                 {
-                    Log.d("BELTA", error.toString())
+                    TODO("Not yet implemented")
                 }
             }
             )
@@ -39,27 +46,7 @@ class UpdaterHelper
     private fun isNewVersionAvailable(update: UpdateSummaryContainer) =
         BuildConfig.VERSION_NAME.lowercase() != update.versionNumber.lowercase()
 
-    private fun showVersionDialog(activity: FragmentActivity, update: UpdateSummaryContainer)
-    {
-        val versionDialog = VersionDialog(
-            update,
-            object: VersionDialogListener
-            {
-                override fun onClickPositiveButton()
-                {
-                    TODO("Not yet implemented - Start download")
-                }
 
-                override fun onClickNegativeButton()
-                {
-                    // Nothing to do
-                }
-
-            }
-        )
-
-        versionDialog.show(activity.supportFragmentManager, "VersionDialog")
-    }
 
     private fun checkPermissions(activity: FragmentActivity, context: Context, permission: String): Boolean
     {

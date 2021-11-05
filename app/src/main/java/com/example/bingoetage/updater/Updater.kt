@@ -1,15 +1,21 @@
 package com.example.bingoetage.updater
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.database.Cursor
+import android.net.Uri
+import androidx.fragment.app.FragmentActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.bingoetage.R
+import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import java.io.IOError
+
 
 abstract class Updater {
     /**
@@ -22,24 +28,98 @@ abstract class Updater {
      */
     abstract suspend fun checkUpdate(context: Context, updateListener: UpdateListener)
 
-    suspend fun downloadUpdate(updateSummary: UpdateSummaryContainer){
-        TODO("Not yet implemented")
+    suspend fun downloadUpdate(activity: FragmentActivity, context: Context, updateSummary: UpdateSummaryContainer){
+        showVersionDialog(activity, context, updateSummary)
     }
 
     suspend fun installUpdate(){
         TODO("Not yet implemented")
     }
+
+    private fun showVersionDialog(activity: FragmentActivity, context: Context, update: UpdateSummaryContainer)
+    {
+        val versionDialog = VersionDialog(
+            update,
+            object: VersionDialogListener
+            {
+                override fun onClickPositiveButton()
+                {
+                    val downloadRequest = DownloadManager.Request(Uri.parse(update.downloadURL))
+
+                    downloadRequest.setTitle(context.resources.getString(R.string.main_toolbar_title))
+                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+                        .setAllowedOverRoaming(false)
+                        .setAllowedNetworkTypes(
+                            DownloadManager.Request.NETWORK_WIFI
+                                    or DownloadManager.Request.NETWORK_MOBILE
+                        )
+
+                    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+                    val downloadID = downloadManager.enqueue(downloadRequest)
+
+                    context.registerReceiver(
+                        setupBroadcastReceiver(
+                            downloadID,
+                            downloadManager
+                        ),
+                        IntentFilter(
+                            DownloadManager.ACTION_DOWNLOAD_COMPLETE
+                        )
+                    )
+                }
+
+                override fun onClickNegativeButton()
+                {
+                    // Nothing to do
+                }
+            }
+        )
+        versionDialog.show(activity.supportFragmentManager, "VersionDialog")
+    }
+
+    private fun setupBroadcastReceiver(downloadID: Long, downloadManager: DownloadManager): BroadcastReceiver
+    {
+        val receiver: BroadcastReceiver = object : BroadcastReceiver()
+        {
+            override fun onReceive(context: Context, intent: Intent)
+            {
+                val action = intent.action
+                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action)
+                {
+                    val query = DownloadManager.Query()
+                    query.setFilterById(downloadID)
+                    val cursor: Cursor = downloadManager.query(query)
+                    if (cursor.moveToFirst())
+                    {
+                        val columnIndex: Int = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
+                        when(cursor.getInt(columnIndex))
+                        {
+                            DownloadManager.STATUS_SUCCESSFUL ->
+                            {
+                                val localPath: String = cursor.getString(
+                                        cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                    )
+
+                                cursor.close()
+                                runBlocking{
+                                    installUpdate(context, localPath, downloadID)
+                                }
+
+                                context.unregisterReceiver(this)
+                            }
+                            DownloadManager.STATUS_FAILED -> context.unregisterReceiver(this)
+                        }
+                    }
+                    cursor.close()
+                }
+            }
+        }
+        return receiver
+    }
 }
 
 class GitHubUpdater(user: String, repo: String): Updater() {
-    /**
-     * GitHub updater class, retrieves update information from the GitHub repo given in constructor
-     *
-     * checkUpdate method retrieves update information and calls updateListener methods on success or failure
-     *
-     * @param user            name of the owner of the repository
-     * @param repo            name of the repository
-     */
 
     private var releaseURL = "${GITHUB_URL}${user}/${repo}/releases/latest"
 

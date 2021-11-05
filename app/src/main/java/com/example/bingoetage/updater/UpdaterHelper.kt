@@ -24,8 +24,7 @@ class UpdaterHelper
             {
                 override fun onSuccess(update: UpdateSummaryContainer)
                 {
-                    Log.d("BELTA", "new version: ${isNewVersionAvailable(update)}")
-                    showVersionDialog(activity, update)
+                    runBlocking{updater.downloadUpdate(activity, context, update)}
                 }
 
                 override fun onFailed(error: IOError)

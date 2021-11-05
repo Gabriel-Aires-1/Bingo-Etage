@@ -85,30 +85,6 @@ class SettingsActivity : AppCompatActivity()
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             this.findPreference<Preference>("update_now")?.setOnPreferenceClickListener {
-/*                AppUpdater(requireContext())
-                    .setDisplay(Display.DIALOG)
-                    .setUpdateFrom(UpdateFrom.GITHUB)
-                    .setGitHubUserAndRepo("RedSpheal", "Bingo-Etage")
-                    .start()*/
-                /*val test = AppUpdaterUtils(requireContext()).withListener(object :
-                    AppUpdaterUtils.UpdateListener {
-                    override fun onSuccess(update: Update?, isUpdateAvailable: Boolean?) {
-                        update ?: return
-                        Log.d("AppUpdater Latest Version", update.latestVersion)
-                        Log.d("AppUpdater Latest Version Code", update.latestVersionCode.toString())
-                        Log.d("AppUpdater Release notes", update.releaseNotes ?: "")
-                        Log.d("AppUpdater URL", update.urlToDownload.toString())
-                        Log.d("AppUpdater Is update available?", isUpdateAvailable.toString())
-                    }
-
-                    override fun onFailed(error: AppUpdaterError?) {
-                        Log.d("AppUpdater Error", "Something went wrong")
-                    }
-                })
-                test
-                    .setUpdateFrom(UpdateFrom.GITHUB)
-                    .setGitHubUserAndRepo("RedSpheal", "Bingo-Etage")
-                    .start()*/
                 UpdaterHelper().startUpdate(
                     this.requireActivity(),
                     requireContext(),

@@ -1,30 +1,12 @@
 package com.example.bingoetage
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.bingoetage.updater.GitHubUpdater
-import com.example.bingoetage.updater.UpdateListener
-import com.example.bingoetage.updater.UpdateSummaryContainer
-import com.github.javiersantos.appupdater.AppUpdater
-import com.github.javiersantos.appupdater.AppUpdaterUtils
-import com.github.javiersantos.appupdater.enums.AppUpdaterError
-import com.github.javiersantos.appupdater.enums.Display
-import com.github.javiersantos.appupdater.enums.UpdateFrom
-import com.github.javiersantos.appupdater.objects.Update
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import java.io.IOError
-import android.widget.Toast
-
-import android.net.NetworkInfo
-
-import android.net.ConnectivityManager
 import com.example.bingoetage.updater.UpdaterHelper
 
 

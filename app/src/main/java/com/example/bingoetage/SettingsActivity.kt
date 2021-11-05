@@ -112,7 +112,7 @@ class SettingsActivity : AppCompatActivity()
                 UpdaterHelper().startUpdate(
                     this.requireActivity(),
                     requireContext(),
-                    GitHubUpdater("RedSpheal", "Bingo-Etage")
+                    GitHubUpdater("Gabriel-Aires-1", "Bingo-Etage")
                 )
                 true
             }

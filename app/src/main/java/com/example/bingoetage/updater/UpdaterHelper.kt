@@ -97,7 +97,7 @@ class UpdaterHelper
                                 DownloadManager.STATUS_SUCCESSFUL ->
                                 {
                                     val localPath: String = cursor.getString(
-                                        cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
+                                        cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
                                     )
 
                                     cursor.close()

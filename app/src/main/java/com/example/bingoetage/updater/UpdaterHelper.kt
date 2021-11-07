@@ -5,11 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.database.Cursor
-import androidx.core.app.ActivityCompat.*
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import com.example.bingoetage.BuildConfig
 
 /**
@@ -17,34 +13,6 @@ import com.example.bingoetage.BuildConfig
  */
 class UpdaterHelper
 {
-    private fun checkPermissions(activity: FragmentActivity, context: Context, permission: String): Boolean
-    {
-        return when
-        {
-            ContextCompat.checkSelfPermission(
-                context,
-                permission
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // You can use the API that requires the permission.
-                true
-            }
-            /*shouldShowRequestPermissionRationale(activity, Manifest.permission.INTERNET) -> {
-            // In an educational UI, explain to the user why your app requires this
-            // permission for a specific feature to behave as expected. In this UI,
-            // include a "cancel" or "no thanks" button that allows the user to
-            // continue using your app without granting the permission.
-            showInContextUI(...)
-        }*/
-            else -> {
-                // You can directly ask for the permission.
-                requestPermissions(activity,
-                    arrayOf(permission),
-                    10)
-                false
-            }
-        }
-    }
-
     companion object
     {
         /**

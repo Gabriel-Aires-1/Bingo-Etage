@@ -1,18 +1,13 @@
 package com.example.bingoetage.updater
 
 import android.app.DownloadManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.database.Cursor
 import android.net.Uri
-import androidx.fragment.app.FragmentActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.bingoetage.R
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import java.io.IOError
 

@@ -1,13 +1,15 @@
 package com.example.bingoetage
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.example.bingoetage.updater.GitHubUpdater
-import com.example.bingoetage.updater.UpdaterHelper
+import com.example.bingoetage.updater.*
+import kotlinx.coroutines.runBlocking
+import java.io.IOError
 
 
 class SettingsActivity : AppCompatActivity()
@@ -67,13 +69,53 @@ class SettingsActivity : AppCompatActivity()
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             this.findPreference<Preference>("update_now")?.setOnPreferenceClickListener {
-                UpdaterHelper().startUpdate(
-                    this.requireActivity(),
-                    requireContext(),
-                    GitHubUpdater("Gabriel-Aires-1", "Bingo-Etage")
-                )
+                updateApplication()
                 true
             }
+        }
+
+        /***
+         * Starts an application update in background
+         * The user will be prompted to download the update (if available) through a versionDialog
+         * A toast will be displayed if no update is available if silent is false
+         * @param silent        if true, no toast is displayed when the application is up to date
+         *                      or if there is no internet connection
+         */
+        fun updateApplication(silent: Boolean = false)
+        {
+            // Updater definition
+            val updater = GitHubUpdater("Gabriel-Aires-1", "Bingo-Etage")
+
+            // Check update availability
+            // On success and if a new version is available, display a dialog to the user
+            // On error, display a toast if not silent
+            UpdaterHelper.checkUpdate(
+                requireContext(),
+                updater,
+                object: UpdateListener
+                {
+                    override fun onSuccess(update: UpdateSummaryContainer)
+                    {
+                        if (UpdaterHelper.isNewVersionAvailable(update))
+                        {
+                            val versionDialog = VersionDialog(
+                                update,
+                                UpdaterHelper.getVersionDialogListener(requireContext(), update, updater),
+                            )
+                            versionDialog.show(parentFragmentManager, "VersionDialog")
+                        }
+                    }
+                    override fun onFailed(error: IOError)
+                    {
+                        if (!silent)
+                            Toast.makeText(
+                                context,
+                                resources.getString(R.string.toast_update_chack_failed),
+                                Toast.LENGTH_LONG
+                            ).show()
+                    }
+                }
+            )
         }
 
 /*        override fun onResume()

@@ -26,104 +26,45 @@ import java.io.IOError
  * installUpdate method installs the update
  */
 abstract class Updater {
-    abstract suspend fun checkUpdate(context: Context, updateListener: UpdateListener)
 
-    suspend fun downloadUpdate(activity: FragmentActivity, context: Context, updateSummary: UpdateSummaryContainer){
-        showVersionDialog(activity, context, updateSummary)
+    /**
+     * Abstract function to be overridden by children Updater classes with the corresponding logic
+     * @param context           The application context
+     * @param updateListener    The listener called when a response is received from GitHub servers
+     */
+    abstract fun checkUpdate(context: Context, updateListener: UpdateListener)
+
+    /**
+     * Start the download from the address contained in the UpdateSummaryContainer object
+     * @param context           The application context
+     * @param update            The update summary object retrieved from the checkUpdate method
+     */
+    fun downloadUpdate(context: Context, update: UpdateSummaryContainer): Long
+    {
+        val downloadRequest = DownloadManager.Request(Uri.parse(update.downloadURL))
+
+        downloadRequest.setTitle(context.resources.getString(R.string.main_toolbar_title))
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            .setAllowedOverRoaming(false)
+            .setAllowedNetworkTypes(
+                DownloadManager.Request.NETWORK_WIFI
+                        or DownloadManager.Request.NETWORK_MOBILE
+            )
+
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        return downloadManager.enqueue(downloadRequest)
     }
 
     suspend fun installUpdate(context: Context, localPath: String, downloadID: Long){
         val installIntent = Intent(Intent.ACTION_VIEW)
-        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
         installIntent.setDataAndType(
             Uri.parse(localPath),
-            downloadManager.getMimeTypeForDownloadedFile(downloadID)
+            MimeType
         )
         installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         context.startActivity(installIntent)
-    }
-
-    private fun showVersionDialog(activity: FragmentActivity, context: Context, update: UpdateSummaryContainer)
-    {
-        val versionDialog = VersionDialog(
-            update,
-            object: VersionDialogListener
-            {
-                override fun onClickPositiveButton()
-                {
-                    val downloadRequest = DownloadManager.Request(Uri.parse(update.downloadURL))
-
-                    downloadRequest.setTitle(context.resources.getString(R.string.main_toolbar_title))
-                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                        .setAllowedOverRoaming(false)
-                        .setAllowedNetworkTypes(
-                            DownloadManager.Request.NETWORK_WIFI
-                                    or DownloadManager.Request.NETWORK_MOBILE
-                        )
-
-                    val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-                    val downloadID = downloadManager.enqueue(downloadRequest)
-
-                    context.registerReceiver(
-                        setupBroadcastReceiver(
-                            downloadID,
-                            downloadManager
-                        ),
-                        IntentFilter(
-                            DownloadManager.ACTION_DOWNLOAD_COMPLETE
-                        )
-                    )
-                }
-
-                override fun onClickNegativeButton()
-                {
-                    // Nothing to do
-                }
-            }
-        )
-        versionDialog.show(activity.supportFragmentManager, "VersionDialog")
-    }
-
-    private fun setupBroadcastReceiver(downloadID: Long, downloadManager: DownloadManager): BroadcastReceiver
-    {
-        val receiver: BroadcastReceiver = object : BroadcastReceiver()
-        {
-            override fun onReceive(context: Context, intent: Intent)
-            {
-                val action = intent.action
-                if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == action)
-                {
-                    val query = DownloadManager.Query()
-                    query.setFilterById(downloadID)
-                    val cursor: Cursor = downloadManager.query(query)
-                    if (cursor.moveToFirst())
-                    {
-                        val columnIndex: Int = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                        when(cursor.getInt(columnIndex))
-                        {
-                            DownloadManager.STATUS_SUCCESSFUL ->
-                            {
-                                val localPath: String = cursor.getString(
-                                        cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
-                                    )
-
-                                cursor.close()
-                                runBlocking{
-                                    installUpdate(context, localPath, downloadID)
-                                }
-
-                                context.unregisterReceiver(this)
-                            }
-                            DownloadManager.STATUS_FAILED -> context.unregisterReceiver(this)
-                        }
-                    }
-                    cursor.close()
-                }
-            }
-        }
-        return receiver
     }
 }
 

@@ -60,6 +60,7 @@
     <string name="daily">Quotidienne</string>
     <string name="weekly">Hebdomadaire</string>
     <string name="monthly">Mensuelle</string>
+    <string name="never">Jamais</string>
 
     <!--    Calendar view-->
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>

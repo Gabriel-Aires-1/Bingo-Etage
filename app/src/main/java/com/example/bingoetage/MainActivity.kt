@@ -107,11 +107,12 @@ class MainActivity : AppCompatActivity(),
         var deltaDay = 0
         var deltaMonth = 0
         when (PreferenceManager.getDefaultSharedPreferences(this)
-                .getString("update_frequency_preference","monthly"))
+                .getString("update_frequency_preference","never"))
         {
             "daily" -> deltaDay = 1
             "weekly" -> deltaDay = 7
             "monthly" -> deltaMonth = 1
+            "never" -> return
         }
         val delta = Period.between(lastUpdateDate, nowDate)
         if (delta.days >= deltaDay && delta.months >= deltaMonth)

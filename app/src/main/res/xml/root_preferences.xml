@@ -41,7 +41,7 @@
         <ListPreference
             app:entries="@array/update_frequency_entries"
             app:entryValues="@array/update_frequency_values"
-            app:defaultValue="monthly"
+            app:defaultValue="never"
             app:key="update_frequency_preference"
             app:title="@string/update_frequency_title"
             app:useSimpleSummaryProvider="true"

@@ -36,6 +36,7 @@
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
+    <string name="never">Never</string>
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Go to current date</string>
     <string name="trigram_day_1">MON</string>

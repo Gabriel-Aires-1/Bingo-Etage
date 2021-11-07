@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.database.Cursor
 import com.example.bingoetage.BuildConfig
+import kotlin.math.min
 
 /**
  * Helper class for the Updater class
@@ -20,8 +21,33 @@ class UpdaterHelper
          * @param update    UpdateSummaryContainer containing the update information
          * @return Boolean: True if update is different than current version, false otherwise
          */
-        fun isNewVersionAvailable(update: UpdateSummaryContainer) =
-            BuildConfig.VERSION_NAME.lowercase() != update.versionNumber.lowercase()
+        fun isNewVersionAvailable(update: UpdateSummaryContainer): Boolean
+        {
+            val currentVersion = BuildConfig.VERSION_NAME.lowercase()
+            val newVersion = update.versionNumber.lowercase().removePrefix("v")
+
+            val currentVersionList = currentVersion.substringBefore("-").split(".").map { it.toInt() }
+            val newVersionList = newVersion.substringBefore("-").split(".").map { it.toInt() }
+
+            val currentVersionSuffix = currentVersion.substringAfter("-", "")
+            val newVersionSuffix = newVersion.substringAfter("-", "")
+
+            var newerVersionAvailable = false
+
+            for ( i in 0 until min(currentVersionList.size, newVersionList.size) )
+            {
+                if ( newVersionList[i] > currentVersionList[i] )
+                {
+                    newerVersionAvailable = true
+                    break
+                }
+            }
+            if ( !newerVersionAvailable && currentVersionSuffix != newVersionSuffix )
+                newerVersionAvailable = true
+
+            return newerVersionAvailable
+        }
+
 
         /**
          * Check if an update is available (wraps the updater method)

@@ -258,13 +258,22 @@ class MainActivity : AppCompatActivity(),
                             )
                             versionDialog.show(fragmentManager, "VersionDialog")
                         }
+                        else
+                        {
+                            if (!silent)
+                                Toast.makeText(
+                                    context,
+                                    resources.getString(R.string.toast_update_uptodate),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                        }
                     }
 
                     override fun onFailed(error: IOError) {
                         if (!silent)
                             Toast.makeText(
                                 context,
-                                resources.getString(R.string.toast_update_chack_failed),
+                                resources.getString(R.string.toast_update_check_failed),
                                 Toast.LENGTH_LONG
                             ).show()
                     }

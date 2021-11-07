@@ -97,6 +97,7 @@
     <string name="version_dialog_patch_note_label">Notes de mise à jour : </string>
     <string name="version_dialog_positive_button">Installer</string>
     <string name="version_dialog_negative_button">Annuler</string>
-    <string name="toast_update_chack_failed">Impossible de vérifier la disponibilité de mise à jour</string>
+    <string name="toast_update_check_failed">Impossible de vérifier la disponibilité de mise à jour</string>
+    <string name="toast_update_uptodate">L\'application est à jour</string>
 
 </resources>

@@ -66,5 +66,6 @@
     <string name="version_dialog_patch_note_label">Patch notes: </string>
     <string name="version_dialog_positive_button">Install</string>
     <string name="version_dialog_negative_button">Cancel</string>
-    <string name="toast_update_chack_failed">Error during update check</string>
+    <string name="toast_update_check_failed">Error during update check</string>
+    <string name="toast_update_uptodate">The application is up-to-date</string>
 </resources>

@@ -56,7 +56,13 @@ abstract class Updater {
         return downloadManager.enqueue(downloadRequest)
     }
 
-    suspend fun installUpdate(context: Context, localPath: String, downloadID: Long){
+    /**
+     * Start the installation of the update
+     * @param context           The application context
+     * @param localPath         Local path of the update file
+     * @param MimeType          MimeType of the update
+     */
+    fun installUpdate(context: Context, localPath: String, MimeType: String){
         val installIntent = Intent(Intent.ACTION_VIEW)
 
         installIntent.setDataAndType(
@@ -80,10 +86,13 @@ class GitHubUpdater(user: String, repo: String): Updater() {
 
     private var releaseURL = "${GITHUB_URL}${user}/${repo}/releases/latest"
 
-    override suspend fun checkUpdate(context: Context, updateListener: UpdateListener) {
-        /**
-         * Retrieves update information and calls updateListener methods on success or failure
-         */
+    /**
+     * Retrieves update information and calls updateListener methods on success or failure
+     * @param context           The application context
+     * @param updateListener    The listener called when a response is received from GitHub servers
+     */
+    override fun checkUpdate(context: Context, updateListener: UpdateListener)
+    {
 
         val queue = Volley.newRequestQueue(context)
 
@@ -100,6 +109,11 @@ class GitHubUpdater(user: String, repo: String): Updater() {
         queue.add(jsonObjectRequest)
     }
 
+    /**
+     * Parse the GitHub JSON to retrieve the relevant information in an UpdateSummaryContainer
+     * @param response      The JSONObject response from GitHub
+     * @return              An UpdateSummaryContainer containing the relevant information from the JSONObject
+     */
     private fun parseJSON(response: JSONObject): UpdateSummaryContainer{
 
         val versionNumber: String = response.getString("tag_name")

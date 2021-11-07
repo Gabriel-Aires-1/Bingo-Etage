@@ -22,6 +22,18 @@
         <item>18</item>
     </string-array>
 
+    <string-array name="update_frequency_entries">
+        <item>@string/daily</item>
+        <item>@string/weekly</item>
+        <item>@string/monthly</item>
+    </string-array>
+
+    <string-array name="update_frequency_values">
+        <item>daily</item>
+        <item>weekly</item>
+        <item>monthly</item>
+    </string-array>
+
     <string-array name="spinner_average_chart_type">
         <item>@string/spinner_type_option_1</item>
         <item>@string/spinner_type_option_2</item>

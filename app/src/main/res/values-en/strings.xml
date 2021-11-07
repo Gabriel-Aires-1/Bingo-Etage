@@ -30,6 +30,12 @@
     <string name="main_toolbar_title">Floor bingo</string>
     <string name="settings_toolbar_title">Parameters</string>
     <string name="username_empty_reply">Please change the username in the parameters to generate personalized grids</string>
+    <string name="update_category_title">Update</string>
+    <string name="update_now_text">Update now</string>
+    <string name="update_frequency_title">Update frequency</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
     <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
     <string name="calendar_button_text">Go to current date</string>
     <string name="trigram_day_1">MON</string>
@@ -54,8 +60,6 @@
     <string name="floor_18">18</string>
     <string name="spinner_type_option_1">Bingo</string>
     <string name="spinner_type_option_2">Stops</string>
-    <string name="update_category_title">Update</string>
-    <string name="update_now_text">Update now</string>
     <string name="version_dialog_title">New update available</string>
     <string name="version_dialog_version_label">Version: %1$s</string>
     <string name="version_dialog_download_size_label">Download size: %1$s</string>

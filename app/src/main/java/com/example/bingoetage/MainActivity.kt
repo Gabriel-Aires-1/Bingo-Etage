@@ -1,7 +1,9 @@
 package com.example.bingoetage
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,11 +17,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.bingoetage.updater.*
 import com.example.bingoetage.viewmodel.BingoViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.IOError
 import java.lang.IllegalStateException
+import java.time.LocalDate
+import java.time.Period
 import java.util.*
 
 @AndroidEntryPoint
@@ -68,6 +74,7 @@ class MainActivity : AppCompatActivity(),
         applyDayNightMode()
 
         usernameCheck()
+        updateCheck()
     }
 
     override fun onDestroy()
@@ -91,6 +98,24 @@ class MainActivity : AppCompatActivity(),
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    private fun updateCheck()
+    {
+        val nowDate = LocalDate.now()
+        val lastUpdateDate = LocalDate.ofEpochDay(PreferenceManager.getDefaultSharedPreferences(this).getLong("last_update_date", 0))
+        var deltaDay = 0
+        var deltaMonth = 0
+        when (PreferenceManager.getDefaultSharedPreferences(this)
+                .getString("update_frequency_preference","monthly"))
+        {
+            "daily" -> deltaDay = 1
+            "weekly" -> deltaDay = 7
+            "monthly" -> deltaMonth = 1
+        }
+        val delta = Period.between(lastUpdateDate, nowDate)
+        if (delta.days >= deltaDay && delta.months >= deltaMonth)
+            updateApplication(this, supportFragmentManager, resources, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean
@@ -196,4 +221,55 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun reloadBingoGrid() = viewModel.reloadBingoGrid()
+
+    companion object {
+        /***
+         * Starts an application update in background
+         * The user will be prompted to download the update (if available) through a versionDialog
+         * A toast will be displayed if no update is available if silent is false
+         * @param silent        if true, no toast is displayed when the application is up to date
+         *                      or if there is no internet connection
+         */
+        fun updateApplication(context: Context, fragmentManager: FragmentManager, resources: Resources, silent: Boolean = false) {
+            // Updater definition
+            val updater = GitHubUpdater("Gabriel-Aires-1", "Bingo-Etage")
+
+            // Check update availability
+            // On success and if a new version is available, display a dialog to the user
+            // On error, display a toast if not silent
+            UpdaterHelper.checkUpdate(
+                context,
+                updater,
+                object : UpdateListener {
+                    override fun onSuccess(update: UpdateSummaryContainer) {
+                        // Update last update date
+                        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                            .putLong("last_update_date", LocalDate.now().toEpochDay())
+                            .apply()
+
+                        if (UpdaterHelper.isNewVersionAvailable(update)) {
+                            val versionDialog = VersionDialog(
+                                update,
+                                UpdaterHelper.getVersionDialogListener(
+                                    context,
+                                    update,
+                                    updater
+                                ),
+                            )
+                            versionDialog.show(fragmentManager, "VersionDialog")
+                        }
+                    }
+
+                    override fun onFailed(error: IOError) {
+                        if (!silent)
+                            Toast.makeText(
+                                context,
+                                resources.getString(R.string.toast_update_chack_failed),
+                                Toast.LENGTH_LONG
+                            ).show()
+                    }
+                }
+            )
+        }
+    }
 }

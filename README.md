@@ -6,4 +6,4 @@ Comme les ascenseurs peuvent s'arrêter à de nombreux étages, cette applicatio
 
 La grille de bingo est générée chaque jour aléatoirement à partir du nom d'utilisateur entré dans les paramètres.
 
-L'application permettra à terme de sauvegarder le résultat journalier, de naviguer parmi les résultats précédents et d'afficher des statistiques sur les résultats précédents.
+Plus de détails sur le fonctionnement de l'application sont disponibles dans le [wiki](https://github.com/Gabriel-Aires-1/Bingo-Etage/wiki). 

@@ -356,6 +356,7 @@ class CalendarFragment2 : Fragment()
         private val textView: TextView = binding.dayText
         private val layout: ConstraintLayout = binding.dayLayout
         private val notifTextView: TextView = binding.dayNotification
+        private val resultTextView: TextView = binding.dayResult
         private lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable
@@ -394,12 +395,19 @@ class CalendarFragment2 : Fragment()
             notifTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
         }
 
+        // Function to set the result Visibility
+        private fun changeResultVisibility(visibility: Boolean)
+        {
+            resultTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
+        }
+
         // Function to make current DayViewContainer invisible
         private fun makeInvisible()
         {
             gradientDrawable.setColor(defaultDayBackGroundColor)
             textView.setTextColor(defaultDayTextColor)
             changeNotificationVisibility(false)
+            changeResultVisibility(false)
             layout.visibility = View.INVISIBLE
         }
 
@@ -415,6 +423,7 @@ class CalendarFragment2 : Fragment()
                 gradientDrawable.setColor(defaultDayBackGroundColor)
                 textView.setTextColor(dayTextDisabledColor)
                 changeNotificationVisibility(false)
+                changeResultVisibility(false)
             }
             else
             {
@@ -430,6 +439,8 @@ class CalendarFragment2 : Fragment()
                 )
                 textView.setTextColor(defaultDayTextColor)
                 changeNotificationVisibility(bingoGrid.editingBoolInput)
+                changeResultVisibility(true)
+                resultTextView.text = bingoGrid.totalValue.toString()
             }
         }
 

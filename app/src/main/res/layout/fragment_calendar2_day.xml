@@ -24,13 +24,24 @@
         android:id="@+id/dayNotification"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_margin="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/calendar_day_notification"
-        android:visibility="invisible">
-    </TextView>
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/dayResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/dayNotification"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/dayNotification"
+        tools:text="0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

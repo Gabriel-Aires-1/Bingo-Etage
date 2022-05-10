@@ -59,6 +59,7 @@
     <string name="floor_layout_title">Floor</string>
     <string name="floor_21">21</string>
     <string name="floor_18">18</string>
+    <string name="floor_17">17</string>
     <string name="spinner_type_option_1">Bingo</string>
     <string name="spinner_type_option_2">Stops</string>
     <string name="version_dialog_title">New update available</string>

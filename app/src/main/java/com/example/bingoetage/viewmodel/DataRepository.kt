@@ -71,27 +71,32 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
 
     val floorListMap = hashMapOf(
         "21" to listOf("11", "12", "13", "14", "15", "16", "17", "18", "19", "20"),
-        "18"  to listOf("11", "12", "13", "14", "15", "16", "17", "null", "null")
+        "18"  to listOf("11", "12", "13", "14", "15", "16", "17", "null", "null"),
+        "17"  to listOf("11", "12", "13", "14", "15", "16", "null", "null", "null"),
     )
 
     val linesMap = hashMapOf<String, Array<IntArray>?>(
         "21" to line2DArray,
         "18" to line2DArray,
+        "17" to line2DArray,
     )
 
     val columnMap = hashMapOf<String, Array<IntArray>?>(
         "21" to column2DArray,
         "18" to column2DArray,
+        "17" to column2DArray,
     )
 
     val diagMap = hashMapOf<String, Array<IntArray>?>(
         "21" to diag2DArray,
         "18" to diag2DArray,
+        "17" to diag2DArray,
     )
 
     val bonusMap = hashMapOf<String, IntArray?>(
         "21" to bonusArray,
         "18" to null,
+        "17" to null,
     )
 
 }

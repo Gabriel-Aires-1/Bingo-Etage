@@ -53,6 +53,7 @@
     <string name="floor_layout_title">Etage</string>
     <string name="floor_21">21</string>
     <string name="floor_18">18</string>
+    <string name="floor_17">17</string>
 
     <string name="update_category_title">Mise à jour</string>
     <string name="update_now_text">Vérifier les mises à jour</string>

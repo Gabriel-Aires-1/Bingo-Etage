@@ -34,7 +34,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
-import kotlin.math.sqrt
+import kotlin.math.pow
 
 
 // the fragment initialization parameters keys
@@ -430,9 +430,18 @@ class CalendarFragment2 : Fragment()
                 // Otherwise, uses BingoGrid value to calculate the background color by interpolation
                 gradientDrawable.setColor(
                     ColorConverter.interpolateFromRGB(
-                        // Using square root to add more spaces between low values and reduce space between high values
+                        // Interpolation between possible score values to add more spaces between
+                        // low values and reduce space between high values
                         // helps using the color range better
-                        sqrt((bingoGrid.totalValue - dayMinValue).toFloat() / (dayMaxValue - dayMinValue)),
+                        // Possible values :
+                        // 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17 18 20 25
+                        // Polynomial interpolation : -1.039E-1 + 5.127E-2 * x + 1.202E-3 * x^2 + 5.918E-5 * x^3
+                        (
+                                -1.039E-1
+                                + 5.127E-2 * bingoGrid.totalValue
+                                + 1.202E-3 * bingoGrid.totalValue.toFloat().pow(2)
+                                + 5.918E-5 * bingoGrid.totalValue.toFloat().pow(3)
+                        ).toFloat(),
                         dayBackGroundColorMin,
                         dayBackGroundColorMax,
                     )

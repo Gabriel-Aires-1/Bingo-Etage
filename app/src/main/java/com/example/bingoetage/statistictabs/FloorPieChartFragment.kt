@@ -67,11 +67,10 @@ class FloorPieChartFragment : Fragment() {
         floorPieChart.setEntryLabelTextSize(20f)
 
         viewModel.getEditingBingoGrids(false).observe(
-            viewLifecycleOwner,
-            { bingoGridList ->
-                updatePieChartDisplay(getListForFPC(bingoGridList))
-            }
-        )
+            viewLifecycleOwner
+        ) { bingoGridList ->
+            updatePieChartDisplay(getListForFPC(bingoGridList))
+        }
 
         return binding.root
     }

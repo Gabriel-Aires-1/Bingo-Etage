@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.example.bingoetage.databinding.FragmentStatBinding
+import com.example.bingoetage.statistictabs.AveragePerDayFragment
 import com.example.bingoetage.statistictabs.AveragePerMonthFragment
 import com.example.bingoetage.statistictabs.FloorPieChartFragment
 import com.google.android.material.tabs.TabLayout
@@ -60,6 +61,7 @@ class StatFragment : Fragment() {
             {
                 0 -> resources.getString(R.string.average_month_tab_title)
                 1 -> resources.getString(R.string.floor_pie_chart_tab_title)
+                2 -> resources.getString(R.string.average_day_tab_title)
                 else -> resources.getString(R.string.unknown_tab)
             }
         }.attach()
@@ -96,7 +98,7 @@ class StatFragment : Fragment() {
     class ViewPagerFragmentAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         FragmentStateAdapter(fragmentManager, lifecycle)
     {
-        override fun getItemCount(): Int = 2
+        override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment
         {
@@ -104,6 +106,7 @@ class StatFragment : Fragment() {
             {
                 0 -> AveragePerMonthFragment.newInstance()
                 1 -> FloorPieChartFragment.newInstance()
+                2 -> AveragePerDayFragment.newInstance()
                 else -> Fragment()
             }
         }

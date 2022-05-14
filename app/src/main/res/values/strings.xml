@@ -81,17 +81,20 @@
     <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
 
     <!--    Statistic view-->
-    <string name="average_month_tab_title">Moyenne</string>
+    <string name="average_month_tab_title">Moyenne mois</string>
     <string name="floor_pie_chart_tab_title">Etages</string>
+    <string name="average_day_tab_title">Moyenne jour</string>
     <string name="year_spinner_all_option">Toutes</string>
     <!--    average per month-->
     <string name="spinner_text_year">Année : </string>
     <string name="spinner_text_type">Type : </string>
-    <string name="average_graph_title">Moyenne par mois</string>
+    <string name="average_month_graph_title">Moyenne par mois</string>
     <string name="spinner_type_option_1">Bingo</string>
     <string name="spinner_type_option_2">Arrêts</string>
     <!--    floor pie chart-->
     <string name="floor_pie_chart_title">Répartition des étages</string>
+    <!--    average per month-->
+    <string name="average_day_graph_title">Moyenne par jour</string>
 
     <!-- Updater -->
     <string name="version_dialog_title">Nouvelle mise à jour disponible</string>

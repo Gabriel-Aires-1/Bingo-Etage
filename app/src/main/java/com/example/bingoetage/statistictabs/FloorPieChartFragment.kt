@@ -54,15 +54,25 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentFloorPieChartBinding.inflate(inflater, container, false)
+
+        _floorPieChart = binding.floorPieChart
+
+        setPieChartSettings()
+
+        setYearSpinnerSettings()
+
+        return binding.root
+    }
+
+    private fun setPieChartSettings()
+    {
         // Get colors from theme for bar chart display
         val typedValue = TypedValue()
         val theme = requireContext().theme
         theme.resolveAttribute(R.attr.stat_tab_text_color, typedValue, true)
         textColor = typedValue.data
-        // Inflate the layout for this fragment
-        _binding = FragmentFloorPieChartBinding.inflate(inflater, container, false)
-
-        _floorPieChart = binding.floorPieChart
 
         // display settings
         floorPieChart.animateY(1000, Easing.EaseInOutQuad)
@@ -74,10 +84,6 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // entry label styling
         floorPieChart.setEntryLabelColor(textColor)
         floorPieChart.setEntryLabelTextSize(20f)
-
-        setYearSpinnerSettings()
-
-        return binding.root
     }
 
     private fun setYearSpinnerSettings()

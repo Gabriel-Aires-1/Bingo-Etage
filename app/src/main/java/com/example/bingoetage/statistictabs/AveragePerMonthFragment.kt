@@ -64,13 +64,6 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Get colors from theme for bar chart display
-        val typedValue = TypedValue()
-        val theme = requireContext().theme
-        theme.resolveAttribute(R.attr.stat_tab_text_color, typedValue, true)
-        textColor = typedValue.data
-        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
-        barColor = typedValue.data
 
         // Inflate the layout for this fragment
         _binding = FragmentAveragePerMonthBinding.inflate(inflater, container, false)
@@ -120,6 +113,14 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun setBarChartSettings(barChart: BarChart)
     {
+        // Get colors from theme for bar chart display
+        val typedValue = TypedValue()
+        val theme = requireContext().theme
+        theme.resolveAttribute(R.attr.stat_tab_text_color, typedValue, true)
+        textColor = typedValue.data
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        barColor = typedValue.data
+
         // the value formatter controls the value display
         // In this case, it converts from float to month string
         val valueFormatter = object : ValueFormatter(){

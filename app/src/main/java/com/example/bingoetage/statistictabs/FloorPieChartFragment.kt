@@ -108,7 +108,9 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
             val previouslySelectedValue =
                 yearSpinner.selectedItem?.toString() ?: currentYear
 
-            val valueToSelect = (if (valueList.contains(previouslySelectedValue)) previouslySelectedValue else currentYear) ?: valueList[0]
+            val valueToSelect = (
+                    if (valueList.contains(previouslySelectedValue)) previouslySelectedValue else currentYear
+                    ) ?: valueList[0]
 
             val adapter =
                 ArrayAdapter(

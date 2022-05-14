@@ -90,13 +90,17 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         ) { yearList ->
 
             val mutableYearList = yearList.toMutableList()
+
+            if (mutableYearList.isEmpty())
+                viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
+
             val selectedYear =
                 yearSpinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(
                     Calendar.YEAR
                 )
 
-            if (mutableYearList.isEmpty())
-                viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
+            val yearToSelect = if (mutableYearList.contains(selectedYear)) selectedYear else mutableYearList[0]
+
             val adapter =
                 ArrayAdapter(
                     requireContext(),
@@ -106,7 +110,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
             yearSpinner.adapter = adapter
-            yearSpinner.setSelection(mutableYearList.indexOf(selectedYear))
+            yearSpinner.setSelection(mutableYearList.indexOf(yearToSelect))
         }
 
         binding.typeSpinner.onItemSelectedListener = this

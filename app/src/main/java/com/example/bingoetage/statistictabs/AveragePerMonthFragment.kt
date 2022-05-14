@@ -90,13 +90,23 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
 
         // the value formatter controls the value display
         // In this case, it converts from float to month string
-        val valueFormatter = object : ValueFormatter(){
+        val valueFormatterFull = object : ValueFormatter(){
             override fun getFormattedValue(value: Float): String {
                 val calFmt = Calendar.getInstance()
                 // Negative month value for top to bottom ordering in chart
                 calFmt.set(Calendar.DAY_OF_MONTH, 1)
                 calFmt.set(Calendar.MONTH, -value.toInt())
                 return String.format("%1\$tB", calFmt)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+            }
+        }
+        val valueFormatterShort = object : ValueFormatter(){
+            override fun getFormattedValue(value: Float): String {
+                val calFmt = Calendar.getInstance()
+                // Negative month value for top to bottom ordering in chart
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
+                calFmt.set(Calendar.MONTH, -value.toInt())
+                return String.format("%1\$tb", calFmt)
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
             }
         }
@@ -129,7 +139,7 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
         xl.textColor = textColor
         // the value formatter controls the value display
         // In this case, it converts from float to month string
-        xl.valueFormatter = valueFormatter
+        xl.valueFormatter = valueFormatterShort
 
         // Y axes settings
         val ylr = barChart.axisRight
@@ -146,7 +156,7 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
         yll.textColor = textColor
 
         // Marker view controls the floating windows displayed on value selection
-        val mv = XYMarkerView(requireContext(), valueFormatter)
+        val mv = XYMarkerView(requireContext(), valueFormatterFull)
         mv.chartView = barChart // For bounds control
         barChart.marker = mv
     }

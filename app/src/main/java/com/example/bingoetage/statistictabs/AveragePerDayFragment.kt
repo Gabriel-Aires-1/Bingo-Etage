@@ -90,7 +90,18 @@ class AveragePerDayFragment : ChartFragment(), AdapterView.OnItemSelectedListene
 
         // the value formatter controls the value display
         // In this case, it converts from float to day string
-        val valueFormatter = object : ValueFormatter(){
+        val valueFormatterFull = object : ValueFormatter(){
+            override fun getFormattedValue(value: Float): String {
+                // Negative day value for top to bottom ordering in chart
+                val cal = Calendar.getInstance()
+                val dayOfWeek = -value.toInt() - 1 + cal.firstDayOfWeek
+
+                cal.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+                return String.format("%1\$tA", cal)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+            }
+        }
+        val valueFormatterShort = object : ValueFormatter(){
             override fun getFormattedValue(value: Float): String {
                 // Negative day value for top to bottom ordering in chart
                 val cal = Calendar.getInstance()
@@ -130,7 +141,7 @@ class AveragePerDayFragment : ChartFragment(), AdapterView.OnItemSelectedListene
         xl.textColor = textColor
         // the value formatter controls the value display
         // In this case, it converts from float to month string
-        xl.valueFormatter = valueFormatter
+        xl.valueFormatter = valueFormatterShort
 
         // Y axes settings
         val ylr = barChart.axisRight
@@ -147,7 +158,7 @@ class AveragePerDayFragment : ChartFragment(), AdapterView.OnItemSelectedListene
         yll.textColor = textColor
 
         // Marker view controls the floating windows displayed on value selection
-        val mv = XYMarkerView(requireContext(), valueFormatter)
+        val mv = XYMarkerView(requireContext(), valueFormatterFull)
         mv.chartView = barChart // For bounds control
         barChart.marker = mv
     }

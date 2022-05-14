@@ -83,6 +83,7 @@
     <!--    Statistic view-->
     <string name="average_month_tab_title">Moyenne</string>
     <string name="floor_pie_chart_tab_title">Etages</string>
+    <string name="year_spinner_all_option">Toutes</string>
     <!--    average per month-->
     <string name="spinner_text_year">Année : </string>
     <string name="spinner_text_type">Type : </string>

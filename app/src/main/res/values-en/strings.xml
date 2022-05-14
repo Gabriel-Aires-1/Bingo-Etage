@@ -56,6 +56,7 @@
     <string name="spinner_text_type">Type:</string>
     <string name="average_graph_title">Average per month</string>
     <string name="floor_pie_chart_title">Floor repartition</string>
+    <string name="year_spinner_all_option">All</string>
     <string name="floor_layout_title">Floor</string>
     <string name="floor_21">21</string>
     <string name="floor_18">18</string>

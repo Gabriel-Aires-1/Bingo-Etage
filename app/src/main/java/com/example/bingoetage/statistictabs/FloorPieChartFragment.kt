@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
@@ -24,7 +23,6 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -34,9 +32,9 @@ import kotlin.collections.ArrayList
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class FloorPieChartFragment : ChartFragment(), AdapterView.OnItemSelectedListener {
 
-    private val viewModel: BingoViewModel by activityViewModels()
+    override val viewModel: BingoViewModel by activityViewModels()
 
     private var _binding: FragmentFloorPieChartBinding? = null
     private val binding get() = _binding!!
@@ -46,7 +44,7 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private var _floorPieChart: PieChart? = null
     private val floorPieChart get() = _floorPieChart!!
 
-    private var bingoGridList: LiveData<List<BingoGrid>>? = null
+    override var bingoGridList: LiveData<List<BingoGrid>>? = null
 
     @ColorInt private var textColor = 0
 
@@ -93,51 +91,12 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
         // On selection change, change the livedata observed for graph update
         _yearSpinner = binding.yearSpinner
         yearSpinner.onItemSelectedListener = this
-        viewModel.getDistinctYears().observe(
-            viewLifecycleOwner
-        ) { yearList ->
-
-            val valueList = yearList.map { it.toString() }.toMutableList()
-            val currentYear = viewModel.currentDate.value?.get(Calendar.YEAR)?.toString()
-
-            valueList.add(0, resources.getString(R.string.year_spinner_all_option))
-
-            if (valueList.count() == 1)
-                currentYear?.let { valueList.add(it) }
-
-            val previouslySelectedValue =
-                yearSpinner.selectedItem?.toString() ?: currentYear
-
-            val valueToSelect = (
-                    if (valueList.contains(previouslySelectedValue)) previouslySelectedValue else currentYear
-                    ) ?: valueList[0]
-
-            val adapter =
-                ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    valueList
-                )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-            yearSpinner.adapter = adapter
-            yearSpinner.setSelection(valueList.indexOf(valueToSelect))
-        }
+        setYearSpinnerYearObserver(yearSpinner)
     }
 
-    // Observe the livedata corresponding to the year and update the chart
-    private fun updatePieChartValues(allYears: Boolean, year: Int?=null)
+    override fun updateChartDisplay(bingoGridList: List<BingoGrid>?)
     {
-        bingoGridList?.removeObservers(viewLifecycleOwner)
-
-        if (allYears) bingoGridList = viewModel.getEditingBingoGrids(false)
-        else if (year != null) bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
-
-        bingoGridList?.observe(
-            viewLifecycleOwner
-        ) { bingoGridList ->
-            updatePieChartDisplay(getListForFPC(bingoGridList))
-        }
+        updatePieChartDisplay(getListForFPC(bingoGridList))
     }
 
     // Transform the data to a list usable by the chart
@@ -232,11 +191,13 @@ class FloorPieChartFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // Spinner selection logic
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val allYears = yearSpinner.selectedItemPosition == 0
+
         when(parent?.id)
         {
             R.id.yearSpinner ->
-                if (position == 0) updatePieChartValues(true)
-                else updatePieChartValues(false, parent.getItemAtPosition(position).toString().toInt())
+                if (allYears) updateChartValues(true)
+                else updateChartValues(false, parent.getItemAtPosition(position).toString().toInt())
         }
     }
 

@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -44,9 +43,9 @@ import com.github.mikephil.charting.charts.BarChart
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListener {
 
-    private val viewModel: BingoViewModel by activityViewModels()
+    override val viewModel: BingoViewModel by activityViewModels()
 
     private var _binding: FragmentAveragePerMonthBinding? = null
     private val binding get() = _binding!!
@@ -55,7 +54,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private val graphAveragePerMonths get() = _graphAveragePerMonths!!
     private var _yearSpinner: Spinner? = null
     private val yearSpinner get() = _yearSpinner!!
-    private var bingoGridList: LiveData<List<BingoGrid>>? = null
+    override var bingoGridList: LiveData<List<BingoGrid>>? = null
 
     @ColorInt private var textColor = 0
     @ColorInt private var barColor = 0
@@ -72,39 +71,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         setBarChartSettings(graphAveragePerMonths)
 
-
-        // Year spinner
-        // On year list data update, change the year list in the spinner
-        // On selection change, change the livedata observed for graph update
-        _yearSpinner = binding.yearSpinner
-        yearSpinner.onItemSelectedListener = this
-        viewModel.getDistinctYears().observe(
-            viewLifecycleOwner
-        ) { yearList ->
-
-            val mutableYearList = yearList.toMutableList()
-
-            if (mutableYearList.isEmpty())
-                viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
-
-            val selectedYear =
-                yearSpinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(
-                    Calendar.YEAR
-                )
-
-            val yearToSelect = if (mutableYearList.contains(selectedYear)) selectedYear else mutableYearList[0]
-
-            val adapter =
-                ArrayAdapter(
-                    requireContext(),
-                    android.R.layout.simple_spinner_item,
-                    mutableYearList
-                )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-            yearSpinner.adapter = adapter
-            yearSpinner.setSelection(mutableYearList.indexOf(yearToSelect))
-        }
+        setYearSpinnerSettings()
 
         binding.typeSpinner.onItemSelectedListener = this
 
@@ -184,22 +151,22 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         barChart.marker = mv
     }
 
-    // Observe the livedata corresponding to the year and update the chart
-    private fun updateBarChartValues(year: Int?)
+    private fun setYearSpinnerSettings()
     {
-        bingoGridList?.removeObservers(viewLifecycleOwner)
-        if(year != null)
-        {
-            bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
-        }
-        bingoGridList?.observe(
-            viewLifecycleOwner
-        ) { bingoGridList ->
-            updateBarChartDisplay(
-                getListForGraphAPM(bingoGridList),
-                year.toString(),
-            )
-        }
+        // Year spinner
+        // On year list data update, change the year list in the spinner
+        // On selection change, change the livedata observed for graph update
+        _yearSpinner = binding.yearSpinner
+        yearSpinner.onItemSelectedListener = this
+        setYearSpinnerYearObserver(yearSpinner)
+    }
+
+    override fun updateChartDisplay(bingoGridList: List<BingoGrid>?)
+    {
+        updateBarChartDisplay(
+            getListForGraphAPM(bingoGridList),
+            yearSpinner.selectedItem.toString(),
+        )
     }
 
     // Update the chart display given the list of values
@@ -305,14 +272,14 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // Spinner selection logic
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val allYears = yearSpinner.selectedItemPosition == 0
+
         when(parent?.id)
         {
-            R.id.yearSpinner -> updateBarChartValues(
-                parent.getItemAtPosition(position).toString().toInt()
-            )
-            R.id.typeSpinner -> updateBarChartValues(
-                null
-            )
+            R.id.yearSpinner ->
+                if (allYears) updateChartValues(true)
+                else updateChartValues(false, parent.getItemAtPosition(position).toString().toInt())
+            R.id.typeSpinner -> updateChartValues(allYears, null)
         }
     }
 

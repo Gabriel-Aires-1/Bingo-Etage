@@ -35,6 +35,7 @@ import androidx.annotation.ColorInt
 
 import android.util.TypedValue
 import com.example.bingoetage.R
+import com.github.mikephil.charting.charts.BarChart
 
 
 /**
@@ -76,72 +77,7 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         _graphAveragePerMonths = binding.graphAveragePerMonths
 
-        // display settings
-        graphAveragePerMonths.setDrawBarShadow(false)
-        graphAveragePerMonths.setDrawValueAboveBar(true)
-        graphAveragePerMonths.description.isEnabled = false
-        graphAveragePerMonths.setDrawGridBackground(false)
-        graphAveragePerMonths.setFitBars(true)
-        graphAveragePerMonths.animateY(1000)
-
-        graphAveragePerMonths.legend.isEnabled = false
-
-        // touch settings
-        graphAveragePerMonths.setPinchZoom(false)
-        graphAveragePerMonths.isDoubleTapToZoomEnabled = false
-
-        // xAxis settings
-        // The xaxis on an horizontal bar chart is on the left (bottom) or right (top)
-        // The granularity controls the minimum interval between 2 values
-        val xl = graphAveragePerMonths.xAxis
-        xl.position = XAxisPosition.BOTTOM
-        xl.setDrawAxisLine(false)
-        xl.setDrawGridLines(false)
-        xl.granularity = 1f
-        xl.labelCount = 12
-
-        xl.textColor = textColor
-        // the value formatter controls the value display
-        // In this case, it converts from float to month string
-        xl.valueFormatter = object : ValueFormatter(){
-            override fun getFormattedValue(value: Float): String {
-                val calFmt = Calendar.getInstance()
-                // Negative month value for top to bottom ordering in chart
-                calFmt.set(Calendar.DAY_OF_MONTH, 1)
-                calFmt.set(Calendar.MONTH, -value.toInt())
-                return String.format("%1\$tb", calFmt)
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
-            }
-        }
-
-        // Y axes settings
-        val ylr = graphAveragePerMonths.axisRight
-        ylr.setDrawAxisLine(true)
-        ylr.setDrawGridLines(true)
-        ylr.axisMinimum = 0f
-        ylr.textColor = textColor
-        ylr.granularity = 1f
-        val yll = graphAveragePerMonths.axisLeft
-        yll.setDrawAxisLine(true)
-        yll.setDrawGridLines(true)
-        yll.axisMinimum = 0f
-        yll.granularity = 1f
-        yll.textColor = textColor
-
-        // Marker view controls the floating windows displayed on value selection
-        val mv = XYMarkerView(requireContext(),
-            object : ValueFormatter(){
-                override fun getFormattedValue(value: Float): String {
-                    val calFmt = Calendar.getInstance()
-                    // Negative month value for top to bottom ordering in chart
-                    calFmt.set(Calendar.DAY_OF_MONTH, 1)
-                    calFmt.set(Calendar.MONTH, -value.toInt())
-                    return String.format("%1\$tB", calFmt)
-                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
-                }
-            })
-        mv.chartView = graphAveragePerMonths // For bounds control
-        graphAveragePerMonths.marker = mv
+        setBarChartSettings(graphAveragePerMonths)
 
 
         // Year spinner
@@ -170,6 +106,71 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding.typeSpinner.onItemSelectedListener = this
 
         return binding.root
+    }
+
+    private fun setBarChartSettings(barChart: BarChart)
+    {
+        // the value formatter controls the value display
+        // In this case, it converts from float to month string
+        val valueFormatter = object : ValueFormatter(){
+            override fun getFormattedValue(value: Float): String {
+                val calFmt = Calendar.getInstance()
+                // Negative month value for top to bottom ordering in chart
+                calFmt.set(Calendar.DAY_OF_MONTH, 1)
+                calFmt.set(Calendar.MONTH, -value.toInt())
+                return String.format("%1\$tB", calFmt)
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+            }
+        }
+
+
+        // display settings
+        barChart.setDrawBarShadow(false)
+        barChart.setDrawValueAboveBar(true)
+        barChart.description.isEnabled = false
+        barChart.setDrawGridBackground(false)
+        barChart.setFitBars(true)
+        barChart.animateY(1000)
+
+        barChart.legend.isEnabled = false
+
+        // touch settings
+        barChart.setPinchZoom(false)
+        barChart.isDoubleTapToZoomEnabled = false
+
+        // xAxis settings
+        // The xaxis on an horizontal bar chart is on the left (bottom) or right (top)
+        // The granularity controls the minimum interval between 2 values
+        val xl = barChart.xAxis
+        xl.position = XAxisPosition.BOTTOM
+        xl.setDrawAxisLine(false)
+        xl.setDrawGridLines(false)
+        xl.granularity = 1f
+        xl.labelCount = 12
+
+        xl.textColor = textColor
+        // the value formatter controls the value display
+        // In this case, it converts from float to month string
+        xl.valueFormatter = valueFormatter
+
+        // Y axes settings
+        val ylr = barChart.axisRight
+        ylr.setDrawAxisLine(true)
+        ylr.setDrawGridLines(true)
+        ylr.axisMinimum = 0f
+        ylr.textColor = textColor
+        ylr.granularity = 1f
+        val yll = barChart.axisLeft
+        yll.setDrawAxisLine(true)
+        yll.setDrawGridLines(true)
+        yll.axisMinimum = 0f
+        yll.granularity = 1f
+        yll.textColor = textColor
+
+        // Marker view controls the floating windows displayed on value selection
+        val mv = XYMarkerView(requireContext(), valueFormatter)
+        mv.chartView = barChart // For bounds control
+        barChart.marker = mv
     }
 
     // Observe the livedata corresponding to the year and update the chart

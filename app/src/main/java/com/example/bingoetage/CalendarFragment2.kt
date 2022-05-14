@@ -167,9 +167,8 @@ class CalendarFragment2 : Fragment()
 
                     // Attach observer to container to update display with value
                     container.dayBingoGrid.observe(
-                        viewLifecycleOwner,
-                        { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
-                    )
+                        viewLifecycleOwner
+                    ) { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
 
                     // Change selected state in accordance with selected date data
                     container.selectDay(selectedDate == day.date)
@@ -203,9 +202,13 @@ class CalendarFragment2 : Fragment()
 
                 // Observe LiveData to change the average result
                 container.yearMonthBingoGrids.observe(
-                    viewLifecycleOwner,
-                    { bingoGridList -> updateAverageTextView(container.averageTextView, bingoGridList) }
-                )
+                    viewLifecycleOwner
+                ) { bingoGridList ->
+                    updateAverageTextView(
+                        container.averageTextView,
+                        bingoGridList
+                    )
+                }
             }
         }
 
@@ -234,21 +237,20 @@ class CalendarFragment2 : Fragment()
 
         // Allow to change the selected date from outside event
         viewModel.changeSelectedDate.observe(
-            viewLifecycleOwner,
-            { selectedCal ->
-                // converts the calendar instance to LocalDate
-                val date = LocalDate.of(
-                    selectedCal.get(Calendar.YEAR),
-                    selectedCal.get(Calendar.MONTH) + 1,
-                    selectedCal.get(Calendar.DAY_OF_MONTH),
-                )
+            viewLifecycleOwner
+        ) { selectedCal ->
+            // converts the calendar instance to LocalDate
+            val date = LocalDate.of(
+                selectedCal.get(Calendar.YEAR),
+                selectedCal.get(Calendar.MONTH) + 1,
+                selectedCal.get(Calendar.DAY_OF_MONTH),
+            )
 
-                // Scroll to date in case it is not currently displayed
-                calendarView.scrollToMonth(date.yearMonth)
+            // Scroll to date in case it is not currently displayed
+            calendarView.scrollToMonth(date.yearMonth)
 
-                changeSelectedDate(date)
-            }
-        )
+            changeSelectedDate(date)
+        }
 
         // Return fragment
         return fragView

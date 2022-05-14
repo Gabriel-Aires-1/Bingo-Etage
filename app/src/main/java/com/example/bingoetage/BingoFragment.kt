@@ -116,9 +116,8 @@ class BingoFragment : Fragment(), View.OnClickListener
 
         // Listen to calendar changes
         viewModel.bingoGrid.observe(
-            viewLifecycleOwner,
-            { changeBingoGrid() }
-        )
+            viewLifecycleOwner
+        ) { changeBingoGrid() }
 
         // return the view
         return fragView

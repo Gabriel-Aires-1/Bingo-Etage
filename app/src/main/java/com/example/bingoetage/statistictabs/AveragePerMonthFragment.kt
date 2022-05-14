@@ -86,22 +86,28 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
         _yearSpinner = binding.yearSpinner
         yearSpinner.onItemSelectedListener = this
         viewModel.getDistinctYears().observe(
-            viewLifecycleOwner,
-            { yearList ->
+            viewLifecycleOwner
+        ) { yearList ->
 
-                val mutableYearList = yearList.toMutableList()
-                val selectedYear = yearSpinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(Calendar.YEAR)
+            val mutableYearList = yearList.toMutableList()
+            val selectedYear =
+                yearSpinner.selectedItem?.toString()?.toInt() ?: viewModel.currentDate.value!!.get(
+                    Calendar.YEAR
+                )
 
-                if (mutableYearList.isEmpty())
-                    viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
-                val adapter =
-                    ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, mutableYearList)
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            if (mutableYearList.isEmpty())
+                viewModel.currentDate.value?.let { mutableYearList.add(it.get(Calendar.YEAR)) }
+            val adapter =
+                ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_spinner_item,
+                    mutableYearList
+                )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
-                yearSpinner.adapter = adapter
-                yearSpinner.setSelection(mutableYearList.indexOf(selectedYear))
-            }
-        )
+            yearSpinner.adapter = adapter
+            yearSpinner.setSelection(mutableYearList.indexOf(selectedYear))
+        }
 
         binding.typeSpinner.onItemSelectedListener = this
 
@@ -182,14 +188,13 @@ class AveragePerMonthFragment : Fragment(), AdapterView.OnItemSelectedListener {
             bingoGridList = viewModel.getYearEditingBingoGrids(year, false)
         }
         bingoGridList?.observe(
-            viewLifecycleOwner,
-            { bingoGridList ->
-                updateBarChartDisplay(
-                    getListForGraphAPM(bingoGridList),
-                    year.toString(),
-                )
-            }
-        )
+            viewLifecycleOwner
+        ) { bingoGridList ->
+            updateBarChartDisplay(
+                getListForGraphAPM(bingoGridList),
+                year.toString(),
+            )
+        }
     }
 
     // Update the chart display given the list of values

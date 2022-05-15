@@ -7,7 +7,7 @@
     <string name="unknown_tab">Unknown tab</string>
     <string name="calendar_toast_text">Selecting current day</string>
     <string name="setting_text">Parameters</string>
-    <string name="text_bingo_count">Total : %1$s</string>
+    <string name="text_bingo_count">Total: %1$s</string>
     <string name="text_button_1">1</string>
     <string name="text_button_2">2</string>
     <string name="text_button_3">3</string>

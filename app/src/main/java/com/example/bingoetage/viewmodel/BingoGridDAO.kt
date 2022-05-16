@@ -81,4 +81,9 @@ interface BingoGridDAO
         SELECT DISTINCT year FROM bingoGrid 
         """)
     fun loadDistinctYears(): Flow<List<Int>>
+
+    @Query("""
+        SELECT * FROM bingoGrid
+        """)
+    suspend fun getAllGrids(): List<BingoGrid>
 }

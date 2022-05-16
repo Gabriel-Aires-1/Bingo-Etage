@@ -84,6 +84,7 @@ interface BingoGridDAO
 
     @Query("""
         SELECT * FROM bingoGrid
+        ORDER BY year, month, day
         """)
     suspend fun getAllGrids(): List<BingoGrid>
 }

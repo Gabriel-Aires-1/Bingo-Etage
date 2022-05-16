@@ -24,10 +24,10 @@ abstract class ChartFragment: Fragment() {
             val valueList = yearList.map { it.toString() }.toMutableList()
             val currentYear = viewModel.currentDate.value?.get(Calendar.YEAR)?.toString()
 
-            valueList.add(0, resources.getString(R.string.year_spinner_all_option))
+            if (!valueList.contains(currentYear))
+                currentYear?.let { valueList.add(it); valueList.sort() }
 
-            if (valueList.count() == 1)
-                currentYear?.let { valueList.add(it) }
+            valueList.add(0, resources.getString(R.string.year_spinner_all_option))
 
             val previouslySelectedValue =
                 yearSpinner.selectedItem?.toString() ?: currentYear

@@ -236,7 +236,12 @@ class BingoViewModel @Inject constructor(
         _changeSelectedDate.value = cal
     }
 
-    suspend fun getAllGrids() = repository.getAllGrids()
+    fun getAllGrids(): List<BingoGrid>
+    {
+        return runBlocking(Dispatchers.IO) {
+            repository.getAllGrids()
+        }
+    }
 
     fun replaceGrids(list: List<BingoGrid>)
     {

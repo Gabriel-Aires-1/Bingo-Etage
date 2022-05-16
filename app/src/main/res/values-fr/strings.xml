@@ -58,6 +58,11 @@
     <string name="update_category_title">Mise à jour</string>
     <string name="update_now_text">Vérifier les mises à jour</string>
     <string name="update_frequency_title">Fréquence des mises à jour</string>
+
+    <string name="CSV_IO_category_title">Export/Import de la base de données</string>
+    <string name="CSV_IO_export_text">Exporter la base de données au format CSV</string>
+    <string name="CSV_IO_import_text">Importer la base de données depuis le format CSV</string>
+
     <string name="daily">Quotidienne</string>
     <string name="weekly">Hebdomadaire</string>
     <string name="monthly">Mensuelle</string>

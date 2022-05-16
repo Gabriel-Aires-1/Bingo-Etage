@@ -33,6 +33,11 @@
     <string name="update_category_title">Update</string>
     <string name="update_now_text">Update now</string>
     <string name="update_frequency_title">Update frequency</string>
+
+    <string name="CSV_IO_category_title">Database export/import</string>
+    <string name="CSV_IO_export_text">Export the database to CSV format</string>
+    <string name="CSV_IO_import_text">Import the database from CSV format</string>
+
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>

@@ -111,7 +111,7 @@
     <string name="toast_update_check_failed">Impossible de vérifier la disponibilité de mise à jour</string>
     <string name="toast_update_uptodate">L\'application est à jour</string>
 
-    <string name="csv_file_header">"Jour", "Mois", "Année", "Liste des valeurs mélangées", "Etats validés", "Booléen édition", "Valeur", "Disposition"</string>
+    <string name="csv_file_header">"Jour"; "Mois"; "Année"; "Liste des valeurs mélangées"; "Etats validés"; "Booléen édition"; "Valeur"; "Disposition"</string>
     <string name="csv_export_complete_toast_text">Export CSV terminé</string>
     <string name="csv_export_error_toast_text">Erreur pendant l\'export CSV</string>
     <string name="csv_export_file_format">BingoEtage__%1\$tY_%1\$tm_%1\$td.csv</string>

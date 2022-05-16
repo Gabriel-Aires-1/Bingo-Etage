@@ -237,4 +237,18 @@ class BingoViewModel @Inject constructor(
     }
 
     suspend fun getAllGrids() = repository.getAllGrids()
+
+    fun replaceGrids(list: List<BingoGrid>)
+    {
+        runBlocking(Dispatchers.IO) {
+            repository.replaceGrids(list)
+        }
+    }
+
+    fun deleteDatabase()
+    {
+        runBlocking(Dispatchers.IO) {
+            repository.deleteDatabase()
+        }
+    }
 }

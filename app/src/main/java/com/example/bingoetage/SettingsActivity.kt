@@ -15,11 +15,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.example.bingoetage.databaseIO.csv.CSVExporter
+import com.example.bingoetage.databaseIO.csv.CSVImporter
+import com.example.bingoetage.viewmodel.BingoGrid
 import com.example.bingoetage.viewmodel.BingoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.BufferedReader
 import java.io.BufferedWriter
+import java.io.FileReader
 import java.io.FileWriter
 import java.util.*
 
@@ -28,11 +32,13 @@ class SettingsActivity : AppCompatActivity()
 {
     private val viewModel: BingoViewModel by viewModels()
 
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var exportResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var importResultLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
-        resultLauncher = getExportActivityResultLauncher()
+        exportResultLauncher = getExportActivityResultLauncher()
+        importResultLauncher = getImportActivityResultLauncher()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
         // Add the fragment if not saved
@@ -78,7 +84,7 @@ class SettingsActivity : AppCompatActivity()
      * The user will be prompted when the export is over through a toast
      */
     fun exportDatabaseToCSV() = CSVExporter.createFile(
-        resultLauncher,
+        exportResultLauncher,
         resources.getString(R.string.csv_export_file_format).format(Calendar.getInstance())
     )
 
@@ -118,6 +124,45 @@ class SettingsActivity : AppCompatActivity()
             }
         }
     }
+    /*** Starts Database export to CSV in background
+     * The user will be prompted when the export is over through a toast
+     */
+    fun importDatabaseToCSV() = CSVImporter.readFile(importResultLauncher)
+
+    /*** Execute the export on activity callback
+     * The user will be prompted when the export is over through a toast
+     */
+    private fun getImportActivityResultLauncher(): ActivityResultLauncher<Intent>
+    {
+        return registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                // There are no request codes
+                val fileURI: Uri = result.data?.data ?: return@registerForActivityResult
+
+                var reader: BufferedReader? = null
+                try {
+                    val pfd = applicationContext.contentResolver.openFileDescriptor(fileURI, "r")!!
+                    reader = BufferedReader(FileReader(pfd.fileDescriptor))
+
+                    lifecycleScope.launchWhenResumed {
+                        viewModel.deleteDatabase()
+                        viewModel.replaceGrids(
+                            reader.readLines().drop(1).map { BingoGrid.generateFromCSV(it) }
+                        )
+                        reader.close()
+                        Toast.makeText(applicationContext, resources.getString(R.string.csv_import_complete_toast_text), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                catch (e: Exception) {
+                    e.printStackTrace()
+                    reader?.close()
+                    Toast.makeText(applicationContext, resources.getString(R.string.csv_import_error_toast_text), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
 
     }
 
@@ -135,6 +180,11 @@ class SettingsActivity : AppCompatActivity()
 
             this.findPreference<Preference>("export_CSV")?.setOnPreferenceClickListener {
                 (activity as? SettingsActivity)?.exportDatabaseToCSV()
+                true
+            }
+
+            this.findPreference<Preference>("import_CSV")?.setOnPreferenceClickListener {
+                (activity as? SettingsActivity)?.importDatabaseToCSV()
                 true
             }
         }

@@ -82,4 +82,7 @@
     <string name="csv_export_complete_toast_text">CSV export complete</string>
     <string name="csv_export_error_toast_text">Error during CSV export</string>
     <string name="csv_export_file_format">FloorBingo__%1\$tY_%1\$tm_%1\$td.csv</string>
+
+    <string name="csv_import_complete_toast_text">CSV import complete</string>
+    <string name="csv_import_error_toast_text">Error during CSV import</string>
 </resources>

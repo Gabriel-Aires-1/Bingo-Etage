@@ -87,4 +87,7 @@ interface BingoGridDAO
         ORDER BY year, month, day
         """)
     suspend fun getAllGrids(): List<BingoGrid>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun replaceGrids(list: List<BingoGrid>)
 }

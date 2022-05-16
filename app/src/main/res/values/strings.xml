@@ -33,6 +33,11 @@
     <string name="update_category_title">Update</string>
     <string name="update_now_text">Update now</string>
     <string name="update_frequency_title">Update frequency</string>
+
+    <string name="CSV_IO_category_title">Database export/import</string>
+    <string name="CSV_IO_export_text">Export the database to CSV format</string>
+    <string name="CSV_IO_import_text">Import the database from CSV format</string>
+
     <string name="daily">Daily</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
@@ -73,4 +78,11 @@
     <string name="version_dialog_negative_button">Cancel</string>
     <string name="toast_update_check_failed">Error during update check</string>
     <string name="toast_update_uptodate">The application is up-to-date</string>
+    <string name="csv_file_header">"Day"; "Month"; "Year"; "List of shuffled inputs"; "Checked state"; "Editing boolean"; "Value"; "Layout"</string>
+    <string name="csv_export_complete_toast_text">CSV export complete</string>
+    <string name="csv_export_error_toast_text">Error during CSV export</string>
+    <string name="csv_export_file_format">FloorBingo__%1\$tY_%1\$tm_%1\$td.csv</string>
+
+    <string name="csv_import_complete_toast_text">CSV import complete</string>
+    <string name="csv_import_error_toast_text">Error during CSV import</string>
 </resources>

@@ -16,6 +16,39 @@ data class BingoGrid
     @ColumnInfo(name = "totalValue") var totalValue: Int,
     @ColumnInfo(name = "layout") var layout: String,
 )
+{
+
+    fun toCSV(): String
+    {
+        return "%d;%d;%d;%s;%s;%b;%d;%s".format(day, month, year, numberListShuffledInput.toString(), checkedArrayInput.toString(), editingBoolInput, totalValue, layout)
+    }
+
+    companion object
+    {
+        fun generateFromCSV(csvLine: String): BingoGrid
+        {
+            fun strToStrList(str: String): List<String>
+            {
+                return str.removePrefix("[").removeSuffix("]").split(",")
+                    .map { it.trim() }
+            }
+            fun strToBoolList(str: String): List<Boolean> = strToStrList(str).map { it.toBoolean() }
+
+            val csvLineSplit = csvLine.split(";").map { it.trim() }
+
+            return BingoGrid(
+                csvLineSplit[0].toInt(),
+                csvLineSplit[1].toInt(),
+                csvLineSplit[2].toInt(),
+                strToStrList(csvLineSplit[3]),
+                strToBoolList(csvLineSplit[4]),
+                csvLineSplit[5].toBoolean(),
+                csvLineSplit[6].toInt(),
+                csvLineSplit[7],
+            )
+        }
+    }
+}
 
 class Converters
 {

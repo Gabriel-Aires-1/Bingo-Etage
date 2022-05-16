@@ -50,4 +50,18 @@
             />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/CSV_IO_category_title">
+        <Preference
+            app:key="export_CSV"
+            app:title="@string/CSV_IO_export_text"
+            app:allowDividerBelow="true"
+            />
+        <Preference
+            app:key="import_CSV"
+            app:title="@string/CSV_IO_import_text"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            />
+    </PreferenceCategory>
+
 </PreferenceScreen>

@@ -42,6 +42,9 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
         bingoGridDAO.loadFlow(bingoGridDay,bingoGridMonth,bingoGridYear)
     suspend fun deleteDay(bingoGridDay: Int, bingoGridMonth: Int, bingoGridYear: Int) =
         bingoGridDAO.deleteDay(bingoGridDay,bingoGridMonth,bingoGridYear)
+    suspend fun getAllGrids() = bingoGridDAO.getAllGrids()
+    suspend fun replaceGrids(list: List<BingoGrid>) = bingoGridDAO.replaceGrids(list)
+    suspend fun deleteDatabase() = bingoGridDAO.deleteDatabase()
 
 
     fun getUsername() = pref.getString("username", "")

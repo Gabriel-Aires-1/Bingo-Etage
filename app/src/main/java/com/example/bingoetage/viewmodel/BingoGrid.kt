@@ -16,6 +16,12 @@ data class BingoGrid
     @ColumnInfo(name = "totalValue") var totalValue: Int,
     @ColumnInfo(name = "layout") var layout: String,
 )
+{
+        fun toCSV(): String
+        {
+            return "%d,%d,%d,%s,%s,%b,%d,%s".format(day, month, year, numberListShuffledInput.toString(), checkedArrayInput.toString(), editingBoolInput, totalValue, layout)
+        }
+    }
 
 class Converters
 {

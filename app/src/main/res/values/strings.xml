@@ -87,4 +87,13 @@
 
     <string name="csv_import_complete_toast_text">CSV import complete</string>
     <string name="csv_import_error_toast_text">Error during CSV import</string>
+
+    <string name="first_opening_dialog_title_text_view_text">First configuration </string>
+    <string name="first_opening_dialog_layout_text_view_text">Floor: </string>
+    <string name="first_opening_dialog_layout_explanation_text_view_text">The grids will be generated from the selected floor number.</string>
+    <string name="first_opening_dialog_username_text_view_text">Your name: </string>
+    <string name="first_opening_dialog_username_edit_text_hint_text">User name</string>
+    <string name="first_opening_dialog_username_explanation_text_view_text">The username is used when generating random grids.\nAs such, if the users had registered different usernames, the generated grids will be different.\nThe username can have no special meaning as long as it is different from the ones of the users you compare to.</string>
+    <string name="first_opening_dialog_yes_button_text">Confirm</string>
+    <string name="first_opening_dialog_cancel_button_text">Later</string>
 </resources>

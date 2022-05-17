@@ -442,7 +442,7 @@ class CalendarFragment2 : Fragment()
                                 -1.039E-1
                                 + 5.127E-2 * bingoGrid.totalValue
                                 + 1.202E-3 * bingoGrid.totalValue.toFloat().pow(2)
-                                + 5.918E-5 * bingoGrid.totalValue.toFloat().pow(3)
+                                - 5.918E-5 * bingoGrid.totalValue.toFloat().pow(3)
                         ).toFloat(),
                         dayBackGroundColorMin,
                         dayBackGroundColorMax,

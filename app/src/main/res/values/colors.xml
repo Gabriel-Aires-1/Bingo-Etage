@@ -82,7 +82,9 @@
     <color name="md_purple_A700">#AA00FF</color>
 
 
-    <color name="cal_red">#F20000</color>
-    <color name="cal_green">#00F200</color>
+    <color name="cal_red_day">#E60B0B</color>
+    <color name="cal_green_day">#0CF20C</color>
+    <color name="cal_red_night">#CC2929</color>
+    <color name="cal_green_night">#29CC29</color>
 
 </resources>

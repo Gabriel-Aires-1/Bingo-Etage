@@ -2,7 +2,7 @@ package com.example.bingoetage.colors
 
 import android.graphics.Color
 
-class ColorConverter(val colorRGB: Int)
+class ColorConverter(colorRGB: Int)
 {
     val hsv = convertToHSV(colorRGB)
 
@@ -14,7 +14,7 @@ class ColorConverter(val colorRGB: Int)
             Color.RGBToHSV(Color.red(colorRGB), Color.green(colorRGB), Color.blue(colorRGB), hsv)
             return hsv
         }
-        fun convertToRGB(hsv: FloatArray): Int
+        private fun convertToRGB(hsv: FloatArray): Int
         {
             return Color.HSVToColor(hsv)
 

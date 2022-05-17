@@ -81,4 +81,8 @@
 
     <color name="md_purple_A700">#AA00FF</color>
 
+
+    <color name="cal_red">#F20000</color>
+    <color name="cal_green">#00F200</color>
+
 </resources>

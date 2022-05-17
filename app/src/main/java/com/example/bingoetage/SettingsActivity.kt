@@ -15,6 +15,7 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceManager
 import com.example.bingoetage.databaseIO.csv.CSVExporter
 import com.example.bingoetage.databaseIO.csv.CSVImporter
 import com.example.bingoetage.viewmodel.BingoGrid
@@ -153,6 +154,7 @@ class SettingsActivity : AppCompatActivity()
                             reader.readLines().drop(1).map { BingoGrid.generateFromCSV(it) }
                         )
                         reader.close()
+                        toggleCSVLoadPreference()
                         Toast.makeText(applicationContext, resources.getString(R.string.csv_import_complete_toast_text), Toast.LENGTH_SHORT).show()
                     }
                 }
@@ -163,6 +165,14 @@ class SettingsActivity : AppCompatActivity()
                 }
             }
         }
+    }
+
+    private fun toggleCSVLoadPreference()
+    {
+        val defSharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        val prefStr = resources.getString(R.string.csv_import_preference_toggle_name)
+        val toggleValue = defSharedPref.getBoolean(prefStr,false)
+        defSharedPref.edit().putBoolean(prefStr,!toggleValue).apply()
     }
 
     }

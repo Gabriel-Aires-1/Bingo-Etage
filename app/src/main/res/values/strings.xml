@@ -91,6 +91,7 @@
     <string name="csv_import_alert_dialog_message">This action will delete the current database and its replacement by the data contained in the selected file.\nDo you want to proceed?</string>
     <string name="csv_import_alert_dialog_pos_button">Yes</string>
     <string name="csv_import_alert_dialog_neg_button">No</string>
+    <string name="csv_import_preference_toggle_name" translatable="false">CSV_import_toggle</string>
 
     <string name="first_opening_dialog_title_text_view_text">First configuration </string>
     <string name="first_opening_dialog_layout_text_view_text">Floor: </string>

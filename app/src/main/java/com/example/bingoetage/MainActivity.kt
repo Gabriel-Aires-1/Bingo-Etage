@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity(),
         {
             "theme_preference" -> applyDayNightMode()
             "username" -> reloadBingoGrid()
-            "number_floors" ->
+            "number_floors", resources.getString(R.string.csv_import_preference_toggle_name) ->
             {
                 reloadBingoGrid()
                 reloadBingoGridFragment()

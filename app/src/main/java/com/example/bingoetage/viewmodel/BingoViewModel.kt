@@ -16,8 +16,8 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "18")
-    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "18")
+    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), repository.defaultLayout)
+    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), repository.defaultLayout)
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection

@@ -48,7 +48,8 @@ class DataRepository @Inject constructor(@ApplicationContext val context: Contex
 
 
     fun getUsername() = pref.getString("username", "")
-    fun getLayout() = pref.getString("number_floors", "18")!!
+    fun getLayout() = pref.getString("number_floors", defaultLayout)!!
+    val defaultLayout get() = context.resources.getString(R.string.default_layout)
 
     val caseValue = context.resources.getInteger(R.integer.caseValue)
     val lineValue = context.resources.getInteger(R.integer.lineValue)

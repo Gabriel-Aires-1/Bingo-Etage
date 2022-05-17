@@ -26,7 +26,7 @@
     <ListPreference
         app:entries="@array/floor_layout_entries"
         app:entryValues="@array/floor_layout_values"
-        app:defaultValue="18"
+        app:defaultValue="@string/default_layout"
         app:key="number_floors"
         app:title="@string/floor_layout_title"
         app:useSimpleSummaryProvider="true"

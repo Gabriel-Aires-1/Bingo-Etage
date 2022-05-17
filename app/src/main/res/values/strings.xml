@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BingoEtage</string>
+    <string name="default_layout" translatable="false">18</string>
+
     <string name="first_tab_name">Grid</string>
     <string name="second_tab_name">Calendar</string>
     <string name="third_tab_name">Statistics</string>

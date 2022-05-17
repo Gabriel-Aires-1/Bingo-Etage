@@ -12,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
-import com.example.bingoetage.databinding.FragmentAveragePerMonthBinding
 import com.example.bingoetage.viewmodel.BingoGrid
 import com.example.bingoetage.viewmodel.BingoViewModel
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -34,24 +33,25 @@ import androidx.annotation.ColorInt
 
 import android.util.TypedValue
 import com.example.bingoetage.R
+import com.example.bingoetage.databinding.FragmentAveragePerDayBinding
 import com.github.mikephil.charting.charts.BarChart
 
 
 /**
  * A simple [Fragment] subclass.
- * Use the [AveragePerMonthFragment.newInstance] factory method to
+ * Use the [AveragePerDayFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListener {
+class AveragePerDayFragment : ChartFragment(), AdapterView.OnItemSelectedListener {
 
     override val viewModel: BingoViewModel by activityViewModels()
 
-    private var _binding: FragmentAveragePerMonthBinding? = null
+    private var _binding: FragmentAveragePerDayBinding? = null
     private val binding get() = _binding!!
 
-    private var _graphAveragePerMonths: HorizontalBarChart? = null
-    private val graphAveragePerMonths get() = _graphAveragePerMonths!!
+    private var _graphAveragePerDays: HorizontalBarChart? = null
+    private val graphAveragePerDays get() = _graphAveragePerDays!!
     private var _yearSpinner: Spinner? = null
     private val yearSpinner get() = _yearSpinner!!
     override var bingoGridList: LiveData<List<BingoGrid>>? = null
@@ -65,11 +65,11 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
     ): View {
 
         // Inflate the layout for this fragment
-        _binding = FragmentAveragePerMonthBinding.inflate(inflater, container, false)
+        _binding = FragmentAveragePerDayBinding.inflate(inflater, container, false)
 
-        _graphAveragePerMonths = binding.graphAveragePerMonths
+        _graphAveragePerDays = binding.graphAveragePerDays
 
-        setBarChartSettings(graphAveragePerMonths)
+        setBarChartSettings(graphAveragePerDays)
 
         setYearSpinnerSettings()
 
@@ -89,24 +89,26 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
         barColor = typedValue.data
 
         // the value formatter controls the value display
-        // In this case, it converts from float to month string
+        // In this case, it converts from float to day string
         val valueFormatterFull = object : ValueFormatter(){
             override fun getFormattedValue(value: Float): String {
-                val calFmt = Calendar.getInstance()
-                // Negative month value for top to bottom ordering in chart
-                calFmt.set(Calendar.DAY_OF_MONTH, 1)
-                calFmt.set(Calendar.MONTH, -value.toInt())
-                return String.format("%1\$tB", calFmt)
+                // Negative day value for top to bottom ordering in chart
+                val cal = Calendar.getInstance()
+                val dayOfWeek = -value.toInt() - 1 + cal.firstDayOfWeek
+
+                cal.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+                return String.format("%1\$tA", cal)
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
             }
         }
         val valueFormatterShort = object : ValueFormatter(){
             override fun getFormattedValue(value: Float): String {
-                val calFmt = Calendar.getInstance()
-                // Negative month value for top to bottom ordering in chart
-                calFmt.set(Calendar.DAY_OF_MONTH, 1)
-                calFmt.set(Calendar.MONTH, -value.toInt())
-                return String.format("%1\$tb", calFmt)
+                // Negative day value for top to bottom ordering in chart
+                val cal = Calendar.getInstance()
+                val dayOfWeek = -value.toInt() - 1 + cal.firstDayOfWeek
+
+                cal.set(Calendar.DAY_OF_WEEK, dayOfWeek)
+                return String.format("%1\$ta", cal)
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
             }
         }
@@ -134,7 +136,7 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
         xl.setDrawAxisLine(false)
         xl.setDrawGridLines(false)
         xl.granularity = 1f
-        xl.labelCount = 12
+        xl.labelCount = 7
 
         xl.textColor = textColor
         // the value formatter controls the value display
@@ -184,14 +186,15 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
     {
         val dataSet: BarDataSet
 
-        if (graphAveragePerMonths.data != null &&
-            graphAveragePerMonths.data.dataSetCount > 0
+        if (
+            graphAveragePerDays.data != null &&
+            graphAveragePerDays.data.dataSetCount > 0
         )
         {
-            dataSet = graphAveragePerMonths.data.getDataSetByIndex(0) as BarDataSet
+            dataSet = graphAveragePerDays.data.getDataSetByIndex(0) as BarDataSet
             dataSet.values = seriesValues
-            graphAveragePerMonths.data.notifyDataChanged()
-            graphAveragePerMonths.notifyDataSetChanged()
+            graphAveragePerDays.data.notifyDataChanged()
+            graphAveragePerDays.notifyDataSetChanged()
         }
         else
         {
@@ -204,7 +207,7 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
             data.setValueTextSize(10f)
             data.setValueTextColor(textColor)
 
-            graphAveragePerMonths.data = data
+            graphAveragePerDays.data = data
         }
     }
 
@@ -225,47 +228,47 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
                 else -> {bingoGrid.totalValue}
             }
 
-        val sumResultAndCountPerMonths = mutableMapOf<Int, Pair<Int, Int>>()
+        val sumResultAndCountPerDays = mutableMapOf<Int, Pair<Int, Int>>()
+
+        val cal = Calendar.getInstance()
 
         bingoGridList?.forEach { bingoGrid ->
-            sumResultAndCountPerMonths[bingoGrid.month] = Pair(
-                sumResultAndCountPerMonths[bingoGrid.month]?.first?.plus(bingoGridValue(bingoGrid)) ?: bingoGridValue(bingoGrid),
-                sumResultAndCountPerMonths[bingoGrid.month]?.second?.plus(1) ?: 1,
+            cal.set(bingoGrid.year, bingoGrid.month, bingoGrid.day)
+            val dayOfWeek = (cal.get(Calendar.DAY_OF_WEEK) - cal.firstDayOfWeek + 7) % 7 + 1
+
+            sumResultAndCountPerDays[dayOfWeek] = Pair(
+                sumResultAndCountPerDays[dayOfWeek]?.first?.plus(bingoGridValue(bingoGrid)) ?: bingoGridValue(bingoGrid),
+                sumResultAndCountPerDays[dayOfWeek]?.second?.plus(1) ?: 1,
             )
         }
 
-        val sortedAveragePerMonths = mutableMapOf<Int, Float>()
-        for (i in 0..11) sortedAveragePerMonths[i] = 0.0f
+        val sortedAveragePerDays = mutableMapOf<Int, Float>()
 
-        sumResultAndCountPerMonths.forEach { (month, sumCount) ->
-            sortedAveragePerMonths[month] = sumCount.first / sumCount.second.toFloat()
+        sumResultAndCountPerDays.forEach { (day, sumCount) ->
+            sortedAveragePerDays[day] = sumCount.first / sumCount.second.toFloat()
         }
 
         val dataEntries = mutableListOf<BarEntry>()
-        val calFmt = Calendar.getInstance()
 
-        sortedAveragePerMonths
-            .forEach { (month, average) ->
-                calFmt.set(Calendar.DAY_OF_MONTH, 1)
-                calFmt.set(Calendar.MONTH, month)
-
+        sortedAveragePerDays
+            .forEach { (day, average) ->
                 dataEntries.add(
                     BarEntry(
                         // Negative month value for top to bottom ordering in chart
-                        -month.toFloat(),
+                        -day.toFloat(),
                         average,
                     )
                 )
             }
         // reversed to obtain a rising x-value list to prevent touch events bugs
-        return dataEntries.reversed()
+        return dataEntries.sortedBy { it.x }
     }
 
     override fun onDestroyView()
     {
         super.onDestroyView()
         _binding = null
-        _graphAveragePerMonths = null
+        _graphAveragePerDays = null
         _yearSpinner = null
     }
 
@@ -277,7 +280,7 @@ class AveragePerMonthFragment : ChartFragment(), AdapterView.OnItemSelectedListe
          * @return A new instance of fragment StatFragment.
          */
         @JvmStatic
-        fun newInstance() = AveragePerMonthFragment()
+        fun newInstance() = AveragePerDayFragment()
     }
 
     // Spinner selection logic

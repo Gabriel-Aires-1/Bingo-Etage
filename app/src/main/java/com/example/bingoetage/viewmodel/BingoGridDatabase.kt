@@ -41,10 +41,10 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
 val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(database: SupportSQLiteDatabase) {
-        // Add layout column with a default value of "21"
+        // Add layout column with a default value of "18"
         database.execSQL(
             "ALTER TABLE BingoGrid " +
-                    "ADD COLUMN layout TEXT DEFAULT 21 NOT NULL"
+                    "ADD COLUMN layout TEXT DEFAULT 18 NOT NULL"
         )
     }
 }

@@ -1,0 +1,136 @@
+<resources>
+
+
+    <!-- App level strings -->
+    <string name="app_name">BingoEtage</string>
+
+
+    <!-- Main activity strings -->
+    <string name="first_tab_name">Grille</string>
+    <string name="second_tab_name">Calendrier</string>
+    <string name="third_tab_name">Statistiques</string>
+    <string name="unknown_tab">Onglet inconnu</string>
+    <string name="calendar_toast_text">Sélection de la date courante</string>
+
+
+    <!-- Bingo fragment strings -->
+    <string name="text_button_1">1</string>
+    <string name="text_button_2">2</string>
+    <string name="text_button_3">3</string>
+    <string name="text_button_4">4</string>
+    <string name="text_button_5">5</string>
+    <string name="text_button_6">6</string>
+    <string name="text_button_7">7</string>
+    <string name="text_button_8">8</string>
+    <string name="text_button_9">9</string>
+    <string name="text_button_10">10</string>
+    <!-- unicode for space: \u0020 -->
+    <!-- %1$s : format string   -->
+    <string name="text_bingo_count">Total : %1$s</string>
+    <string name="setting_text">Paramètres</string>
+    <string name="text_ok_button">Valider</string>
+    <string name="description_edit_button">Editer</string>
+
+
+    <!-- Calendar fragment strings -->
+    <string name="calendar_header_date">%1$s %2$s</string>
+    <string name="calendar_header_average">Moyenne : %.2f</string>
+
+
+    <!-- Settings strings -->
+    <string name="theme_title">Choix du thème</string>
+    <string name="theme_system">Système</string>
+    <string name="theme_light">Thème clair</string>
+    <string name="theme_dark">Thème nuit</string>
+
+    <string name="username_text">Votre nom</string>
+    <string name="main_toolbar_title">Bingo des étages</string>
+    <string name="settings_toolbar_title">Paramètres</string>
+
+    <string name="username_empty_reply">Veuillez modifier le nom d\'utilisateur dans les options
+        afin de générer des grilles personnalisées</string>
+
+    <string name="floor_layout_title">Etage</string>
+    <string name="floor_21">21</string>
+    <string name="floor_18">18</string>
+    <string name="floor_17">17</string>
+
+    <string name="update_category_title">Mise à jour</string>
+    <string name="update_now_text">Vérifier les mises à jour</string>
+    <string name="update_frequency_title">Fréquence des mises à jour</string>
+
+    <string name="CSV_IO_category_title">Export/Import de la base de données</string>
+    <string name="CSV_IO_export_text">Exporter la base de données au format CSV</string>
+    <string name="CSV_IO_import_text">Importer la base de données depuis le format CSV</string>
+
+    <string name="daily">Quotidienne</string>
+    <string name="weekly">Hebdomadaire</string>
+    <string name="monthly">Mensuelle</string>
+    <string name="never">Jamais</string>
+
+    <!--    Calendar view-->
+    <string name="date_format">%1\$td/%1\$tm/%1\$tY</string>
+    <string name="calendar_button_text">Aller à la date courante</string>
+
+    <string name="trigram_day_1">LUN</string>
+    <string name="trigram_day_2">MAR</string>
+    <string name="trigram_day_3">MER</string>
+    <string name="trigram_day_4">JEU</string>
+    <string name="trigram_day_5">VEN</string>
+    <string name="trigram_day_6">SAM</string>
+    <string name="trigram_day_7">DIM</string>
+
+    <string name="delete_DB_object_yes_button_text">Oui</string>
+    <string name="delete_DB_object_no_button_text">Non</string>
+    <string name="delete_DB_object_title">Suppression</string>
+    <string name="delete_DB_object_message">Voulez-vous supprimer cette entrée de la base de donnée ?</string>
+
+    <!--    Statistic view-->
+    <string name="average_month_tab_title">Moyenne mois</string>
+    <string name="floor_pie_chart_tab_title">Etages</string>
+    <string name="average_day_tab_title">Moyenne jour</string>
+    <string name="year_spinner_all_option">Toutes</string>
+    <!--    average per month-->
+    <string name="spinner_text_year">Année : </string>
+    <string name="spinner_text_type">Type : </string>
+    <string name="average_month_graph_title">Moyenne par mois</string>
+    <string name="spinner_type_option_1">Bingo</string>
+    <string name="spinner_type_option_2">Arrêts</string>
+    <!--    floor pie chart-->
+    <string name="floor_pie_chart_title">Répartition des étages</string>
+    <!--    average per month-->
+    <string name="average_day_graph_title">Moyenne par jour</string>
+
+    <!-- Updater -->
+    <string name="version_dialog_title">Nouvelle mise à jour disponible</string>
+    <string name="version_dialog_version_label">Numéro de version : %1$s</string>
+    <string name="version_dialog_download_size_label">Taille du téléchargement : %1$s</string>
+    <string name="version_dialog_patch_note_label">Notes de mise à jour : </string>
+    <string name="version_dialog_positive_button">Installer</string>
+    <string name="version_dialog_negative_button">Annuler</string>
+    <string name="toast_update_check_failed">Impossible de vérifier la disponibilité de mise à jour</string>
+    <string name="toast_update_uptodate">L\'application est à jour</string>
+
+    <string name="csv_file_header">\"Jour\"; \"Mois\"; \"Année\"; \"Liste des valeurs mélangées\"; \"Etats validés\"; \"Booléen édition\"; \"Résultat obtenu\"; \"Disposition\"</string>
+    <string name="csv_export_complete_toast_text">Export CSV terminé</string>
+    <string name="csv_export_error_toast_text">Erreur pendant l\'export CSV</string>
+    <string name="csv_export_file_format">BingoEtage__%1\$tY_%1\$tm_%1\$td.csv</string>
+
+    <string name="csv_import_complete_toast_text">Import CSV terminé</string>
+    <string name="csv_import_error_toast_text">Erreur pendant l\'import CSV</string>
+    <string name="csv_import_alert_dialog_title">Attention</string>
+    <string name="csv_import_alert_dialog_message">Cette action entraînera la suppression de la base de données actuelles et son remplacement par les données contenues dans le fichier sélectionné.\nEtes-vous sûr de vouloir continuer ?</string>
+    <string name="csv_import_alert_dialog_pos_button">Oui</string>
+    <string name="csv_import_alert_dialog_neg_button">Non</string>
+
+    <!-- First opening dialog -->
+    <string name="first_opening_dialog_title_text_view_text">Première configuration </string>
+    <string name="first_opening_dialog_layout_text_view_text">Etage : </string>
+    <string name="first_opening_dialog_layout_explanation_text_view_text">Les grilles seront générées à partir de l\étage choisi.</string>
+    <string name="first_opening_dialog_username_text_view_text">Nom d\'utilisateur : </string>
+    <string name="first_opening_dialog_username_edit_text_hint_text">Votre nom</string>
+    <string name="first_opening_dialog_username_explanation_text_view_text">Le nom d\'utilisateur est utilisé pour générer des grilles aléatoires. \nAinsi, si les utilisateurs renseignent des noms différents, les grilles générées seront également différentes. \nLe nom d\'utilisateur peut ne pas avoir de signification particulière, du moment qu\il est différent de celui des utilisateurs auxquels vous vous comparez.</string>
+    <string name="first_opening_dialog_yes_button_text">Valider</string>
+    <string name="first_opening_dialog_cancel_button_text">Plus tard</string>
+
+</resources>

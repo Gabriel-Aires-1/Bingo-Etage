@@ -16,8 +16,8 @@ class BingoViewModel @Inject constructor(
     private var repository: DataRepository
     ): ViewModel()
 {
-    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), "21")
-    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), "21")
+    val minValue = calculateBingoCount(BooleanArray(10) { false }.toTypedArray(), repository.defaultLayout)
+    val maxValue = calculateBingoCount(BooleanArray(10) { true }.toTypedArray(), repository.defaultLayout)
 
     // Current date displayed in the app
     // Updated by the CalendarFragment on selection
@@ -234,5 +234,26 @@ class BingoViewModel @Inject constructor(
     fun changeSelectedDateTo(cal: Calendar)
     {
         _changeSelectedDate.value = cal
+    }
+
+    fun getAllGrids(): List<BingoGrid>
+    {
+        return runBlocking(Dispatchers.IO) {
+            repository.getAllGrids()
+        }
+    }
+
+    fun replaceGrids(list: List<BingoGrid>)
+    {
+        runBlocking(Dispatchers.IO) {
+            repository.replaceGrids(list)
+        }
+    }
+
+    fun deleteDatabase()
+    {
+        runBlocking(Dispatchers.IO) {
+            repository.deleteDatabase()
+        }
     }
 }

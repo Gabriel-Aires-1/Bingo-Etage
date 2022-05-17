@@ -50,14 +50,16 @@ class BingoFragment : Fragment(), View.OnClickListener
     private val layoutsMap = hashMapOf(
         "21" to R.layout.fragment_bingo_21,
         "18"  to R.layout.fragment_bingo_18,
+        "17"  to R.layout.fragment_bingo_18,
     )
     // Maps the layouts in the database to the BingoFragment layouts number of buttons
     private val nbButtonMap = hashMapOf(
         "21" to 10,
         "18"  to 9,
+        "17"  to 9,
     )
-    // Stores the currently loaded layout (default 21)
-    private var loadedLayout = "21"
+    // Stores the currently loaded layout (default 18)
+    private var loadedLayout = "18"
 
     private val viewModel: BingoViewModel by activityViewModels()
 
@@ -114,9 +116,8 @@ class BingoFragment : Fragment(), View.OnClickListener
 
         // Listen to calendar changes
         viewModel.bingoGrid.observe(
-            viewLifecycleOwner,
-            { changeBingoGrid() }
-        )
+            viewLifecycleOwner
+        ) { changeBingoGrid() }
 
         // return the view
         return fragView

@@ -5,9 +5,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.Spinner
 import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import com.example.bingoetage.R
 import com.example.bingoetage.databinding.FragmentFloorPieChartBinding
 import com.example.bingoetage.viewmodel.BingoGrid
@@ -29,15 +32,19 @@ import kotlin.collections.ArrayList
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class FloorPieChartFragment : Fragment() {
+class FloorPieChartFragment : ChartFragment(), AdapterView.OnItemSelectedListener {
 
-    private val viewModel: BingoViewModel by activityViewModels()
+    override val viewModel: BingoViewModel by activityViewModels()
 
     private var _binding: FragmentFloorPieChartBinding? = null
     private val binding get() = _binding!!
+    private var _yearSpinner: Spinner? = null
+    private val yearSpinner get() = _yearSpinner!!
 
     private var _floorPieChart: PieChart? = null
     private val floorPieChart get() = _floorPieChart!!
+
+    override var bingoGridList: LiveData<List<BingoGrid>>? = null
 
     @ColorInt private var textColor = 0
 
@@ -45,15 +52,25 @@ class FloorPieChartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflate the layout for this fragment
+        _binding = FragmentFloorPieChartBinding.inflate(inflater, container, false)
+
+        _floorPieChart = binding.floorPieChart
+
+        setPieChartSettings()
+
+        setYearSpinnerSettings()
+
+        return binding.root
+    }
+
+    private fun setPieChartSettings()
+    {
         // Get colors from theme for bar chart display
         val typedValue = TypedValue()
         val theme = requireContext().theme
         theme.resolveAttribute(R.attr.stat_tab_text_color, typedValue, true)
         textColor = typedValue.data
-        // Inflate the layout for this fragment
-        _binding = FragmentFloorPieChartBinding.inflate(inflater, container, false)
-
-        _floorPieChart = binding.floorPieChart
 
         // display settings
         floorPieChart.animateY(1000, Easing.EaseInOutQuad)
@@ -65,15 +82,21 @@ class FloorPieChartFragment : Fragment() {
         // entry label styling
         floorPieChart.setEntryLabelColor(textColor)
         floorPieChart.setEntryLabelTextSize(20f)
+    }
 
-        viewModel.getEditingBingoGrids(false).observe(
-            viewLifecycleOwner,
-            { bingoGridList ->
-                updatePieChartDisplay(getListForFPC(bingoGridList))
-            }
-        )
+    private fun setYearSpinnerSettings()
+    {
+        // Year spinner
+        // On year list data update, change the year list in the spinner
+        // On selection change, change the livedata observed for graph update
+        _yearSpinner = binding.yearSpinner
+        yearSpinner.onItemSelectedListener = this
+        setYearSpinnerYearObserver(yearSpinner)
+    }
 
-        return binding.root
+    override fun updateChartDisplay(bingoGridList: List<BingoGrid>?)
+    {
+        updatePieChartDisplay(getListForFPC(bingoGridList))
     }
 
     // Transform the data to a list usable by the chart
@@ -152,6 +175,7 @@ class FloorPieChartFragment : Fragment() {
         super.onDestroyView()
         _binding = null
         _floorPieChart = null
+        _yearSpinner = null
     }
 
     companion object {
@@ -164,4 +188,18 @@ class FloorPieChartFragment : Fragment() {
         @JvmStatic
         fun newInstance() = FloorPieChartFragment()
     }
+
+    // Spinner selection logic
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val allYears = yearSpinner.selectedItemPosition == 0
+
+        when(parent?.id)
+        {
+            R.id.yearSpinner ->
+                if (allYears) updateChartValues(true)
+                else updateChartValues(false, parent.getItemAtPosition(position).toString().toInt())
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 }

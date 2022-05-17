@@ -34,7 +34,7 @@ import java.time.LocalDate
 import java.time.YearMonth
 import java.time.temporal.WeekFields
 import java.util.*
-import kotlin.math.sqrt
+import kotlin.math.pow
 
 
 // the fragment initialization parameters keys
@@ -167,9 +167,8 @@ class CalendarFragment2 : Fragment()
 
                     // Attach observer to container to update display with value
                     container.dayBingoGrid.observe(
-                        viewLifecycleOwner,
-                        { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
-                    )
+                        viewLifecycleOwner
+                    ) { bingoGrid -> container.updateDayDisplayWithGrid(bingoGrid) }
 
                     // Change selected state in accordance with selected date data
                     container.selectDay(selectedDate == day.date)
@@ -203,9 +202,13 @@ class CalendarFragment2 : Fragment()
 
                 // Observe LiveData to change the average result
                 container.yearMonthBingoGrids.observe(
-                    viewLifecycleOwner,
-                    { bingoGridList -> updateAverageTextView(container.averageTextView, bingoGridList) }
-                )
+                    viewLifecycleOwner
+                ) { bingoGridList ->
+                    updateAverageTextView(
+                        container.averageTextView,
+                        bingoGridList
+                    )
+                }
             }
         }
 
@@ -234,21 +237,20 @@ class CalendarFragment2 : Fragment()
 
         // Allow to change the selected date from outside event
         viewModel.changeSelectedDate.observe(
-            viewLifecycleOwner,
-            { selectedCal ->
-                // converts the calendar instance to LocalDate
-                val date = LocalDate.of(
-                    selectedCal.get(Calendar.YEAR),
-                    selectedCal.get(Calendar.MONTH) + 1,
-                    selectedCal.get(Calendar.DAY_OF_MONTH),
-                )
+            viewLifecycleOwner
+        ) { selectedCal ->
+            // converts the calendar instance to LocalDate
+            val date = LocalDate.of(
+                selectedCal.get(Calendar.YEAR),
+                selectedCal.get(Calendar.MONTH) + 1,
+                selectedCal.get(Calendar.DAY_OF_MONTH),
+            )
 
-                // Scroll to date in case it is not currently displayed
-                calendarView.scrollToMonth(date.yearMonth)
+            // Scroll to date in case it is not currently displayed
+            calendarView.scrollToMonth(date.yearMonth)
 
-                changeSelectedDate(date)
-            }
-        )
+            changeSelectedDate(date)
+        }
 
         // Return fragment
         return fragView
@@ -356,6 +358,7 @@ class CalendarFragment2 : Fragment()
         private val textView: TextView = binding.dayText
         private val layout: ConstraintLayout = binding.dayLayout
         private val notifTextView: TextView = binding.dayNotification
+        private val resultTextView: TextView = binding.dayResult
         private lateinit var day: CalendarDay
         var dayBingoGrid: LiveData<BingoGrid> = MutableLiveData()
         private val gradientDrawable = layout.background as GradientDrawable
@@ -394,12 +397,19 @@ class CalendarFragment2 : Fragment()
             notifTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
         }
 
+        // Function to set the result Visibility
+        private fun changeResultVisibility(visibility: Boolean)
+        {
+            resultTextView.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
+        }
+
         // Function to make current DayViewContainer invisible
         private fun makeInvisible()
         {
             gradientDrawable.setColor(defaultDayBackGroundColor)
             textView.setTextColor(defaultDayTextColor)
             changeNotificationVisibility(false)
+            changeResultVisibility(false)
             layout.visibility = View.INVISIBLE
         }
 
@@ -415,21 +425,33 @@ class CalendarFragment2 : Fragment()
                 gradientDrawable.setColor(defaultDayBackGroundColor)
                 textView.setTextColor(dayTextDisabledColor)
                 changeNotificationVisibility(false)
+                changeResultVisibility(false)
             }
             else
             {
                 // Otherwise, uses BingoGrid value to calculate the background color by interpolation
                 gradientDrawable.setColor(
                     ColorConverter.interpolateFromRGB(
-                        // Using square root to add more spaces between low values and reduce space between high values
+                        // Interpolation between possible score values to add more spaces between
+                        // low values and reduce space between high values
                         // helps using the color range better
-                        sqrt((bingoGrid.totalValue - dayMinValue).toFloat() / (dayMaxValue - dayMinValue)),
+                        // Possible values :
+                        // 2 3 4 5 6 7 8 9 10 11 12 13 15 16 17 18 20 25
+                        // Polynomial interpolation : -1.039E-1 + 5.127E-2 * x + 1.202E-3 * x^2 + 5.918E-5 * x^3
+                        (
+                                -1.039E-1
+                                + 5.127E-2 * bingoGrid.totalValue
+                                + 1.202E-3 * bingoGrid.totalValue.toFloat().pow(2)
+                                - 5.918E-5 * bingoGrid.totalValue.toFloat().pow(3)
+                        ).toFloat(),
                         dayBackGroundColorMin,
                         dayBackGroundColorMax,
                     )
                 )
                 textView.setTextColor(defaultDayTextColor)
                 changeNotificationVisibility(bingoGrid.editingBoolInput)
+                changeResultVisibility(true)
+                resultTextView.text = bingoGrid.totalValue.toString()
             }
         }
 

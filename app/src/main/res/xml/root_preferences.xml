@@ -26,7 +26,7 @@
     <ListPreference
         app:entries="@array/floor_layout_entries"
         app:entryValues="@array/floor_layout_values"
-        app:defaultValue="21"
+        app:defaultValue="@string/default_layout"
         app:key="number_floors"
         app:title="@string/floor_layout_title"
         app:useSimpleSummaryProvider="true"
@@ -45,6 +45,20 @@
             app:key="update_frequency_preference"
             app:title="@string/update_frequency_title"
             app:useSimpleSummaryProvider="true"
+            app:allowDividerAbove="true"
+            app:allowDividerBelow="true"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/CSV_IO_category_title">
+        <Preference
+            app:key="export_CSV"
+            app:title="@string/CSV_IO_export_text"
+            app:allowDividerBelow="true"
+            />
+        <Preference
+            app:key="import_CSV"
+            app:title="@string/CSV_IO_import_text"
             app:allowDividerAbove="true"
             app:allowDividerBelow="true"
             />

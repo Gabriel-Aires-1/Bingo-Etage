@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".CalendarFragment2"
     android:id="@+id/dayLayout"
     android:background="@drawable/calendar_day_shape">
@@ -14,7 +14,7 @@
         android:layout_margin="5dp"
         android:gravity="center"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,13 +24,31 @@
         android:id="@+id/dayNotification"
         android:layout_width="10dp"
         android:layout_height="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="6dp"
+        app:layout_constraintBottom_toBottomOf="@id/dayResult"
+        app:layout_constraintTop_toTopOf="@id/dayResult"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/calendar_day_notification"
-        android:visibility="invisible">
-    </TextView>
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/dayResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp"
+        android:gravity="center"
+        android:textSize="12sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="0" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="dayResult,dayNotification" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

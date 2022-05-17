@@ -81,7 +81,7 @@
         app:constraint_referenced_ids="yearLayout, typeLayout" />
 
     <com.github.mikephil.charting.charts.HorizontalBarChart
-        android:id="@+id/graph_average_per_months"
+        android:id="@+id/graph_average_per_days"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="?android:colorBackground"

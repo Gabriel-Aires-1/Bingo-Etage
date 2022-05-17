@@ -118,4 +118,8 @@
 
     <string name="csv_import_complete_toast_text">Import CSV terminé</string>
     <string name="csv_import_error_toast_text">Erreur pendant l\'import CSV</string>
+    <string name="csv_import_alert_dialog_title">Attention</string>
+    <string name="csv_import_alert_dialog_message">Cette action entraînera la suppression de la base de données actuelles et son remplacement par les données contenues dans le fichier sélectionné.\nEtes-vous sûr de vouloir continuer ?</string>
+    <string name="csv_import_alert_dialog_pos_button">Oui</string>
+    <string name="csv_import_alert_dialog_neg_button">Non</string>
 </resources>

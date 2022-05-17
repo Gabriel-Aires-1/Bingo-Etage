@@ -1,6 +1,7 @@
 package com.example.bingoetage
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -184,7 +185,23 @@ class SettingsActivity : AppCompatActivity()
             }
 
             this.findPreference<Preference>("import_CSV")?.setOnPreferenceClickListener {
-                (activity as? SettingsActivity)?.importDatabaseToCSV()
+
+                val alertDialogBuilder = AlertDialog.Builder(requireContext())
+
+                alertDialogBuilder.setTitle(resources.getString(R.string.csv_import_alert_dialog_title))
+                alertDialogBuilder.setMessage(resources.getString(R.string.csv_import_alert_dialog_message))
+                alertDialogBuilder.setPositiveButton(resources.getString(
+                    R.string.csv_import_alert_dialog_pos_button)
+                ) { _, _ -> // Proceed with operation
+                    (activity as? SettingsActivity)?.importDatabaseToCSV()
+                }
+                alertDialogBuilder.setNegativeButton(resources.getString(
+                    R.string.csv_import_alert_dialog_neg_button),
+                    // Do nothing
+                    null)
+                alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert)
+                alertDialogBuilder.show()
+
                 true
             }
         }

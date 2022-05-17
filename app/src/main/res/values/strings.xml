@@ -78,7 +78,7 @@
     <string name="version_dialog_negative_button">Cancel</string>
     <string name="toast_update_check_failed">Error during update check</string>
     <string name="toast_update_uptodate">The application is up-to-date</string>
-    <string name="csv_file_header">"Day"; "Month"; "Year"; "List of shuffled inputs"; "Checked state"; "Editing boolean"; "Value"; "Layout"</string>
+    <string name="csv_file_header">\"Day\"; \"Month\"; \"Year\"; \"List of shuffled inputs\"; \"Checked state\"; \"Editing boolean\"; \"Result\"; \"Layout\"</string>
     <string name="csv_export_complete_toast_text">CSV export complete</string>
     <string name="csv_export_error_toast_text">Error during CSV export</string>
     <string name="csv_export_file_format">FloorBingo__%1\$tY_%1\$tm_%1\$td.csv</string>

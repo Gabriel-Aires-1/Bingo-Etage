@@ -27,9 +27,13 @@ data class BingoGrid
     {
         fun generateFromCSV(csvLine: String): BingoGrid
         {
+            fun cleanStr(str:String): String
+            {
+                return str.trim().removeSurrounding("\"").trim()
+            }
             fun strToStrList(str: String): List<String>
             {
-                return str.removePrefix("[").removeSuffix("]").split(",")
+                return cleanStr(str).removePrefix("[").removeSuffix("]").split(",")
                     .map { it.trim() }
             }
             fun strToBoolList(str: String): List<Boolean> = strToStrList(str).map { it.toBoolean() }
@@ -37,14 +41,14 @@ data class BingoGrid
             val csvLineSplit = csvLine.split(";").map { it.trim() }
 
             return BingoGrid(
-                csvLineSplit[0].toInt(),
-                csvLineSplit[1].toInt(),
-                csvLineSplit[2].toInt(),
+                cleanStr(csvLineSplit[0]).toInt(),
+                cleanStr(csvLineSplit[1]).toInt(),
+                cleanStr(csvLineSplit[2]).toInt(),
                 strToStrList(csvLineSplit[3]),
                 strToBoolList(csvLineSplit[4]),
-                csvLineSplit[5].toBoolean(),
-                csvLineSplit[6].toInt(),
-                csvLineSplit[7],
+                cleanStr(csvLineSplit[5]).toBoolean(),
+                cleanStr(csvLineSplit[6]).toInt(),
+                cleanStr(csvLineSplit[7]),
             )
         }
     }

@@ -118,8 +118,21 @@
 
     <string name="csv_import_complete_toast_text">Import CSV terminé</string>
     <string name="csv_import_error_toast_text">Erreur pendant l\'import CSV</string>
+
+
+    <!-- First opening dialog -->
+    <string name="first_opening_dialog_title_text_view_text">Première configuration </string>
+    <string name="first_opening_dialog_layout_text_view_text">Etage : </string>
+    <string name="first_opening_dialog_layout_explanation_text_view_text">Les grilles seront générées à partir de l\étage choisi.</string>
+    <string name="first_opening_dialog_username_text_view_text">Nom d\'utilisateur : </string>
+    <string name="first_opening_dialog_username_edit_text_hint_text">Votre nom</string>
+    <string name="first_opening_dialog_username_explanation_text_view_text">Le nom d\'utilisateur est utilisé pour générer des grilles aléatoires. \nAinsi, si les utilisateurs renseignent des noms différents, les grilles générées seront également différentes. \nLe nom d\'utilisateur peut ne pas avoir de signification particulière, du moment qu\il est différent de celui des utilisateurs auxquels vous vous comparez.</string>
+    <string name="first_opening_dialog_yes_button_text">Valider</string>
+    <string name="first_opening_dialog_cancel_button_text">Plus tard</string>
+
     <string name="csv_import_alert_dialog_title">Attention</string>
     <string name="csv_import_alert_dialog_message">Cette action entraînera la suppression de la base de données actuelles et son remplacement par les données contenues dans le fichier sélectionné.\nEtes-vous sûr de vouloir continuer ?</string>
     <string name="csv_import_alert_dialog_pos_button">Oui</string>
     <string name="csv_import_alert_dialog_neg_button">Non</string>
+
 </resources>

@@ -17,6 +17,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.example.bingoetage.customdialogs.FirstOpeningDialog
+import com.example.bingoetage.customdialogs.FirstOpeningDialogListener
 import com.example.bingoetage.updater.*
 import com.example.bingoetage.viewmodel.BingoViewModel
 import com.google.android.material.tabs.TabLayout
@@ -30,7 +32,8 @@ import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(),
-    SharedPreferences.OnSharedPreferenceChangeListener
+    SharedPreferences.OnSharedPreferenceChangeListener,
+    FirstOpeningDialogListener
 {
     private var _viewPager: ViewPager2? = null
     private val viewPager get() = _viewPager!!
@@ -92,11 +95,16 @@ class MainActivity : AppCompatActivity(),
         if (PreferenceManager.getDefaultSharedPreferences(this)
             .getString("username","") == "")
         {
-            Toast.makeText(
+            val dialog = FirstOpeningDialog(
                 this,
-                resources.getString(R.string.username_empty_reply),
-                Toast.LENGTH_LONG
-            ).show()
+                this,
+                PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("number_floors",resources.getString(R.string.default_layout))
+                    ?: resources.getString(R.string.default_layout),
+                PreferenceManager.getDefaultSharedPreferences(this)
+                    .getString("username","") ?: ""
+            )
+            dialog.show()
         }
     }
 
@@ -281,5 +289,16 @@ class MainActivity : AppCompatActivity(),
                 }
             )
         }
+    }
+
+    override fun onClickPositiveButton(floor: String, username: String) {
+        val prefEditor = PreferenceManager.getDefaultSharedPreferences(this).edit()
+        prefEditor.putString("number_floors", floor)
+        prefEditor.putString("username", username)
+        prefEditor.apply()
+    }
+
+    override fun onClickNegativeButton() {
+        // Do nothing
     }
 }

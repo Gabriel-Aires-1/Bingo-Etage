@@ -84,7 +84,7 @@
 
     <color name="cal_red_day">#E60B0B</color>
     <color name="cal_green_day">#0CF20C</color>
-    <color name="cal_red_night">#CC2929</color>
-    <color name="cal_green_night">#29CC29</color>
+    <color name="cal_red_night">#D50000</color>
+    <color name="cal_green_night">#4CAF50</color>
 
 </resources>

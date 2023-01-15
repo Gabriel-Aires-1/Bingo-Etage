@@ -25,7 +25,7 @@ abstract class ChartFragment: Fragment() {
             val currentYear = viewModel.currentDate.value?.get(Calendar.YEAR)?.toString()
 
             if (!valueList.contains(currentYear))
-                currentYear?.let { valueList.add(it); valueList.sort() }
+                currentYear?.let { valueList.add(it); valueList.sortDescending() }
 
             valueList.add(0, resources.getString(R.string.year_spinner_all_option))
 

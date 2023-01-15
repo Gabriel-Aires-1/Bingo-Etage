@@ -79,6 +79,7 @@ interface BingoGridDAO
 
     @Query("""
         SELECT DISTINCT year FROM bingoGrid 
+        ORDER BY year DESC
         """)
     fun loadDistinctYears(): Flow<List<Int>>
 
